@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="App3.Friends"
+             Title="Friends">
+    <ContentPage.Content>
+        <RefreshView x:Name="refreshView" IsRefreshing="{Binding IsRefreshing}" RefreshColor="Red"    
+             Command="{Binding RefreshViewCommand}">
+            <StackLayout BackgroundColor="Black">
+                <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
+                    <StackLayout>
+                        <Label Text="Friends" Padding="20,20,20,20" TextColor="White" FontSize="50" HeightRequest="70"/>
+                        <ListView x:Name="friendsListView" RowHeight="80" BackgroundColor="Black"></ListView>
+                    </StackLayout>
+                </ScrollView>
+            </StackLayout>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
+             mc:Ignorable="d"
+             x:Class="App3.SignUp">
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem Text="Sign In" Clicked="OnSwitchToSignIn"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid BackgroundColor="Black">
+            <magic:GradientView VerticalOptions="FillAndExpand">
+                <magic:GradientView.GradientSource>
+                    <magic:CssGradientSource>
+                        <x:String>
+                            <![CDATA[
+                    linear-gradient(to bottom, #5433ff, #20bdff, #a5fecb)
+                            ]]>
+                        </x:String>
+                    </magic:CssGradientSource>
+                </magic:GradientView.GradientSource>
+            </magic:GradientView>
+            <Grid ColumnSpacing="0">
+
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalOptions="Center" Margin="0,10,0,0">
+                    <Label Text="GL" TextColor="White" FontSize="130" FontAttributes="Bold, Italic"></Label>
+                </StackLayout>
+                
+                <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Sign Up" HorizontalTextAlignment="Center" TextColor="White" FontSize="40"></Label>
+                <Entry Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="username" Placeholder="University Email" PlaceholderColor="Black" FontSize="Medium" HorizontalTextAlignment="Center"/>
+                <Entry Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="password" Placeholder="Password" PlaceholderColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True"/>
+                <Entry Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" x:Name="retypePassword" Placeholder="Retype Password" PlaceholderColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True"/>
+
+                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="" TextColor="Red" FontSize="20"/>
+                <Button Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="Sign Up" BackgroundColor="Black" TextColor="White" HeightRequest="50" VerticalOptions="Start" Clicked="onSubmit"/>
+
+                <StackLayout Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2">
+                    <Label Text="Already have an account? Sign In." TextColor="Black" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                </StackLayout>
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
