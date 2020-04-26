@@ -14,6 +14,7 @@ namespace App3.iOS
         {
             // if you want to use a different Application Delegate class from "AppDelegate"
             // you can specify it here.
+            Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
             Xamarin.FormsMaps.Init();
             UIApplication.Main(args, null, "AppDelegate");
         }

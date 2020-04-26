@@ -26,9 +26,8 @@ namespace App3
         private void loadViews()
         {
             Children.Clear();
-            BarBackgroundColor = Color.Purple;
-            SelectedTabColor = Color.White;
-            UnselectedTabColor = Color.Black;
+            SelectedTabColor = Color.MediumPurple;
+            UnselectedTabColor = Color.LightGray;
             
 
             /*

@@ -19,7 +19,6 @@ namespace App3.iOS
     {
         UIView customPinView;
         List<PartyPin> customPins;
-
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
         {
             base.OnElementChanged(e);
@@ -47,6 +46,7 @@ namespace App3.iOS
                 nativeMap.DidDeselectAnnotationView += OnDidDeselectAnnotationView;
             }
         }
+        
         protected override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
         {
             MKAnnotationView annotationView = null;
@@ -90,7 +90,7 @@ namespace App3.iOS
                 var image = new UIImageView(new CGRect(0, 0, 200, 84));
                 image.Image = UIImage.FromFile("xamarin.png");
                 customPinView.AddSubview(image);
-                customPinView.Center = new CGPoint(0, -(e.View.Frame.Height + 75));
+                customPinView.Center = new CGPoint(0, -(e.View.Frame.Height + 75)); //75
                 e.View.AddSubview(customPinView);
             }
         }

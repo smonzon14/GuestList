@@ -13,7 +13,6 @@ using Xamarin.Forms.Xaml;
 using MagicGradients;
 using Xamarin.Forms.Maps;
 using App3.Maps;
-
 namespace App3
 {
 
@@ -23,7 +22,6 @@ namespace App3
         // Party object visualization template
         private TabbedPage1 parent;
         private PartyMap map;
-        private StackLayout partyStackList;
         public Home(TabbedPage1 parent)
         {
             this.parent = parent;
@@ -34,22 +32,10 @@ namespace App3
             map = new PartyMap();
             map.HeightRequest = 300;
             map.IsShowingUser = true;
-            mainStack.Children.Insert(0, map);
-
-            partyStackList = new StackLayout
-            {
-                Orientation = StackOrientation.Horizontal,
-                Children = { }
-            };
-            var scrollView = new ScrollView
-            {
-                HorizontalOptions = LayoutOptions.Fill,
-                Orientation = ScrollOrientation.Horizontal,
-
-                Content = partyStackList
-            };
             
-            mainStack.Children.Add(scrollView);
+            //mainStack.Children.Insert(0, map);
+            mainStack.Children.Add(map, 0, 1, 0, 3);
+            mainStack.LowerChild(map);
             update();
             
         }
@@ -59,26 +45,44 @@ namespace App3
             update();
             Debug.WriteLine("Done Refreshing.");
         }
+        async public void hostButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Host(this.parent));
+        }
         async public void OnSettingsButtonClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new Settings(this.parent));
         }
         private void generateMap(List<Party> pList)
         {
-            
+            int id = 0;
             foreach (Party p in pList)
             {
-                PartyPin pin = new PartyPin
+                int index = -1;
+                // Update existing pin
+                if((index = map.partyPins.FindIndex(existingPin=>existingPin.partyId==p.id)) > 0)
                 {
-                    Type = PinType.Place,
-                    Position = p.geoPosition,
-                    Label = p.description,
-                    Address = p.address,
-                    Name = p.name,
-                    Url = "http://xamarin.com/about/"
-                };
-                map.Pins.Add(pin);
-                map.partyPins.Add(pin);
+                    map.partyPins[index].Position = p.geoPosition;
+                    map.partyPins[index].Label = p.description;
+                    map.partyPins[index].Address = p.address;
+                    map.partyPins[index].Name = p.name;
+                }
+                else // Create new pin
+                {
+                    PartyPin pin = new PartyPin
+                    {
+                        partyId = id,
+                        Type = PinType.Place,
+                        Position = p.geoPosition,
+                        Label = p.description,
+                        Address = p.address,
+                        Name = p.name,
+                    };
+                    map.Pins.Add(pin);
+                    map.partyPins.Add(pin);
+                }
+                
+                id++;
             }
             
             
@@ -97,15 +101,22 @@ namespace App3
             // TODO: Implement database retrieval of parties
             List<Party> partiesList = new List<Party>();
             Geocoder geoCoder = new Geocoder();
-            for (var i = 0; i < 1; i++) {
-                string address = "214 Lynn Fells Parkway, Melrose, MA";
+            List<string> testAddresses = new List<string>
+            {
+                "214 Lynn Fells Parkway, Melrose, MA",
+                "143 Commonwealth Ave, Amherst, MA 01002",
+                "153 Commonwealth Ave, Amherst, MA 01002",
+                "151 Commonwealth Ave, Amherst, MA 01002"
+            };
+            for (var i = 0; i < 4; i++) {
+                string address = testAddresses[i];
                 IEnumerable<Position> approxLocation = await geoCoder.GetPositionsForAddressAsync(address);
                 Position geoPos = approxLocation.FirstOrDefault();
 
                 Party party = new Party()
                 {
                     name = ("Party "+i),
-                    description = "BYOB. Ratio DNE. 🔥",
+                    description = "BYOB. 🥳 Ratio DNE. 🔥",
                     maxInvites = 100,
                     going = false,
                     peopleGoing = new List<Person>(),
@@ -121,6 +132,7 @@ namespace App3
             
             partyListView.ItemsSource = partiesList;
             partyListView.ItemTemplate = Templates.PartyObjectUI();
+            
             partyListView.ItemTapped -= PartyListView_ItemTappedAsync;
             partyListView.ItemTapped += PartyListView_ItemTappedAsync;
             
@@ -131,7 +143,10 @@ namespace App3
         {
             Party selected = (Party)e.Item;
             Debug.WriteLine("Tapped party: " + selected.name);
-            MapSpan span = MapSpan.FromCenterAndRadius(selected.geoPosition, Distance.FromMiles(0.2));
+            Position p = selected.geoPosition;
+            
+            MapSpan span = MapSpan.FromCenterAndRadius(p, Distance.FromMiles(0.3));
+            
             map.MoveToRegion(span);
             //await Navigation.PushAsync(new PartyDetailsPage(selected));
             

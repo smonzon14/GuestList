@@ -10,28 +10,35 @@
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              xmlns:custommap="clr-namespace:App3.Maps">
     <ContentPage.ToolbarItems>
-
-        <ToolbarItem Text="Settings" Clicked="OnSettingsButtonClicked"/>
+        <ToolbarItem Text="+" Clicked="hostButtonClicked" Order="Secondary"/>
+        <ToolbarItem Text="Settings" Clicked="OnSettingsButtonClicked" Order="Primary"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         
         <RefreshView x:Name="refreshView" RefreshColor="Turquoise" Refreshing="refresh" >
             
-            <StackLayout BackgroundColor="Black" x:Name="mainStack">
-
-                
-                <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
+            <Grid BackgroundColor="Tan" x:Name="mainStack" Opacity="1.0" RowSpacing="0">
+                <Grid.RowDefinitions>
                     
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="260"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row ="1" HeightRequest="70" BackgroundColor="#B9000000" Text="Parties" FontSize="40" TextColor="White" Padding="20,10,0,0"/>
+
+                <ScrollView Grid.Row="2" BackgroundColor="#C9000000" VerticalOptions="Fill" >
+
                     <StackLayout>
-                        <Label HeightRequest="60" Text="Parties 🥳" FontSize="40" TextColor="White" Padding="20,0,0,0"/>
+
+                        
 
 
-                        <ListView x:Name="partyListView" RowHeight="170" BackgroundColor="Black" Opacity="50"></ListView>
+                            <ListView x:Name="partyListView" RowHeight="170" BackgroundColor="#00000000" Opacity="1.0"></ListView>
                         
                     </StackLayout>
                     
                 </ScrollView>
-            </StackLayout>
+            </Grid>
         </RefreshView>
 
     </ContentPage.Content>

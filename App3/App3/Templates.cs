@@ -9,6 +9,17 @@ namespace App3
 {
     public static class Templates
     {
+        static Random rand = new Random();
+        public static Color GetRandomColor()
+        {
+            int hue = rand.Next(0,255);
+            Console.WriteLine(hue.ToString());
+            Color color = Color.FromHsla(
+                (hue / 255.0f),
+                0.7f,
+                0.5f);
+            return color;
+        }
         public static ViewCell partyCell()
         {
             Color defaultBGColor = Color.Aqua;
@@ -32,22 +43,43 @@ namespace App3
             maxInvitesLabel.TextColor = defaultTextColor;
             maxInvitesLabel.Padding = 20;
             maxInvitesLabel.Margin = new Thickness(0, 80, 0, 0);
-
+            string c1 = GetRandomColor().ToHex().ToString();
+            Console.WriteLine(c1);
+            string c2 = GetRandomColor().ToHex().ToString();
+            string style = "linear-gradient(to right, " + c1 + ", " + c2 + ")";
             GradientView gradient = new GradientView
             {
 
                 VerticalOptions = LayoutOptions.FillAndExpand,
-                GradientSource = new CssGradientSource { Stylesheet = "linear-gradient(to right, #614385, #516395)" }
+                GradientSource = new CssGradientSource { Stylesheet = style}
 
             };
+            
+            StackLayout vote = new StackLayout
+            {
+                Children =
+                {
+                    new Button
+                    {
+                        TextColor=Color.White,
+                        HorizontalOptions=LayoutOptions.FillAndExpand,
+                        VerticalOptions=LayoutOptions.FillAndExpand,
+                        Text="Up"
 
-            BoxView boxView = new BoxView();
-            //boxView.BackgroundColor = Color.Black;
-            boxView.Opacity = 0;
+                    },
+                    new Button
+                    {
+                        TextColor=Color.White,
+                        HorizontalOptions=LayoutOptions.FillAndExpand,
+                        VerticalOptions=LayoutOptions.FillAndExpand,
+                        Text="Down"
+                    }
+                }
+            };
 
             ViewCell cell = new ViewCell()
             {
-
+                
                 View = new StackLayout()
                 {
                     Orientation = StackOrientation.Horizontal,
@@ -68,7 +100,7 @@ namespace App3
                                     {
 
                                         BackgroundColor=defaultBGColor,
-                                        Opacity=0,
+                                        //Opacity=0,
                                         VerticalOptions = LayoutOptions.Center,
                                         Padding = 0,
 
@@ -85,12 +117,13 @@ namespace App3
 
 
                                 },
-                                boxView
+                                vote
 
                             }
                 }
             };
-
+            
+            
             return cell;
         }
         public static View partyCell(Party party)
@@ -180,6 +213,7 @@ namespace App3
             return new DataTemplate(() =>
             {
                 return partyCell();
+                
             });
         }
     }

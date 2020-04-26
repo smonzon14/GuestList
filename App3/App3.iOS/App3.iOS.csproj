@@ -82,10 +82,10 @@
     <ImageAsset Include="Assets.xcassets\Profile.imageset\Profile_avatar_placeholder_large1.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_friends.imageset\bloonsicon.png">
+    <ImageAsset Include="Assets.xcassets\tab_friends.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_friends.imageset\Contents.json">
+    <ImageAsset Include="Assets.xcassets\tab_friends.imageset\tab_friends.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\tab_home.imageset\bloonsicon1.png">
