@@ -44,7 +44,6 @@ namespace App3
             friends.BarBackgroundColor = Color.Black;
             friends.BarTextColor = Color.White;
             friends.IconImageSource = "tab_friends";
-            
             Children.Add(friends);
 
             // Home Page
@@ -52,19 +51,16 @@ namespace App3
             //home.Title = "Parties";
             home.BarBackgroundColor = Color.Black;
             home.BarTextColor = Color.White;
-
             home.IconImageSource = "tab_home";
-
-
             Children.Add(home);
 
+            User user = App.UserDatabase.GetUser();
             // Profile Page
-            NavigationPage profile = new NavigationPage(new ProfilePage(this));
+            NavigationPage profile = new NavigationPage(new ProfilePage(user, this));
             //profile.Title = "Me";
             profile.BarBackgroundColor = Color.Black;
             profile.BarTextColor = Color.White;
             profile.IconImageSource = "tab_profile";
-            
             Children.Add(profile);
 
             CurrentPage = Children[1];

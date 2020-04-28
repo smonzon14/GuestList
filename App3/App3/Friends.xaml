@@ -7,8 +7,7 @@
              x:Class="App3.Friends"
              Title="Friends">
     <ContentPage.Content>
-        <RefreshView x:Name="refreshView" IsRefreshing="{Binding IsRefreshing}" RefreshColor="Red"    
-             Command="{Binding RefreshViewCommand}">
+        <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
             <StackLayout BackgroundColor="Black">
                 <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
                     <StackLayout>

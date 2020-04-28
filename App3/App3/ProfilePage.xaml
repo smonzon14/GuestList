@@ -15,7 +15,9 @@
             <StackLayout BackgroundColor="Black">
                 <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
                     <StackLayout x:Name="profileStack">
+                        
                     </StackLayout>
+                    
                 </ScrollView>
             </StackLayout>
         </RefreshView>

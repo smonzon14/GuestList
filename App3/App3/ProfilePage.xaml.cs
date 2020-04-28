@@ -14,12 +14,31 @@ namespace App3
     public partial class ProfilePage : ContentPage
     {
         TabbedPage1 parent;
-        public ProfilePage(TabbedPage1 parent)
+        Person user;
+        public ProfilePage(Person user, TabbedPage1 parent)
         {
             this.parent = parent;
             InitializeComponent();
-            User user = App.UserDatabase.GetUser();
-            if (user == null) return;
+            if (user != null) displayingUser(user);
+            
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if(this.user == null)
+            {
+                User user = App.UserDatabase.GetUser();
+                if (user == null) parent.OnLogout();
+                else
+                {
+                    displayingUser(user);
+                }
+            }
+        }
+        public void displayingUser(Person user)
+        {
+            if (this.user != null) return;
+            this.user = user;
             var profileImage = new Frame
             {
                 WidthRequest = 200,
@@ -30,8 +49,8 @@ namespace App3
                 IsClippedToBounds = true,
                 Content = new Image
                 {
-                    HorizontalOptions=LayoutOptions.Center,
-                    VerticalOptions=LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
                     Source = "Profile"
                 }
             };
@@ -39,12 +58,12 @@ namespace App3
 
             profileStack.Children.Add(new Label
             {
-                HorizontalTextAlignment=TextAlignment.Center,
+                HorizontalTextAlignment = TextAlignment.Center,
                 Text = user.name,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
-                FontSize =30
-                
+                FontSize = 30
+
             });
 
             var statusString = "Offline";
@@ -63,16 +82,16 @@ namespace App3
 
             profileStack.Children.Add(new Label
             {
-                FontSize=20,
+                FontSize = 20,
                 HorizontalTextAlignment = TextAlignment.Center,
-                TextColor=Color.White,
+                TextColor = Color.White,
                 Text = "Status: " + statusString
-                
+
             });
 
             profileStack.Children.Add(new Label
             {
-                FontSize=20,
+                FontSize = 20,
                 HorizontalTextAlignment = TextAlignment.Center,
                 TextColor = Color.White,
                 Text = "Bio: " + user.bio
@@ -80,20 +99,20 @@ namespace App3
 
             profileStack.Children.Add(new Label
             {
-                Padding=20,
-                FontSize=30,
+                Padding = 20,
+                FontSize = 30,
                 HorizontalTextAlignment = TextAlignment.Center,
                 TextColor = Color.White,
                 Text = "My Parties",
                 FontAttributes = FontAttributes.Bold
 
             });
-
-            ListView partyListView = new ListView
+            var partyListView = new CarouselView
             {
-                RowHeight = 170,
-                BackgroundColor = Color.Black
+                BackgroundColor = Color.Transparent,
+                PeekAreaInsets = 50
             };
+
             profileStack.Children.Add(partyListView);
             List<Party> partiesList = new List<Party>();
             for (var i = 0; i < 10; i++) partiesList.Add(new Party() { name = "past party", description = "party of mine", maxInvites = 22 });
@@ -103,9 +122,9 @@ namespace App3
 
             partyListView.ItemsSource = partiesList;
             partyListView.ItemTemplate = Templates.PartyObjectUI();
-            partyListView.ItemTapped += PartyListView_ItemTapped;
-        }
 
+            profileStack.Children.Add(partyListView);
+        }
         private void PartyListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             throw new NotImplementedException();

@@ -5,6 +5,9 @@ using CoreGraphics;
 using MapKit;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using UIKit;
 using Xamarin.Forms;
@@ -19,6 +22,8 @@ namespace App3.iOS
     {
         UIView customPinView;
         List<PartyPin> customPins;
+        PartyMap formsMap;
+        
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
         {
             base.OnElementChanged(e);
@@ -32,15 +37,23 @@ namespace App3.iOS
                     nativeMap.GetViewForAnnotation = null;
                     nativeMap.DidSelectAnnotationView -= OnDidSelectAnnotationView;
                     nativeMap.DidDeselectAnnotationView -= OnDidDeselectAnnotationView;
+                    
                 }
             }
 
             if (e.NewElement != null)
             {
-                var formsMap = (PartyMap)e.NewElement;
+                formsMap = (PartyMap)e.NewElement;
+                
                 var nativeMap = Control as MKMapView;
+                formsMap.CallToNativeMethod += (sender, ev) =>
+                {
+                    // need to implement programmatic pin selection here
+                    //nativeMap.SelectAnnotation(nativeMap.Annotations[formsMap.selectedPin.partyId], true);
+                    Console.WriteLine(nativeMap.Annotations.Length);
+                };
                 customPins = formsMap.partyPins;
-
+                
                 nativeMap.GetViewForAnnotation = GetViewForAnnotation;
                 nativeMap.DidSelectAnnotationView += OnDidSelectAnnotationView;
                 nativeMap.DidDeselectAnnotationView += OnDidDeselectAnnotationView;
@@ -49,6 +62,7 @@ namespace App3.iOS
         
         protected override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
         {
+            
             MKAnnotationView annotationView = null;
             if (annotation is MKUserLocation)
                 return null;
@@ -58,7 +72,6 @@ namespace App3.iOS
             {
                 annotationView = new CustomMKAnnotationView(annotation, annotation.GetTitle());
                 annotationView.Image = UIImage.FromFile("heatpin.png");
-                
                 annotationView.CalloutOffset = new CGPoint(0, 0);
                 ((CustomMKAnnotationView)annotationView).Name = annotation.GetTitle();
                 
@@ -81,9 +94,9 @@ namespace App3.iOS
 
         private void OnDidSelectAnnotationView(object sender, MKAnnotationViewEventArgs e)
         {
-            CustomMKAnnotationView customView = e.View as CustomMKAnnotationView;
-            customPinView = new UIView();
-
+            //CustomMKAnnotationView customView = e.View as CustomMKAnnotationView;
+            //customPinView = new UIView();
+            /*
             if (customView.Name.Equals("Xamarin"))
             {
                 customPinView.Frame = new CGRect(0, 0, 200, 84);
@@ -92,7 +105,11 @@ namespace App3.iOS
                 customPinView.AddSubview(image);
                 customPinView.Center = new CGPoint(0, -(e.View.Frame.Height + 75)); //75
                 e.View.AddSubview(customPinView);
-            }
+            }*/
+        }
+        private PartyPin GetPartyPin(MKPointAnnotation annotation)
+        {
+            return null;
         }
 
     }
@@ -101,6 +118,7 @@ namespace App3.iOS
     {
         public CustomMKAnnotationView(IMKAnnotation annotation, object name)
         {
+            
             Annotation = annotation;
             Name = name;
             

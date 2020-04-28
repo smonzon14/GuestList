@@ -22,9 +22,11 @@ namespace App3
         // Party object visualization template
         private TabbedPage1 parent;
         private PartyMap map;
+        private bool partyViewIsExpanded;
         public Home(TabbedPage1 parent)
         {
             this.parent = parent;
+            partyViewIsExpanded = false;
             InitializeComponent();
             
             Debug.WriteLine("Updating Home");
@@ -33,16 +35,66 @@ namespace App3
             map.HeightRequest = 300;
             map.IsShowingUser = true;
             
+
+            partyListView.ItemTemplate = Templates.PartyObjectUI();
+            partyListView.CurrentItemChanged += CurrentItemChanged;
             //mainStack.Children.Insert(0, map);
-            mainStack.Children.Add(map, 0, 1, 0, 3);
-            mainStack.LowerChild(map);
+            mainGrid.Children.Add(map, 0, 1, 0, 3);
+            mainGrid.LowerChild(map);
+
+            SwipeGestureRecognizer expandGesture = new SwipeGestureRecognizer
+            {
+                Direction = SwipeDirection.Up
+            };
+            expandGesture.Swiped += expand;
+
+            
+
+            partySearchStack.GestureRecognizers.Add(expandGesture);
             update();
             
+        }
+        void expand(object sender, EventArgs e)
+        {
+            
+            if (!partyViewIsExpanded)
+            {
+                partyViewIsExpanded = true;
+                hostButtonContainer.IsVisible = true;
+                hostButtonContainer.FadeTo(1.0);
+                searchBar.IsVisible = true;
+                searchBar.FadeTo(1.0);
+                new Animation(callback: v => partySearchStack.BackgroundColor = Color.FromHsla(0, 0, 0, v), start: 0, end: 0.8).Commit(this, "FadeToBackgroundColor", 16, 250, Easing.Linear);
+                new Animation(callback: v => partyRow.Height = v, start: 110, end: (Application.Current.MainPage.Height - 250)).Commit(this, "ExpandHeight", 16, 250, Easing.SinOut);
+                
+            }
+        }
+        void close()
+        {
+            
+            if (partyViewIsExpanded)
+            {
+                partyViewIsExpanded = false;
+                hostButtonContainer.FadeTo(0.0);
+                hostButtonContainer.IsVisible = false;
+                searchBar.FadeTo(0.0);
+                searchBar.IsVisible = false;
+                new Animation(callback: v => partySearchStack.BackgroundColor = Color.FromHsla(0, 0, 0, v), start: 0.8, end: 0).Commit(this, "FadeToBackgroundColor", 16, 250, Easing.Linear);
+                new Animation(callback: v => partyRow.Height = v, start: (Application.Current.MainPage.Height - 250), end: 110).Commit(this, "ExpandHeight", 16, 250, Easing.SinOut);
+                
+            }
+        }
+        void expansionClicked(object sender, EventArgs e)
+        {
+            if(!partyViewIsExpanded) expand(null, null);
+            else close();
         }
         public void refresh(object sender, EventArgs e)
         {
             Debug.WriteLine("Refreshing...");
+            refreshView.IsRefreshing = true;
             update();
+            refreshView.IsRefreshing = false;
             Debug.WriteLine("Done Refreshing.");
         }
         async public void hostButtonClicked(object sender, EventArgs e)
@@ -55,12 +107,11 @@ namespace App3
         }
         private void generateMap(List<Party> pList)
         {
-            int id = 0;
             foreach (Party p in pList)
             {
                 int index = -1;
                 // Update existing pin
-                if((index = map.partyPins.FindIndex(existingPin=>existingPin.partyId==p.id)) > 0)
+                if((index = map.partyPins.FindIndex(existingPin=>existingPin.partyId==p.id)) > -1)
                 {
                     map.partyPins[index].Position = p.geoPosition;
                     map.partyPins[index].Label = p.description;
@@ -71,35 +122,26 @@ namespace App3
                 {
                     PartyPin pin = new PartyPin
                     {
-                        partyId = id,
+                        partyId = p.id,
                         Type = PinType.Place,
                         Position = p.geoPosition,
                         Label = p.description,
                         Address = p.address,
                         Name = p.name,
                     };
+                    
                     map.Pins.Add(pin);
                     map.partyPins.Add(pin);
                 }
-                
-                id++;
             }
             
             
             
             map.MoveToRegion(MapSpan.FromCenterAndRadius(map.Pins[0].Position, Distance.FromMiles(0.3)));
         }
-        public async void update()
+        private async Task<List<Party>> testPartyList()
         {
-            refreshView.IsRefreshing = true;
-            if(TabbedPage1.refreshUser() == 1)
-            {
-                parent.OnLogout();
-                return;
-            }
-            
-            // TODO: Implement database retrieval of parties
-            List<Party> partiesList = new List<Party>();
+            List<Party> list = new List<Party>();
             Geocoder geoCoder = new Geocoder();
             List<string> testAddresses = new List<string>
             {
@@ -108,14 +150,16 @@ namespace App3
                 "153 Commonwealth Ave, Amherst, MA 01002",
                 "151 Commonwealth Ave, Amherst, MA 01002"
             };
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < 4; i++)
+            {
                 string address = testAddresses[i];
                 IEnumerable<Position> approxLocation = await geoCoder.GetPositionsForAddressAsync(address);
                 Position geoPos = approxLocation.FirstOrDefault();
 
                 Party party = new Party()
                 {
-                    name = ("Party "+i),
+                    id = i,
+                    name = ("Party " + i),
                     description = "BYOB. 🥳 Ratio DNE. 🔥",
                     maxInvites = 100,
                     going = false,
@@ -123,35 +167,41 @@ namespace App3
                     address = address,
                     geoPosition = geoPos
                 };
-                
-                partiesList.Add(party);
-                
-                //partyStackList.Children.Add(partyView);
+                list.Add(party);
             }
+            return list;
+        }
+        public async void update()
+        {
+            
+            if(TabbedPage1.refreshUser() == 1)
+            {
+                parent.OnLogout();
+                return;
+            }
+
+            // TODO: Implement database retrieval of parties
+
+            List<Party> partiesList = await testPartyList();
+                
             generateMap(partiesList);
             
             partyListView.ItemsSource = partiesList;
-            partyListView.ItemTemplate = Templates.PartyObjectUI();
-            
-            partyListView.ItemTapped -= PartyListView_ItemTappedAsync;
-            partyListView.ItemTapped += PartyListView_ItemTappedAsync;
-            
-            refreshView.IsRefreshing = false;
         }
-
-        private void PartyListView_ItemTappedAsync(object sender, ItemTappedEventArgs e)
+        private void PartyTapped(object s, EventArgs e)
         {
-            Party selected = (Party)e.Item;
-            Debug.WriteLine("Tapped party: " + selected.name);
-            Position p = selected.geoPosition;
+            e.ToString();
+        }
+        private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
+        {
             
-            MapSpan span = MapSpan.FromCenterAndRadius(p, Distance.FromMiles(0.3));
-            
-            map.MoveToRegion(span);
-            //await Navigation.PushAsync(new PartyDetailsPage(selected));
-            
-            ((ListView)sender).SelectedItem = null;
-            
+            if (!partyViewIsExpanded)
+            {
+                Party party = e.CurrentItem as Party;
+                MapSpan span = MapSpan.FromCenterAndRadius(party.geoPosition, Distance.FromMiles(0.3));
+                map.MoveToRegion(span);
+                map.RaiseCallToNativeMethod(map.partyPins.Find(x=> x.partyId == party.id));
+            }
             
         }
     }
