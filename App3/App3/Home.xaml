@@ -14,25 +14,34 @@
         <ToolbarItem Text="Settings" Clicked="OnSettingsButtonClicked" Order="Primary"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        
-        <RefreshView x:Name="refreshView" RefreshColor="Turquoise" Refreshing="refresh" >
+
+        <!--<RefreshView x:Name="refreshView" RefreshColor="Turquoise" Refreshing="refresh">-->
             
-            <Grid BackgroundColor="Tan" x:Name="mainGrid" Opacity="1.0" RowSpacing="0">
+            <Grid BackgroundColor="White" x:Name="mainGrid" Opacity="1.0" RowSpacing="0" ColumnSpacing="0">
                 <Grid.RowDefinitions>
-                    
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition x:Name="partyRow" Height="110"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition x:Name="partyRow" Height="120"/>
                     <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <StackLayout x:Name="partySearchStack" Grid.Row="1" Grid.RowSpan="2" Spacing="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
 
-                    <StackLayout x:Name="searchBar" IsVisible="False" BackgroundColor="#B9000000" Padding="10" Orientation="Horizontal" HeightRequest="40">
-                        <Frame CornerRadius="7" Padding="0" HasShadow="False" HorizontalOptions="FillAndExpand" >
-                            <SearchBar Placeholder="Search" TextColor="Black" BackgroundColor="WhiteSmoke"/>
-                        </Frame>
+            
+            <!-- People Going button -->
+                <Button Text="Going" Grid.Row="4" Grid.Column="3" Clicked="openPeopleGoingView"/>
 
-                        <Button Text="✕" x:Name="expandViewButton" Padding="0" FontSize="40" TextColor="White" Clicked="expansionClicked"/>
-                    </StackLayout>
+                <!-- Main Party Stack -->
+                <StackLayout x:Name="partySearchStack" Grid.Row="5" Grid.RowSpan="2" Grid.ColumnSpan="5" Spacing="0">
+                    
                     <!--<ScrollView BackgroundColor="#C9000000" VerticalOptions="Fill" HeightRequest="260">
                     -->
                     <CarouselView x:Name="partyListView" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="50"></CarouselView>
@@ -40,14 +49,32 @@
                     </ScrollView>
                     -->
                 </StackLayout>
-                <Frame x:Name="hostButtonContainer" IsVisible="False" Grid.Row="2" CornerRadius="20" Margin="160,0,160,10">
-                    <Button  FontSize="60" Text="+" Clicked="hostButtonClicked"  VerticalOptions="Center" TextColor="Black" BackgroundColor="White" Padding="0"/>
+                
+                <!-- Host Button -->
+                
+                <Button Grid.Row="1" Grid.Column="1" FontSize="60" Text="+" Clicked="hostButtonClicked"  VerticalOptions="Center" TextColor="Black" BackgroundColor="White" Padding="0"/>
+                
+                
+                <!-- People going view -->
+                <Grid ColumnSpacing="0" x:Name="peopleGoingView" IsVisible="False" Grid.Row="3" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="5" Padding="0" BackgroundColor="#DF000000">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
 
-                </Frame>
+                    <Label Text="People Going" Grid.Column="0" Grid.Row="0" HorizontalOptions="Center" Padding="0,10,0,0" TextColor="White"/>
+                    <Button Text="x" TextColor="White" Grid.Column="1" Grid.Row="0" Clicked="closePeopleGoingVew"/>
+                    <ListView x:Name="people" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" SeparatorVisibility="None">
 
+                    </ListView>
+                </Grid>
 
-            </Grid>
-        </RefreshView>
+        </Grid>
+        <!--</RefreshView>-->
 
     </ContentPage.Content>
 </ContentPage>

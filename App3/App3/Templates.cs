@@ -2,7 +2,7 @@
 using MagicGradients;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace App3
@@ -10,33 +10,41 @@ namespace App3
     public static class Templates
     {
         static Random rand = new Random();
-        public static Color GetRandomColor()
+        public static List<string> GetRandomHexColor()
         {
-            int hue = rand.Next(0,255);
-            Color color = Color.FromHsla(
+            int hue = rand.Next(0, 255);
+            Color c1 = Color.FromHsla(
                 (hue / 255.0f),
                 0.7f,
                 0.5f);
-            return color;
+
+            hue -= 50;
+            if (hue < 0) hue += 255;
+            
+            Color c2 = Color.FromHsla(
+                (hue / 255.0f),
+                0.7f,
+                0.5f, 0.75);
+            return new List<string> {c1.ToHex(),c2.ToHex() };
         }
         private static ViewCell friendCell()
         {
-            
+
             Label nameLabel = new Label
             {
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
                 FontSize = 20
-                
+
             };
             nameLabel.SetBinding(Label.TextProperty, "name");
-            
+
             Label activity = new Label
             {
-                FontAttributes=FontAttributes.Italic,
+                FontAttributes = FontAttributes.Italic,
                 TextColor = Color.Gray,
                 FontSize = 15
-                
+
             };
             activity.SetBinding(Label.TextProperty, "activity");
 
@@ -71,10 +79,10 @@ namespace App3
                 Content = img
             };
 
-            
+
             return new ViewCell
             {
-                
+
                 View = new StackLayout
                 {
                     Padding = 10,
@@ -88,6 +96,7 @@ namespace App3
                 }
             };
         }
+        
         private static StackLayout partyLayout()
         {
             System.Diagnostics.Debug.WriteLine("PartyLayout");
@@ -108,8 +117,8 @@ namespace App3
                 FontAttributes = FontAttributes.Italic,
                 TextColor = defaultTextColor,
                 Padding = 20
-                
-                
+
+
             };
             whereLabel.SetBinding(Label.TextProperty, "address");
 
@@ -117,26 +126,26 @@ namespace App3
             descriptionLabel.SetBinding(Label.TextProperty, "description");
             descriptionLabel.TextColor = defaultTextColor;
             descriptionLabel.Padding = 20;
-            
-            
 
-            string c1 = GetRandomColor().ToHex().ToString();
-            string c2 = GetRandomColor().ToHex().ToString();
-            string style = "linear-gradient(to right, " + c1 + ", " + c2 + ")";
+
+
+            List<string> colors = GetRandomHexColor();
+            string c3 = "#00000000";//GetRandomColor().ToHex().ToString();
+            string style = "linear-gradient(135deg, " + colors[0] + " 0%, " + colors[1] + " 50%, " + c3 + " 100%)";
             GradientView gradient = new GradientView
             {
 
                 VerticalOptions = LayoutOptions.FillAndExpand,
-                GradientSource = new CssGradientSource { Stylesheet = style}
+                GradientSource = new CssGradientSource { Stylesheet = style }
 
             };
-            
-            
+
+
 
             RowDefinitionCollection infoGridRowDefinitions = new RowDefinitionCollection();
+            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
             infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
-            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(30) });
-            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(70) });
 
             Grid infoGrid = new Grid
             {
@@ -145,134 +154,52 @@ namespace App3
                 //Opacity=0,
                 VerticalOptions = LayoutOptions.Center,
                 Padding = 0,
-                
+
 
             };
+
+            Frame frame = new Frame
+            {
+                
+                HasShadow = false,
+                BackgroundColor = defaultBGColor,
+                //Opacity=0,
+                CornerRadius = 30,
+                Padding = 0,
+                WidthRequest = 300,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.StartAndExpand,
+                Content = infoGrid
+
+            };
+            
+            var img = new Image
+            {
+                HorizontalOptions = LayoutOptions.Fill,
+                Aspect=Aspect.AspectFill,
+                
+                Source = "https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/8/shutterstock_199419065.jpg"
+            };
+            
+            infoGrid.Children.Add(img, 0, 1, 0, 3);
             infoGrid.Children.Add(gradient, 0, 1, 0, 3);
             infoGrid.Children.Add(nameLabel, 0, 0);
             infoGrid.Children.Add(whereLabel, 0, 1);
             infoGrid.Children.Add(descriptionLabel, 0, 2);
             return new StackLayout
             {
+                
                 Orientation = StackOrientation.Horizontal,
                 VerticalOptions = LayoutOptions.StartAndExpand,
-                Padding = new Thickness(10, 20, 0, 0),
+                Padding = new Thickness(10, 0, 0, 0),
                 HorizontalOptions = LayoutOptions.Center,
-                Children =
-                        {
-
-
-                            new Frame
-                            {
-                                HasShadow=false,
-                                BackgroundColor=defaultBGColor,
-                                //Opacity=0,
-                                CornerRadius=30,
-                                Padding=0,
-                                WidthRequest=300,
-                                HorizontalOptions=LayoutOptions.Center,
-                                VerticalOptions=LayoutOptions.StartAndExpand,
-                                Content = infoGrid
-
-
-                            }
-
-                        }
-            };
-            
-        }
-        private static View partyCell(Party party)
-        {
-            Color defaultBGColor = Color.Aqua;
-            Color defaultTextColor = Color.White;
-            int defaultFontSize = 30;
-
-            Label nameLabel = new Label();
-            nameLabel.Text = party.name;
-            nameLabel.TextColor = defaultTextColor;
-            nameLabel.FontSize = defaultFontSize;
-            nameLabel.Padding = 20;
-
-            Label descriptionLabel = new Label();
-            descriptionLabel.Text = party.description;
-            descriptionLabel.TextColor = defaultTextColor;
-            descriptionLabel.Padding = 20;
-            descriptionLabel.Margin = new Thickness(0, 40, 0, 0);
-
-            Label maxInvitesLabel = new Label();
-            maxInvitesLabel.Text = party.maxInvites.ToString();
-            maxInvitesLabel.TextColor = defaultTextColor;
-            maxInvitesLabel.Padding = 20;
-            maxInvitesLabel.Margin = new Thickness(0, 80, 0, 0);
-
-            GradientView gradient = new GradientView
-            {
-
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                GradientSource = new CssGradientSource { Stylesheet = "linear-gradient(to right, #614385, #516395)" }
-
+                Children = { frame }
             };
 
-            BoxView boxView = new BoxView();
-            boxView.BackgroundColor = Color.Black;
-
-            View cell = new ContentView()
-            {
-                
-                Content = new StackLayout()
-                {
-                    Orientation = StackOrientation.Horizontal,
-                    Padding = new Thickness(10, 5, 0, 0),
-                    Children =
-                            {
-
-
-                                new Frame
-                                {
-                                    BackgroundColor=defaultBGColor,
-
-                                    CornerRadius=20,
-                                    Padding=0,
-                                    WidthRequest=300,
-                                    VerticalOptions=LayoutOptions.StartAndExpand,
-                                    Content = new Grid
-                                    {
-
-                                        BackgroundColor=defaultBGColor,
-                                        VerticalOptions = LayoutOptions.Center,
-                                        Padding = 0,
-
-                                        Children =
-                                        {
-                                            gradient,
-                                            nameLabel,
-                                            descriptionLabel,
-                                            maxInvitesLabel
-
-                                        }
-
-                                    }
-
-
-                                },
-                                boxView
-
-                            }
-                }
-            };
-
-            return cell;
         }
         public static DataTemplate PartyObjectUI()
         {
-            
-            return new DataTemplate(() =>
-            {
-                
-                return partyLayout();
-                
-            });
-            
+            return new DataTemplate(() => { return partyLayout(); });
         }
         public static DataTemplate friendDescriptionLayout()
         {
@@ -281,7 +208,7 @@ namespace App3
                 return friendCell();
             });
         }
-        
+
     }
-    
+
 }

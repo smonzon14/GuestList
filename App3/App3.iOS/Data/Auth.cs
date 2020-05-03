@@ -10,8 +10,9 @@ using System.Threading;
 using RestSharp;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using Xamarin.Forms;
 
-[assembly: Xamarin.Forms.Dependency(typeof(App3.iOS.Auth))]
+[assembly: Dependency(typeof(App3.iOS.Auth))]
 namespace App3.iOS
 {
     public class Auth : IAuthentication

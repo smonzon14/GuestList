@@ -8,14 +8,16 @@
              Title="Friends">
     <ContentPage.Content>
         <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
-            <StackLayout BackgroundColor="Black">
-                <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
-                    <StackLayout>
+
+            <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
+                <StackLayout HorizontalOptions="Fill">
+                    <StackLayout Orientation="Horizontal" Spacing="0" Padding="0" HorizontalOptions="StartAndExpand">
                         <Label Text="Friends" Padding="20,20,20,20" TextColor="White" FontSize="50" HeightRequest="70"/>
-                        <ListView x:Name="friendsListView" RowHeight="80" BackgroundColor="Black"></ListView>
+                        <Button Text="Scan" TextColor="White" Clicked="btnScan_Clicked" HorizontalOptions="EndAndExpand"/>
                     </StackLayout>
-                </ScrollView>
-            </StackLayout>
+                    <ListView x:Name="friendsListView" RowHeight="80" BackgroundColor="Black"></ListView>
+                </StackLayout>
+            </ScrollView>
         </RefreshView>
     </ContentPage.Content>
 </ContentPage>

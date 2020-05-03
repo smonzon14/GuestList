@@ -1,18 +1,13 @@
-﻿using App3.Data;
+﻿using App3.Maps;
 using App3.Models;
-using IdentityModel.OidcClient.Browser;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using MagicGradients;
 using Xamarin.Forms.Maps;
-using App3.Maps;
+using Xamarin.Forms.Xaml;
 namespace App3
 {
 
@@ -28,73 +23,41 @@ namespace App3
             this.parent = parent;
             partyViewIsExpanded = false;
             InitializeComponent();
-            
+
             Debug.WriteLine("Updating Home");
 
             map = new PartyMap();
             map.HeightRequest = 300;
             map.IsShowingUser = true;
-            
+
 
             partyListView.ItemTemplate = Templates.PartyObjectUI();
             partyListView.CurrentItemChanged += CurrentItemChanged;
+            
             //mainStack.Children.Insert(0, map);
-            mainGrid.Children.Add(map, 0, 1, 0, 3);
+            
+            mainGrid.Children.Add(map, 0, 5, 0, 7);
             mainGrid.LowerChild(map);
 
-            SwipeGestureRecognizer expandGesture = new SwipeGestureRecognizer
-            {
-                Direction = SwipeDirection.Up
-            };
-            expandGesture.Swiped += expand;
-
-            
-
-            partySearchStack.GestureRecognizers.Add(expandGesture);
+            NavigationPage.SetHasNavigationBar(this, false);
             update();
-            
+
         }
-        void expand(object sender, EventArgs e)
+        void openPeopleGoingView(object sender, EventArgs e)
         {
-            
-            if (!partyViewIsExpanded)
-            {
-                partyViewIsExpanded = true;
-                hostButtonContainer.IsVisible = true;
-                hostButtonContainer.FadeTo(1.0);
-                searchBar.IsVisible = true;
-                searchBar.FadeTo(1.0);
-                new Animation(callback: v => partySearchStack.BackgroundColor = Color.FromHsla(0, 0, 0, v), start: 0, end: 0.8).Commit(this, "FadeToBackgroundColor", 16, 250, Easing.Linear);
-                new Animation(callback: v => partyRow.Height = v, start: 110, end: (Application.Current.MainPage.Height - 250)).Commit(this, "ExpandHeight", 16, 250, Easing.SinOut);
-                
-            }
+            peopleGoingView.IsVisible = true;
         }
-        void close()
+        void closePeopleGoingVew(object sender, EventArgs e)
         {
-            
-            if (partyViewIsExpanded)
-            {
-                partyViewIsExpanded = false;
-                hostButtonContainer.FadeTo(0.0);
-                hostButtonContainer.IsVisible = false;
-                searchBar.FadeTo(0.0);
-                searchBar.IsVisible = false;
-                new Animation(callback: v => partySearchStack.BackgroundColor = Color.FromHsla(0, 0, 0, v), start: 0.8, end: 0).Commit(this, "FadeToBackgroundColor", 16, 250, Easing.Linear);
-                new Animation(callback: v => partyRow.Height = v, start: (Application.Current.MainPage.Height - 250), end: 110).Commit(this, "ExpandHeight", 16, 250, Easing.SinOut);
-                
-            }
+            peopleGoingView.IsVisible = false;
         }
-        void expansionClicked(object sender, EventArgs e)
-        {
-            if(!partyViewIsExpanded) expand(null, null);
-            else close();
-        }
+        
         public void refresh(object sender, EventArgs e)
         {
             Debug.WriteLine("Refreshing...");
-            refreshView.IsRefreshing = true;
+            //refreshView.IsRefreshing = true;
             update();
-            refreshView.IsRefreshing = false;
+            //refreshView.IsRefreshing = false;
             Debug.WriteLine("Done Refreshing.");
         }
         async public void hostButtonClicked(object sender, EventArgs e)
@@ -111,7 +74,7 @@ namespace App3
             {
                 int index = -1;
                 // Update existing pin
-                if((index = map.partyPins.FindIndex(existingPin=>existingPin.partyId==p.id)) > -1)
+                if ((index = map.partyPins.FindIndex(existingPin => existingPin.partyId == p.id)) > -1)
                 {
                     map.partyPins[index].Position = p.geoPosition;
                     map.partyPins[index].Label = p.description;
@@ -129,14 +92,14 @@ namespace App3
                         Address = p.address,
                         Name = p.name,
                     };
-                    
+
                     map.Pins.Add(pin);
                     map.partyPins.Add(pin);
                 }
             }
-            
-            
-            
+
+
+
             map.MoveToRegion(MapSpan.FromCenterAndRadius(map.Pins[0].Position, Distance.FromMiles(0.3)));
         }
         private async Task<List<Party>> testPartyList()
@@ -173,8 +136,8 @@ namespace App3
         }
         public async void update()
         {
-            
-            if(TabbedPage1.refreshUser() == 1)
+
+            if (TabbedPage1.refreshUser() == 1)
             {
                 parent.OnLogout();
                 return;
@@ -183,9 +146,9 @@ namespace App3
             // TODO: Implement database retrieval of parties
 
             List<Party> partiesList = await testPartyList();
-                
+
             generateMap(partiesList);
-            
+
             partyListView.ItemsSource = partiesList;
         }
         private void PartyTapped(object s, EventArgs e)
@@ -194,15 +157,15 @@ namespace App3
         }
         private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
-            
+
             if (!partyViewIsExpanded)
             {
                 Party party = e.CurrentItem as Party;
                 MapSpan span = MapSpan.FromCenterAndRadius(party.geoPosition, Distance.FromMiles(0.3));
                 map.MoveToRegion(span);
-                map.RaiseCallToNativeMethod(map.partyPins.Find(x=> x.partyId == party.id));
+                map.RaiseCallToNativeMethod(map.partyPins.Find(x => x.partyId == party.id));
             }
-            
+
         }
     }
 }

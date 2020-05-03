@@ -10,8 +10,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -25,14 +23,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>App3</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.companyname.App3</string>
+	<string>com.monzon.GuestList</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>App3</string>
-  
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -42,7 +39,7 @@
 			<string>Auth0</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.companyname.App3</string>
+				<string>com.monzon.GuestList</string>
 			</array>
 		</dict>
 	</array>
@@ -58,5 +55,9 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Can we use your location when your application is being used?</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to the camera to scan QR codes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photos.</string>
 </dict>
 </plist>

@@ -17,6 +17,7 @@ namespace App3
         {
             this.parent = parent;
             InitializeComponent();
+            
         }
         async public void OnSettingsButtonClicked(object sender, EventArgs e)
         {

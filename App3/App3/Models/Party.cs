@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms.Maps;
+using System.Drawing;
 
 namespace App3.Models
 {
@@ -13,10 +14,10 @@ namespace App3.Models
         public int maxInvites { get; set; }
         public bool going { get; set; }
         public List<Person> peopleGoing { get; set; }
-        public List<Person> owners { get; set; }
+        public List<Person> throwers { get; set; }
         public DateTime time { get; set; }
         public string address { get; set; }
         public Position geoPosition { get; set; }
-
+        public Color primaryColor { get; set; }
     }
 }

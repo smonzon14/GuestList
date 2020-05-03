@@ -23,14 +23,9 @@ namespace App3.Data
         {
             lock (locker)
             {
-                if(database.Table<User>().Count() == 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    return database.Table<User>().First();
-                }
+                if(database.Table<User>().Count() == 0) return null;
+                else return database.Table<User>().First();
+                
             }
         }
         public int SaveUser(User user)
@@ -38,19 +33,14 @@ namespace App3.Data
             Debug.WriteLine("locking");
             lock (locker)
             {
-
-                
                 Debug.WriteLine("insert new user");
                 return database.Insert(user);
-                
             }
         }
         public int DeleteUser(int id)
         {
-            lock (locker)
-            {
-                return database.Delete<User>(id);
-            }
+            lock (locker) return database.Delete<User>(id);
+            
         }
     }
 }

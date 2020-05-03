@@ -1,4 +1,5 @@
 ﻿using App3.Models;
+using App3.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,41 @@ namespace App3
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Friends : ContentPage
     {
-        public Friends()
+        TabbedPage1 parent;
+        public Friends(TabbedPage1 parent)
         {
+            this.parent = parent;
             InitializeComponent();
             friendsListView.ItemTemplate = Templates.friendDescriptionLayout();
+            friendsListView.ItemTapped += friendItemTapped;
+            NavigationPage.SetHasNavigationBar(this, false);
             update();
+        }
+        private async Task<string> scanQRCode()
+        {
+            try
+            {
+                var scanner = DependencyService.Get<IQrScanningService>();
+                var result = await scanner.ScanAsync();
+                if (result != null) return result;
+            }
+            catch { }
+            return null;
+        }
+        private async void btnScan_Clicked(object sender, EventArgs e)
+        {
+            string userid = await scanQRCode();
+            if (userid == null) await DisplayAlert("User Not Found", "", "Ok");
+            else
+            {
+                Console.WriteLine(userid);
+            }
+        }
+        private async void friendItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var friend = e.Item as Friend;
+            await Navigation.PushAsync(new ProfilePage(friend, this.parent));
+            friendsListView.SelectedItem = null;
         }
         private List<Friend> testPartyList()
         {

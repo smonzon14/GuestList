@@ -26,7 +26,7 @@ namespace App3
         private void loadViews()
         {
             Children.Clear();
-            SelectedTabColor = Color.MediumPurple;
+            SelectedTabColor = Color.BlueViolet;
             UnselectedTabColor = Color.LightGray;
             
 
@@ -39,7 +39,7 @@ namespace App3
             Children.Add(host);*/
 
             //
-            NavigationPage friends = new NavigationPage(new Friends());
+            NavigationPage friends = new NavigationPage(new Friends(this));
             //friends.Title = "Friends";
             friends.BarBackgroundColor = Color.Black;
             friends.BarTextColor = Color.White;
@@ -49,9 +49,11 @@ namespace App3
             // Home Page
             NavigationPage home = new NavigationPage(new Home(this));
             //home.Title = "Parties";
-            home.BarBackgroundColor = Color.Black;
-            home.BarTextColor = Color.White;
+            home.BarBackgroundColor = Color.White;
+
+            home.BarTextColor = Color.Black;
             home.IconImageSource = "tab_home";
+            
             Children.Add(home);
 
             User user = App.UserDatabase.GetUser();
@@ -64,6 +66,7 @@ namespace App3
             Children.Add(profile);
 
             CurrentPage = Children[1];
+
         }
         async private void switchToSignIn()
         {

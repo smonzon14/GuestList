@@ -19,7 +19,7 @@ namespace App3
         {
             this.parent = parent;
             InitializeComponent();
-            if (user != null) displayingUser(user);
+            if (user != null) displayUser(user);
             
         }
         protected override void OnAppearing()
@@ -31,11 +31,11 @@ namespace App3
                 if (user == null) parent.OnLogout();
                 else
                 {
-                    displayingUser(user);
+                    displayUser(user);
                 }
             }
         }
-        public void displayingUser(Person user)
+        public void displayUser(Person user)
         {
             if (this.user != null) return;
             this.user = user;
