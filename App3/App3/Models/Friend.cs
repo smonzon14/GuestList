@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace App3.Models
 {
-    class Friend : Person
+    public class Friend : Person
     {
 
         public Image image { get; set; }

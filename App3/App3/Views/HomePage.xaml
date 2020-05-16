@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="App3.HomePage"
+             Title="Home"
+             xmlns:views="clr-namespace:App3"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             xmlns:custommap="clr-namespace:App3.Maps">
+    <ContentPage.ToolbarItems>
+        
+        <ToolbarItem Text="Settings" Clicked="OnSettingsButtonClicked" Order="Primary"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+
+        <!--<RefreshView x:Name="refreshView" RefreshColor="Turquoise" Refreshing="refresh">-->
+            
+        <Grid BackgroundColor="Gray" x:Name="mainGrid" Opacity="1.0" RowSpacing="0" ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="220"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Host Button -->
+            <ImageButton Source="button_plus" Clicked="hostButtonClicked" Grid.Row="1" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+
+
+
+            
+            <!-- Up Button -->
+            <ImageButton Source="button_up" Clicked="OnUpvoteButtonClicked" Grid.Row="3" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+            
+            <!-- People Going button -->
+            <ImageButton Source="button_ppl" Clicked="openPeopleGoingView" Grid.Row="4" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+
+            <!-- Comments Button -->
+            <ImageButton Source="button_comments" Clicked="openCommentsView" Grid.Row="5" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+
+            <!-- Share Button -->
+            <ImageButton Source="button_share" Clicked="OnShareButtonClickedAsync" Grid.Row="6" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+
+            <!-- Go Button -->
+            <ImageButton Source="button_go" Clicked="OnGoButtonClickedAsync" Grid.Row="7" Grid.Column="3"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+
+
+            <!-- Main Party Stack -->
+            <StackLayout x:Name="partySearchStack" Grid.Row="8" Grid.RowSpan="1" Grid.ColumnSpan="5" Spacing="0">
+                    
+                <!--<ScrollView BackgroundColor="#C9000000" VerticalOptions="Fill" HeightRequest="260">
+                -->
+                <CarouselView x:Name="partyListView" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="50"></CarouselView>
+                <!--
+                </ScrollView>
+                -->
+            </StackLayout>
+                
+                    
+                
+            <!-- People going view -->
+            <Grid ColumnSpacing="0" x:Name="peopleGoing" IsVisible="False" Grid.Row="5" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="5" Padding="0" BackgroundColor="#DF000000">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="People Going" Grid.Column="0" Grid.Row="0" HorizontalOptions="Center" Padding="0,10,0,0" TextColor="White"/>
+                <Button Text="x" TextColor="White" Grid.Column="1" Grid.Row="0" Clicked="closePeopleGoingVew"/>
+                <ListView x:Name="peopleGoingListView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" SeparatorVisibility="None">
+
+                </ListView>
+            </Grid>
+
+            <!-- Comments View -->
+            <Grid ColumnSpacing="0" x:Name="commentsView" IsVisible="False" Grid.Row="5" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="5" Padding="0" BackgroundColor="#DF000000">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Comments" Grid.Column="0" Grid.Row="0" HorizontalOptions="Center" Padding="0,10,0,0" TextColor="White"/>
+                <Button Text="x" TextColor="White" Grid.Column="1" Grid.Row="0" Clicked="closeCommentsVew"/>
+                <ListView x:Name="commentsListView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" SeparatorVisibility="None">
+
+                </ListView>
+            </Grid>
+
+        </Grid>
+        <!--</RefreshView>-->
+
+    </ContentPage.Content>
+</ContentPage>

@@ -70,11 +70,13 @@
   <ItemGroup>
     <Compile Include="CustomMapRenderer.cs" />
     <Compile Include="Data\Auth.cs" />
+    <Compile Include="Data\FirebaseAuthenticator.cs" />
     <Compile Include="Data\SQL_IOS.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\QrScanningService.cs" />
     <None Include="Entitlements.plist" />
+    <BundleResource Include="GoogleService-Info.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -82,7 +84,49 @@
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_comments.imageset\button_comments.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_go.imageset\button_go.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_plus.imageset\button_plus.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_plus_simple.imageset\button_plus_simple.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_ppl.imageset\button_ppl.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_share.imageset\button_share.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_up.imageset\button_up.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\Images.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_ppl.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_comments.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_up.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_plus.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_share.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_go.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\button_plus_simple.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\Profile.imageset\Profile_avatar_placeholder_large1.png">
@@ -91,19 +135,13 @@
     <ImageAsset Include="Assets.xcassets\tab_friends.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_friends.imageset\tab_friends.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_home.imageset\bloonsicon1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_home.imageset\bloonsicon2.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_home.imageset\bloonsicon3.png">
+    <ImageAsset Include="Assets.xcassets\tab_friends.imageset\tab_friends.pdf">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\tab_home.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\tab_home.imageset\tab_home.pdf">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\tab_profile.imageset\Contents.json">
@@ -112,13 +150,7 @@
     <ImageAsset Include="Assets.xcassets\Profile.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_profile.imageset\tab_profile.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_profile.imageset\tab_profile1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_profile.imageset\tab_profile2.png">
+    <ImageAsset Include="Assets.xcassets\tab_profile.imageset\tab_profile3.pdf">
       <Visible>false</Visible>
     </ImageAsset>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -146,6 +178,9 @@
     </PackageReference>
     <PackageReference Include="System.Data.SqlClient">
       <Version>4.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.Auth">
+      <Version>6.5.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="4.5.0.617" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />

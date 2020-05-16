@@ -24,6 +24,8 @@ namespace App3.iOS
             
             global::Xamarin.Forms.Forms.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+            Firebase.Core.App.Configure();
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

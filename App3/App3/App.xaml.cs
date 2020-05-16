@@ -25,7 +25,7 @@ namespace App3
             InitializeComponent();
             //HttpsService.httpsValidation.Initialize();
             //MainPage = new NavigationPage(new Home());
-            MainPage = new TabbedPage1();
+            MainPage = new MasterTabbedPage();
             
             
         }

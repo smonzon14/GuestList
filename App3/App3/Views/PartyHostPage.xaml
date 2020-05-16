@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="App3.PartyHostPage"
+             Title="Host">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="Black">
+            <Label Text="Throw a Party" FontSize="30" TextColor="White" HeightRequest="50" HorizontalOptions="Center" Padding="0,20,0,0"/>
+            
+            <StackLayout Padding="30,20,30,20" Spacing="8">
+                <Label Text="Name" FontSize="20" TextColor="White"/>
+                <Entry x:Name="nameEntry" MaxLength="16" Placeholder="ex. Alpha Beta, B-Day Bash" FontSize="18" BackgroundColor="DarkGray"/>
+                
+                <Label Text="Location" FontSize="20" TextColor="White"/>
+                <Entry x:Name="locationEntry" Placeholder="ex. 123 street rd., City State 00000" BackgroundColor="DarkGray"/>
+
+                <Label Text="Date" FontSize="20" TextColor="White"/>
+                <DatePicker x:Name="datePicker" Format="D"/>
+
+                <Label Text="Time" FontSize="20" TextColor="White"/>
+                <TimePicker x:Name="timePicker" Time="22:00:00" Format="T" BackgroundColor="DarkGray"/>
+                
+                <Label Text="Description" FontSize="20" TextColor="White"/>
+                <Entry x:Name="descriptionEntry" MaxLength="40" Placeholder="ex. 123 street rd., City State 00000" BackgroundColor="DarkGray"/>
+                
+                
+            </StackLayout>
+            <StackLayout Padding="100">
+                <ImageButton Source="button_plus_simple" Clicked="ImageButton_Clicked" HeightRequest="50" BackgroundColor="BlueViolet" Padding="5"/>
+
+            </StackLayout>
+            
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

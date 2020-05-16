@@ -13,8 +13,12 @@
     {
       "appearances": [],
       "scale": "2x",
+      "idiom": "universal"
+    },
+    {
+      "appearances": [],
       "idiom": "universal",
-      "filename": "tab_friends.png"
+      "filename": "tab_friends.pdf"
     }
   ],
   "properties": {},

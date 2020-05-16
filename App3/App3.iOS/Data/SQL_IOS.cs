@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-using Foundation;
 using SQLite;
-using UIKit;
 using Xamarin.Forms;
-using App3.Models;
 [assembly: Dependency(typeof(App3.iOS.Data.SQL_IOS))]
 
 namespace App3.iOS.Data

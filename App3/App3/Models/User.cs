@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Diagnostics;
-using System.Text;
-using SQLite;
+
 
 namespace App3.Models
 {
@@ -13,6 +11,7 @@ namespace App3.Models
         public string email { get; set; }
         public string id_token { get; set; }
         public string access_token { get; set; }
+        public string password { get; set; }
         public void printUser()
         {
             Debug.WriteLine("id: " + id.ToString());

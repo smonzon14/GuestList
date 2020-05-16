@@ -26,6 +26,8 @@ namespace App3.iOS
             ClientId = clientid,
 
         });
+
+        
         public User RefreshUserData(User user)
         {
             var client = new RestClient("https://dev-2huf9bd9.auth0.com/");
