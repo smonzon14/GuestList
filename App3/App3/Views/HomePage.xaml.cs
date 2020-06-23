@@ -1,4 +1,5 @@
-﻿using App3.Maps;
+﻿
+using App3.Data;
 using App3.Models;
 using System;
 using System.Collections.Generic;
@@ -15,57 +16,66 @@ namespace App3
     public partial class HomePage : ContentPage
     {
         // Party object visualization template
+        public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
+        public string ToolbarRightSource { get; private set; }
         private MasterTabbedPage parent;
-        private PartyMap map;
         private bool partyViewIsExpanded;
-        private Person currentUser;
-        public HomePage(Person user, MasterTabbedPage parent)
+        string currentUserId;
+        public HomePage(MasterTabbedPage parent)
         {
+            ToolbarRightSource = "button_refresh";
+            ToolbarRightCommand = new Command(() =>
+            {
+                HamburgerButton_Clicked(null, null);
+            });
+            Debug.WriteLine("Loading Home Page");
             InitializeComponent();
             this.parent = parent;
-            this.currentUser = user;
             partyViewIsExpanded = false;
             
-            Appearing += appearing;
             Debug.WriteLine("Updating Home");
 
-            map = new PartyMap();
-            map.IsShowingUser = true;
-
-
-            partyListView.ItemTemplate = Templates.PartyObjectUI();
-            partyListView.CurrentItemChanged += CurrentItemChanged;
+            //partyCarousel.ItemTemplate = Templates.PartyObjectUI();
+            partyCarousel.CurrentItemChanged += CurrentItemChanged;
             
-            //mainStack.Children.Insert(0, map);
-            
-            mainGrid.Children.Add(map, 0, mainGrid.ColumnDefinitions.Count, 0, mainGrid.RowDefinitions.Count);
-            mainGrid.LowerChild(map);
 
-            commentsListView.ItemTemplate = Templates.commentLayout();
+            //commentsListView.ItemTemplate = Templates.commentLayout();
+
+            //peopleGoingListView.ItemTemplate = Templates.friendDescriptionLayout();
+            //peopleGoingListView.ItemTapped += personItemTapped;
 
             NavigationPage.SetHasNavigationBar(this, false);
             
             update();
 
         }
-        private void appearing(object sender, EventArgs e)
-        {
-            update();
-        }
         Party getCurrentParty()
         {
-            return partyListView.CurrentItem as Party;
+
+            return partyCarousel.CurrentItem as Party;
         }
+        /*
+        private async void personItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var friend = e.Item as User;
+            await Navigation.PushAsync(new ProfilePage(friend, this.parent));
+            peopleGoingListView.SelectedItem = null;
+        }
+        private void appearing(object sender, EventArgs e)
+        {
+            //update();
+        }*/
+        /*
         void OnUpvoteButtonClicked(object sender, EventArgs e)
         {
             Party currentParty = getCurrentParty();
 
+            if (currentParty == null) return;
             if (currentParty.going)
             {
                 //currentParty.peopleGoing.Remove(currentUser);
                 currentParty.going = false;
                 currentParty.numPeopleGoing--;
-                
             }
             else
             {
@@ -73,7 +83,26 @@ namespace App3
                 currentParty.going = true;
                 currentParty.numPeopleGoing++;
             }
-            
+            updateControls();
+
+        }
+        void updateControls()
+        {
+            Party currentParty = getCurrentParty();
+
+            if (currentParty == null) return;
+            if (currentParty.going)
+            {
+                upButton.BackgroundColor = Color.White;
+                goingCount.TextColor = Color.White;
+            }
+            else
+            {
+                upButton.BackgroundColor = Color.Magenta;
+                goingCount.TextColor = Color.Magenta;
+            }
+
+            goingCount.Text = currentParty.numPeopleGoing.ToString();
         }
         async void OnShareButtonClickedAsync(object sender, EventArgs e)
         {
@@ -109,9 +138,15 @@ namespace App3
         }
         void openPeopleGoingView(object sender, EventArgs e)
         {
-            
+            Party currentParty = getCurrentParty();
 
             peopleGoing.IsVisible = true;
+            if(currentParty != null)
+            {
+                peopleGoingListView.ItemsSource = currentParty.peopleGoing;
+            }
+            
+            
             //TODO: load people
         }
         void closePeopleGoingVew(object sender, EventArgs e)
@@ -123,7 +158,7 @@ namespace App3
             commentsView.IsVisible = true;
             Party currentParty = getCurrentParty();
             Console.WriteLine(currentParty);
-            commentsListView.ItemsSource = currentParty.comments;
+            //commentsListView.ItemsSource = currentParty.comments;
             
             //TODO: load comments
         }
@@ -131,6 +166,7 @@ namespace App3
         {
             commentsView.IsVisible = false;
         }
+        */
         public void refresh(object sender, EventArgs e)
         {
             Debug.WriteLine("Refreshing...");
@@ -142,13 +178,18 @@ namespace App3
         async public void hostButtonClicked(object sender, EventArgs e)
         {
             ContentPage page = new PartyHostPage();
+            
+            
             page.ToolbarItems.Add(new ToolbarItem
              {
+
                  Text = "Cancel",
+                    
                  Command = new Command(() => Navigation.PopModalAsync())
              });
             NavigationPage nav = new NavigationPage(page);
-            nav.BarBackgroundColor = Color.BlueViolet;
+            nav.BarBackgroundColor = Color.Black;
+            nav.BarTextColor = Color.White;
             await Navigation.PushModalAsync(nav);
         }
         async public void OnSettingsButtonClicked(object sender, EventArgs e)
@@ -156,48 +197,6 @@ namespace App3
             await Navigation.PushAsync(new SettingsPage(this.parent));
         }
         
-        private async Task<List<Party>> testPartyList()
-        {
-            List<Party> list = new List<Party>();
-            Geocoder geoCoder = new Geocoder();
-            List<string> testAddresses = new List<string>
-            {
-                "214 Lynn Fells Parkway, Melrose, MA",
-                "143 Commonwealth Ave, Amherst, MA 01002",
-                "153 Commonwealth Ave, Amherst, MA 01002",
-                "151 Commonwealth Ave, Amherst, MA 01002"
-            };
-            List<Comment> comments = new List<Comment>();
-            comments.Add(new Comment
-            {
-                profileImage = new Image { Source = "Profile" },
-                username = "Username",
-                comment = "this party blows",
-                likes = 20,
-                datePosted = DateTime.Now
-            });
-            for (var i = 0; i < 4; i++)
-            {
-                string address = testAddresses[i];
-                IEnumerable<Position> approxLocation = await geoCoder.GetPositionsForAddressAsync(address);
-                Position geoPos = approxLocation.FirstOrDefault();
-
-                Party party = new Party()
-                {
-                    id = i,
-                    name = ("Party " + i),
-                    description = "BYOB. 🥳 Ratio DNE. 🔥",
-                    going = false,
-                    peopleGoing = new List<Person>(),
-                    numPeopleGoing = 0,
-                    address = address,
-                    geoPosition = geoPos,
-                    comments = comments
-                };
-                list.Add(party);
-            }
-            return list;
-        }
         public async void update()
         {
 
@@ -206,31 +205,104 @@ namespace App3
                 parent.OnLogout();
                 return;
             }
-
+            currentUserId = App.UserDatabase.GetUser().uid;
             // TODO: Implement database retrieval of parties
 
-            List<Party> partiesList = await testPartyList();
+            List<Party> partiesList = new List<Party>(); //await FirebaseHelper.GetInvitedParties(currentUserId);
+            foreach(var user in App.UserFriends)
+            {
+                partiesList.AddRange(await FirebaseHelper.GetPartiesThrownByUser(user.uid));
+            }
+            partiesList.AddRange(await FirebaseHelper.GetPartiesThrownByUser(currentUserId));
 
-            map.generateMap(partiesList);
+            foreach(var p in partiesList) p.geoPosition = (await (new Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
+            if (partiesList.Count > 0)
+            {
+                map.generateMap(partiesList);
 
-            partyListView.ItemsSource = partiesList;
-            partyListView.CurrentItem = partiesList[0];
+                partyCarousel.ItemsSource = partiesList;
+                partyCarousel.CurrentItem = partiesList[0];
+                partyCarousel.IsVisible = true;
+                //noPartiesMsg.IsVisible = false;
+            }
+            else
+            {
+                partyCarousel.IsVisible = false;
+                //noPartiesMsg.IsVisible = true;
+            }
+           
         }
-        private void PartyTapped(object s, EventArgs e)
-        {
-            e.ToString();
-        }
+        
         private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
 
             if (!partyViewIsExpanded)
             {
+                if (e == null) return;
                 Party party = e.CurrentItem as Party;
-                MapSpan span = MapSpan.FromCenterAndRadius(party.geoPosition, Distance.FromMiles(0.3));
-                map.MoveToRegion(span);
-                map.RaiseCallToNativeMethod(map.partyPins.Find(x => x.partyId == party.id));
+                map.moveTo(party);
+                
+                //goingCount.Text = party.numPeopleGoing.ToString();
+                //updateControls();
             }
 
+        }
+
+        private void HamburgerButton_Clicked(object sender, EventArgs e)
+        {
+            update();
+        }
+
+        private void SearchBar_Focused(object sender, FocusEventArgs e)
+        {
+            searchResults.IsVisible = true;
+            
+            Animation a = new Animation();
+            a.Add(0, 1, new Animation(v => searchStack.Opacity = v, 0.6, 0.8));
+            //a.Add(0, 1, new Animation(v => partyButtonsView.Opacity = v, 1.0, 0));
+            a.Add(0, 1, new Animation(v => searchResults.Opacity = v, 0, 1.0));
+            //a.Add(0, 1, new Animation(v => bottomPaddingRow.Height = v, 0, 200));
+            a.Commit(owner: searchStack, "showSearch", 50, finished: (x, y) => { });
+            
+            
+        }
+
+        private void SearchBar_Unfocused(object sender, FocusEventArgs e)
+        {
+
+            //partyButtonsView.IsVisible = true;
+            
+            Animation a = new Animation();
+            a.Add(0, 1, new Animation(v => searchStack.Opacity = v, 0.8, 0.6));
+            //a.Add(0, 1, new Animation(v => partyButtonsView.Opacity = v, 0, 1.0));
+            a.Add(0, 1, new Animation(v => searchResults.Opacity = v, 1.0, 0));
+            //a.Add(0, 1, new Animation(v => bottomPaddingRow.Height = v, 200, 0));
+            a.Commit(owner: searchStack, "showSearch", 50, finished: (x, y) => { searchResults.IsVisible = false; });
+            
+            
+        }
+        double y;
+        private void PanGestureRecognizer_PanUpdated(object sender, PanUpdatedEventArgs e)
+        {
+
+            switch (e.StatusType)
+            {
+                case GestureStatus.Running:
+                    partyCarousel.TranslationY = Math.Max(Math.Min(0, y + e.TotalY), -Math.Abs(partyCarousel.Height - Application.Current.MainPage.Height));
+                    break;
+
+                case GestureStatus.Completed:
+                    // Store the translation applied during the pan
+                    y = partyCarousel.TranslationY;
+                    break;
+            }
+            Debug.WriteLine("Scroll: " + y.ToString());
+        }
+
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            var current = getCurrentParty();
+            Navigation.PushAsync(new PartyDetailsPage(current));
         }
     }
 }

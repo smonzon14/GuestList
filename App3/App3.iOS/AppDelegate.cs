@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Auth0.OidcClient;
+﻿
 using Foundation;
 using UIKit;
 namespace App3.iOS
@@ -29,12 +26,6 @@ namespace App3.iOS
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
-        }
-        public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
-        {
-            System.Diagnostics.Debug.WriteLine(url.AbsoluteString);
-            ActivityMediator.Instance.Send(url.AbsoluteString);
-            return true;
         }
     }
 }

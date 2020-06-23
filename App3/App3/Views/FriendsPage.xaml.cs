@@ -5,85 +5,90 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using App3.Data;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.Diagnostics;
+using App3.Views;
 
 namespace App3
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FriendsPage : ContentPage
     {
-        MasterTabbedPage parent;
-        public FriendsPage(MasterTabbedPage parent)
+
+        public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
+        public string ToolbarRightSource { get; private set; }
+        static Dictionary<User, ProfilePage> profileBuffer = new Dictionary<User, ProfilePage>();
+        static AddFriendPage addFriendPage = new AddFriendPage();
+        public FriendsPage()
         {
-            this.parent = parent;
+            ToolbarRightCommand = new Command(() =>
+            {
+                AddFriendButton_Clicked(null, null);
+            });
+            Appearing += FriendsPage_Appearing;
+            ToolbarRightSource = "button_addfriend";
             InitializeComponent();
-            friendsListView.ItemTemplate = Templates.friendDescriptionLayout();
-            friendsListView.ItemTapped += friendItemTapped;
+            //friendsListView.ItemTemplate = Templates.friendDescriptionLayout();
             NavigationPage.SetHasNavigationBar(this, false);
             update();
         }
-        private async Task<string> scanQRCode()
+
+        private void FriendsPage_Appearing(object sender, EventArgs e)
         {
-            try
-            {
-                var scanner = DependencyService.Get<IQrScanningService>();
-                var result = await scanner.ScanAsync();
-                if (result != null) return result;
-            }
-            catch { }
-            return null;
+            Debug.WriteLine("wtf");
+            friendsListView.ItemsSource = null;
+            friendsListView.ItemsSource = App.UserFriends;
+            if (App.UserFriends.Count > 0) noFriendsMsg.IsVisible = false;
+            else noFriendsMsg.IsVisible = true;
         }
-        private async void btnScan_Clicked(object sender, EventArgs e)
-        {
-            string userid = await scanQRCode();
-            if (userid == null) await DisplayAlert("User Not Found", "", "Ok");
-            else
-            {
-                Console.WriteLine(userid);
-            }
-        }
+
         private async void friendItemTapped(object sender, ItemTappedEventArgs e)
         {
-            var friend = e.Item as Friend;
-            await Navigation.PushAsync(new ProfilePage(friend, this.parent));
+            
+            var friend = e.Item as User;
+            ProfilePage page;
+            if (profileBuffer.ContainsKey(friend)) page = profileBuffer[friend];
+            else
+            {
+                page = new ProfilePage(friend, null);
+                profileBuffer.Add(friend, page);
+            }
+            await Navigation.PushAsync(page);
             friendsListView.SelectedItem = null;
         }
-        private List<Friend> testPartyList()
-        {
-            List<Friend> list = new List<Friend>();
-            List<string> testNames = new List<string>
-            {
-                "Friend 0",
-                "First Last",
-                "Hello World",
-                "John Doe"
-            };
-            for (var i = 0; i < 4; i++)
-            {
-                Image img = new Image
-                {
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center,
-                    Source = "Profile"
-                };
-                Friend friend = new Friend
-                {
-                    id = i,
-                    bio = "what about me?",
-                    status = (new Random()).Next(2),
-                    name = testNames[i],
-                    image = img
-                    
-                };
-                list.Add(friend);
-            }
-            return list;
-        }
+        
         private void update()
         {
-            friendsListView.ItemsSource = testPartyList();
+            var friendsList = new List<User>();
+            try
+            {
+                var uid = App.UserDatabase.GetUser().uid;
+                friendsList = FirebaseHelper.GetFriendsList(uid).Result;
+                friendsListView.ItemsSource = friendsList;//testPartyList();
+                App.UserFriends.Clear();
+                App.UserFriends.AddRange(friendsList);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error getting friends: " + e);
+            }
+            finally
+            {
+                App.UserFriends.Clear();
+                App.UserFriends.AddRange(friendsList);
+                if (friendsList.Count < 1)
+                {
+                    //Implement no friends message :(
+                    noFriendsMsg.IsVisible = true;
+                }
+                else
+                {
+                    noFriendsMsg.IsVisible = false;
+                }
+            }
+            
         }
 
         private void refreshView_Refreshing(object sender, EventArgs e)
@@ -91,6 +96,11 @@ namespace App3
             refreshView.IsRefreshing = true;
             update();
             refreshView.IsRefreshing = false;
+        }
+
+        private void AddFriendButton_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(addFriendPage);
         }
     }
 }

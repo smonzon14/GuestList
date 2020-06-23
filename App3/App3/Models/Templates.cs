@@ -15,16 +15,16 @@ namespace App3
             int hue = rand.Next(0, 255);
             Color c1 = Color.FromHsla(
                 (hue / 255.0f),
-                0.7f,
+                0.5f,
                 0.5f);
 
-            hue -= 50;
+            hue -= 10;
             if (hue < 0) hue += 255;
             
             Color c2 = Color.FromHsla(
                 (hue / 255.0f),
-                0.7f,
-                0.5f, 0.75);
+                0.5f,
+                0.5f, 0.5);
             return new List<string> {c1.ToHex(),c2.ToHex() };
         }
         private static ViewCell friendCell()
@@ -50,7 +50,7 @@ namespace App3
 
             StackLayout info = new StackLayout
             {
-                Padding = 0,
+                Padding = new Thickness(20,0,0,0),
                 VerticalOptions = LayoutOptions.Center,
                 Orientation = StackOrientation.Vertical,
                 Children =
@@ -86,7 +86,7 @@ namespace App3
                 View = new StackLayout
                 {
                     Padding = 10,
-                    BackgroundColor = Color.Black,
+                    BackgroundColor = Color.Transparent,
                     Orientation = StackOrientation.Horizontal,
                     Children =
                     {
@@ -153,7 +153,7 @@ namespace App3
                 View = new StackLayout
                 {
                     Padding = 10,
-                    BackgroundColor = Color.Black,
+                    BackgroundColor = Color.Transparent,
                     Orientation = StackOrientation.Horizontal,
                     Children =
                     {
@@ -169,36 +169,43 @@ namespace App3
             System.Diagnostics.Debug.WriteLine("PartyLayout");
             Color defaultBGColor = Color.Aqua;
             Color defaultTextColor = Color.White;
-            int defaultFontSize = 30;
+            int defaultFontSize = 25;
 
             Label nameLabel = new Label();
             nameLabel.SetBinding(Label.TextProperty, "name");
             nameLabel.TextColor = defaultTextColor;
             nameLabel.FontSize = defaultFontSize;
-            nameLabel.Padding = new Thickness(20, 30, 20, 20);
-            nameLabel.FontAttributes = FontAttributes.Bold;
+            nameLabel.Padding = 20;
 
 
             Label whereLabel = new Label()
             {
                 FontAttributes = FontAttributes.Italic,
+                FontSize = 18,
                 TextColor = defaultTextColor,
-                Padding = 20
-
-
+                Padding = new Thickness(20, 0, 20, 0),
+                LineBreakMode= LineBreakMode.TailTruncation
             };
             whereLabel.SetBinding(Label.TextProperty, "address");
 
             Label descriptionLabel = new Label();
             descriptionLabel.SetBinding(Label.TextProperty, "description");
             descriptionLabel.TextColor = defaultTextColor;
-            descriptionLabel.Padding = 20;
+            descriptionLabel.Padding = new Thickness(20,10,20,0);
+            descriptionLabel.LineBreakMode = LineBreakMode.TailTruncation;
+            descriptionLabel.MaxLines = 2;
 
-
+            Label date = new Label();
+            date.SetBinding(Label.TextProperty, new Binding("time", stringFormat: "{0:d} @ {0:h:mm tt}"));
+            date.TextColor = Color.White;
+            date.FontAttributes = FontAttributes.Bold;
+            date.Padding = new Thickness(20, 0, 20, 0);
+            date.FontSize = 18;
 
             List<string> colors = GetRandomHexColor();
             string c3 = "#00000000";//GetRandomColor().ToHex().ToString();
-            string style = "linear-gradient(135deg, " + colors[0] + " 0%, " + colors[1] + " 50%, " + c3 + " 100%)";
+            string style = "linear-gradient(135deg, " + colors[0] + " 0%, " + colors[1] + " 50%, " + c3 + " 90%)";
+            //string style = "linear-gradient(to top, #7f000000, #7f000000)";
             GradientView gradient = new GradientView
             {
 
@@ -210,8 +217,9 @@ namespace App3
 
 
             RowDefinitionCollection infoGridRowDefinitions = new RowDefinitionCollection();
-            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
             infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
+            infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
             infoGridRowDefinitions.Add(new RowDefinition { Height = new GridLength(70) });
 
             ColumnDefinitionCollection infoGridColumnDefinitions = new ColumnDefinitionCollection();
@@ -229,21 +237,6 @@ namespace App3
 
 
             };
-
-            Frame frame = new Frame
-            {
-                
-                HasShadow = false,
-                BackgroundColor = defaultBGColor,
-                //Opacity=0,
-                CornerRadius = 30,
-                Padding = 0,
-                WidthRequest = 300,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.StartAndExpand,
-                Content = infoGrid
-
-            };
             
             var img = new Image
             {
@@ -253,58 +246,43 @@ namespace App3
                 Source = "https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/8/shutterstock_199419065.jpg"
             };
 
-            var count = new Label {
-                FontSize = 12,
-                VerticalTextAlignment = TextAlignment.Center,
-                TextColor = defaultTextColor,
-                Padding = new Thickness(10, 10, 0, 10)
-            };
-            count.SetBinding(Label.TextProperty, "numPeopleGoing");
+            infoGrid.Children.Add(img, 0, 2, 0, 4);
+            infoGrid.Children.Add(gradient, 0, 2, 0, 4);
 
-            var goingCountStack = new StackLayout
-            {
-                BackgroundColor = Color.Black,
-                Orientation = StackOrientation.Horizontal,
-                Padding = 0,
-                VerticalOptions = LayoutOptions.Center,
-                Children =
-                {
-                    count,
-                    new Label{ Text = "going", 
-                        FontSize = 12,
-                        VerticalTextAlignment = TextAlignment.Center,
-                        TextColor = defaultTextColor}
-                    
-                }
-            };
-
-            infoGrid.Children.Add(img, 0, 2, 0, 3);
-            infoGrid.Children.Add(gradient, 0, 2, 0, 3);
             infoGrid.Children.Add(nameLabel, 0, 0);
-            infoGrid.Children.Add(goingCountStack, 1, 0);
-            infoGrid.Children.Add(whereLabel, 0, 2, 1, 2);
-            infoGrid.Children.Add(descriptionLabel, 0, 2, 2, 3);
+            infoGrid.Children.Add(date, 0, 2, 1, 2);
+            infoGrid.Children.Add(whereLabel, 0, 2, 2, 3);
+            infoGrid.Children.Add(descriptionLabel, 0, 2, 3, 4);
+
             return new StackLayout
             {
                 
-                Orientation = StackOrientation.Horizontal,
-                VerticalOptions = LayoutOptions.StartAndExpand,
-                Padding = new Thickness(10, 0, 0, 0),
-                HorizontalOptions = LayoutOptions.Center,
-                Children = { frame }
+                
+                Children = { new Frame
+                    {
+
+                        HasShadow = false,
+                        BackgroundColor = defaultBGColor,
+                        //Opacity=0,
+                        CornerRadius = 30,
+                        Padding = 0,
+                        WidthRequest = 350,
+                        HorizontalOptions = LayoutOptions.Center,
+                        VerticalOptions = LayoutOptions.StartAndExpand,
+                        Content = infoGrid
+                    }
+                }
             };
 
         }
         public static DataTemplate PartyObjectUI()
         {
+            
             return new DataTemplate(() => { return partyLayout(); });
         }
         public static DataTemplate friendDescriptionLayout()
         {
-            return new DataTemplate(() =>
-            {
-                return friendCell();
-            });
+            return new DataTemplate(() => { return friendCell(); });
         }
         public static DataTemplate commentLayout()
         {

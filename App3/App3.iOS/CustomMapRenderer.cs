@@ -2,13 +2,14 @@
 using App3.Maps;
 using App3.Models;
 using CoreGraphics;
+using CoreLocation;
+using Foundation;
 using MapKit;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -21,9 +22,8 @@ namespace App3.iOS
     public class CustomMapRenderer : MapRenderer
     {
         UIView customPinView;
-        List<PartyPin> customPins;
         PartyMap formsMap;
-        
+        bool newPinSelected;
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
         {
             base.OnElementChanged(e);
@@ -37,7 +37,9 @@ namespace App3.iOS
                     nativeMap.GetViewForAnnotation = null;
                     nativeMap.DidSelectAnnotationView -= OnDidSelectAnnotationView;
                     nativeMap.DidDeselectAnnotationView -= OnDidDeselectAnnotationView;
-                    
+
+                    nativeMap.CalloutAccessoryControlTapped -= CalloutAccessoryControlTapped;
+                    nativeMap.RegionChanged -= NativeMap_RegionChanged;
                 }
             }
 
@@ -45,27 +47,73 @@ namespace App3.iOS
             {
                 formsMap = (PartyMap)e.NewElement;
                 
+                OverrideUserInterfaceStyle = UIUserInterfaceStyle.Dark;
                 var nativeMap = Control as MKMapView;
+                nativeMap.ShowsCompass = false;
+                nativeMap.ShowsUserLocation = true;
+                
                 formsMap.CallToNativeMethod += (sender, ev) =>
                 {
-                    // need to implement programmatic pin selection here
-                    //nativeMap.SelectAnnotation(nativeMap.Annotations[formsMap.selectedPin.partyId], true);
-                    Console.WriteLine(nativeMap.Annotations.Length);
+                    newPinSelected = true;
                 };
-                customPins = formsMap.partyPins;
-                
+                nativeMap.RegionChanged += NativeMap_RegionChanged;
                 nativeMap.GetViewForAnnotation = GetViewForAnnotation;
                 nativeMap.DidSelectAnnotationView += OnDidSelectAnnotationView;
                 nativeMap.DidDeselectAnnotationView += OnDidDeselectAnnotationView;
+                nativeMap.CalloutAccessoryControlTapped += CalloutAccessoryControlTapped;
             }
         }
-        
-        protected override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+
+        private void CalloutAccessoryControlTapped(object sender, MKMapViewAccessoryTappedEventArgs e)
+        {
+
+        }
+
+        private void NativeMap_RegionChanged(object sender, MKMapViewChangeEventArgs e)
+        {
+            if (newPinSelected)
+            {
+                SelectCurrentPin();
+                newPinSelected = false;
+            }
+            
+        }
+
+        private void SelectCurrentPin()
         {
             
-            MKAnnotationView annotationView = null;
-            if (annotation is MKUserLocation)
+            var pin = formsMap.selectedPin;
+            if (pin == null) return;
+            var nativeMap = Control as MKMapView;
+            var pinLocation = new CLLocationCoordinate2D { Latitude = pin.Position.Latitude, Longitude = pin.Position.Longitude };
+
+            var annotations = nativeMap.GetAnnotations(nativeMap.VisibleMapRect);
+            MKPointAnnotation annotation = null;
+            foreach(NSObject anno in annotations)
+            {
+                if (anno is MKPointAnnotation an)
+                {
+                    if (pinLocation.Equals(an.Coordinate))
+                    {
+                        annotation = an;
+                        break;
+                    }
+
+                }
+            }
+            if (annotation == null) Debug.WriteLine("Annotation not found");
+            else nativeMap.SelectAnnotation(annotation, true);
+        }
+
+        protected override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+        {
+
+            MKAnnotationView annotationView;
+            if (annotation == null || annotation.GetTitle() == null) return null;
+            if (annotation.GetTitle().Equals("My Location"))
+            {
                 return null;
+            }
             
             annotationView = mapView.DequeueReusableAnnotation(annotation.GetTitle());
             if (annotationView == null)
@@ -73,6 +121,7 @@ namespace App3.iOS
                 annotationView = new CustomMKAnnotationView(annotation, annotation.GetTitle());
                 annotationView.Image = UIImage.FromFile("heatpin.png");
                 annotationView.CalloutOffset = new CGPoint(0, 0);
+                annotationView.RightCalloutAccessoryView = new UIImageView(UIImage.FromBundle("button_go"));
                 ((CustomMKAnnotationView)annotationView).Name = annotation.GetTitle();
                 
             }
@@ -94,6 +143,7 @@ namespace App3.iOS
 
         private void OnDidSelectAnnotationView(object sender, MKAnnotationViewEventArgs e)
         {
+
             //CustomMKAnnotationView customView = e.View as CustomMKAnnotationView;
             //customPinView = new UIView();
             /*
@@ -107,10 +157,6 @@ namespace App3.iOS
                 e.View.AddSubview(customPinView);
             }*/
         }
-        private PartyPin GetPartyPin(MKPointAnnotation annotation)
-        {
-            return null;
-        }
 
     }
 
@@ -122,10 +168,10 @@ namespace App3.iOS
             Annotation = annotation;
             Name = name;
             
-            
         }
 
         public object Name { get; internal set; }
     }
+
 
 }

@@ -13,7 +13,7 @@ namespace App3.iOS.Data
         {
             var documentPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             var libraryPath = Path.Combine(documentPath, "..", "Library");
-            var path = Path.Combine(libraryPath, "GLUser.db");
+            var path = Path.Combine(libraryPath, "GLUserDefault3.db");
             var connection = new SQLiteConnection(path);
             return connection;
         }

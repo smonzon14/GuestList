@@ -3,23 +3,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:App3;assembly=App3"
+             xmlns:convert="clr-namespace:App3.Converters"
              mc:Ignorable="d"
-             x:Class="App3.ProfilePage"
-             Title="Me">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Settings" Clicked="OnSettingsButtonClicked"/>
-    </ContentPage.ToolbarItems>
+             x:Class="App3.ProfilePage" Title="{Binding name}"
+             ControlTemplate="{StaticResource header}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <convert:friendStatusToAction x:Key="friendStatusToAction"/>
+            <convert:statusToMessage x:Key="statusToMessage" />
+            <convert:ActionToColor x:Key="actionToColor"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <RefreshView x:Name="refreshView" RefreshColor="Red">
-            <StackLayout BackgroundColor="Black">
-                <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
-                    <StackLayout x:Name="profileStack">
-                        
+        <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
+
+            <ScrollView BackgroundColor="#202020" >
+                <StackLayout x:Name="profileStack" Padding="0,100,0,0">
+                    <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="Center" Padding="0" IsClippedToBounds="True">
+                        <Image HorizontalOptions="Center" VerticalOptions="Center" Source="Profile"/>
+                    </Frame>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="10">
+                        <Button x:Name="friendButton" BackgroundColor="{Binding Source={RelativeSource Self}, Path=Text, Converter={StaticResource actionToColor}}" HeightRequest="35" TextColor="White" FontSize="16" Padding="8" Clicked="profileActionBtn_Clicked" Text="{Binding friendStatus,Converter={StaticResource friendStatusToAction}, TargetNullValue='...'}"/>
                     </StackLayout>
+                    <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
+                    <Label FontSize="20" HorizontalTextAlignment="Center" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>
+                    <Label Padding="20" FontSize="20" TextColor="White" Text="Parties" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" HeightRequest="30"/>
+                    <Label x:Name="noPartiesMsg" Text="No Parties" FontSize="20" TextColor="Gray" HorizontalOptions="Center"/>
+                    <CarouselView x:Name="partyView" BackgroundColor="Transparent" PeekAreaInsets="40" HeightRequest="100">
+                        <CarouselView.ItemTemplate>
+                            <DataTemplate>
+
+                                <StackLayout VerticalOptions="Start">
+                                    <StackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                                    </StackLayout.GestureRecognizers>
+                                    <Frame CornerRadius="20" Padding="0" WidthRequest="320" HorizontalOptions="Center" VerticalOptions="Start" BackgroundColor="#d0d0d0">
+                                        <AbsoluteLayout >
+
+                                            <StackLayout Spacing="5" Padding="12" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" >
+
+                                                <Label Text="{Binding name}" FontSize="18" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                                <Label Text="{Binding address}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                                <Label Text="{Binding time}" FontSize="14" TextColor="Black"/>
+                                                <!--, StringFormat='{0:d} @ {0:h:mm tt}'-->
+                                            </StackLayout>
+                                        </AbsoluteLayout>
+
+                                    </Frame>
+
+                                </StackLayout>
+
+
+                            </DataTemplate>
+                        </CarouselView.ItemTemplate>
+                    </CarouselView>
+
+                    <Label Padding="20" FontSize="20" TextColor="White" Text="Posts" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" HeightRequest="30"/>
                     
-                </ScrollView>
-            </StackLayout>
+                </StackLayout>
+
+            </ScrollView>
+
         </RefreshView>
     </ContentPage.Content>
 </ContentPage>

@@ -3,7 +3,7 @@ using App3.Models;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using System.Collections.Generic;
 namespace App3
 {
     public partial class App : Application
@@ -19,12 +19,30 @@ namespace App3
                 return userDatabase;
             }
         }
-        
+
+        static List<Party> userParties;
+        public static List<Party> UserParties { get
+            {
+                if (userParties == null) userParties = new List<Party>();//FirebaseHelper.GetPartiesThrownByUser(UserDatabase.GetUser().uid).Result;
+                return userParties;
+            }
+        }
+        static List<User> userFriends;
+        public static List<User> UserFriends
+        {
+            get
+            {
+                if (userFriends == null) userFriends = new List<User>(); //FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid).Result;
+                return userFriends;
+            }
+        }
         public App()
         {
             InitializeComponent();
             //HttpsService.httpsValidation.Initialize();
             //MainPage = new NavigationPage(new Home());
+            //userFriends = FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid).Result;
+            //userParties = FirebaseHelper.GetPartiesThrownByUser(UserDatabase.GetUser().uid).Result;
             MainPage = new MasterTabbedPage();
             
             

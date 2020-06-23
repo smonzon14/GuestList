@@ -3,21 +3,52 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:App3.Converters" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
              mc:Ignorable="d"
              x:Class="App3.FriendsPage"
-             Title="Friends">
+             Title="Friends"
+             ControlTemplate="{StaticResource header}">
+    <ContentPage.Resources>
+        <converters:statusToMessage x:Key="statusToMessage"/>
+        
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
 
-            <ScrollView BackgroundColor="Black" VerticalOptions="Fill">
-                <StackLayout HorizontalOptions="Fill">
-                    <StackLayout Orientation="Horizontal" Spacing="0" Padding="0" HorizontalOptions="StartAndExpand">
-                        <Label Text="Friends" Padding="20,20,20,20" TextColor="White" FontSize="50" HeightRequest="70"/>
-                        <Button Text="Scan" TextColor="White" Clicked="btnScan_Clicked" HorizontalOptions="EndAndExpand"/>
-                    </StackLayout>
-                    <ListView x:Name="friendsListView" RowHeight="80" BackgroundColor="Black"></ListView>
+            <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
+                <StackLayout HorizontalOptions="Fill" Padding="0" BackgroundColor="#282828">
+
+                    <ListView x:Name="friendsListView" RowHeight="90" BackgroundColor="#282828" SeparatorVisibility="None" ItemTapped="friendItemTapped">
+                        <ListView.Header>
+                        <Label x:Name="noFriendsMsg" IsVisible="false" HeightRequest="50" FontSize="16" Text="Friends and requests will show up here." TextColor="DarkGray" HorizontalTextAlignment="Center" VerticalTextAlignment="End"/>
+
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Padding="10">
+
+                                        <Frame CornerRadius="35" BackgroundColor="#202020" Padding="0">
+                                            <StackLayout Padding = "10" BackgroundColor = "Transparent" Orientation = "Horizontal">
+                                                <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" IsClippedToBounds="True">
+                                                    <Image Source="Profile" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                </Frame>
+                                                <StackLayout Padding="20,0,0,0" VerticalOptions="Center">
+                                                    <Label Text="{Binding name}" FontSize="20" TextColor="White"/>
+                                                    <Label Text="{Binding status, Converter={StaticResource statusToMessage}}" FontSize="15" TextColor="Gray"/>
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </Frame>
+
+
+                                    </StackLayout>
+                                </ViewCell>
+
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackLayout>
-            </ScrollView>
-        </RefreshView>
+
+            </RefreshView>
+
     </ContentPage.Content>
 </ContentPage>

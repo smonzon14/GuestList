@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="App3.Views.NewPostPage">
+    <ContentPage.Content>
+        <StackLayout Padding="20,50,20,0" BackgroundColor="#282828" Spacing="20">
+            <Frame Padding="0" BackgroundColor="#202020" HorizontalOptions="Start" CornerRadius="15">
+
+                <Button Text="Cancel" Clicked="CancelButton_Clicked" TextColor="#F50058" Padding="10,0,10,0" Margin="0,-4,0,-4"/>
+            </Frame>
+            <Frame CornerRadius="15" Padding="5" HeightRequest="200" BackgroundColor="#202020" HasShadow="False">
+                <Editor x:Name="message" MaxLength="400" BackgroundColor="Transparent" Placeholder="What do you want your friends to know?" TextColor="White" FontSize="16" AutoSize="TextChanges" PlaceholderColor="Gray" MinimumHeightRequest="100"/>
+
+            </Frame>
+            <Label Text="{Binding Text.Length, Source={x:Reference message}, FallbackValue='0/400', StringFormat='{0}/400'}" TextColor="White" HorizontalOptions="EndAndExpand"/>
+            <StackLayout Padding="50" VerticalOptions="EndAndExpand">
+                <Frame CornerRadius="30" Padding="0" BackgroundColor="Transparent" HasShadow="False">
+                    <Button Text="Post" HeightRequest="80" BackgroundColor="#57000000" TextColor="#F50058" FontSize="40" Clicked="PostButton_Clicked"/>
+                </Frame>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

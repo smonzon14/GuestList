@@ -5,10 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
              mc:Ignorable="d"
              x:Class="App3.Views.LogInPage">
-    <ContentPage.ToolbarItems>
-
-        <ToolbarItem Text="Sign Up" Clicked="OnSwitchToSignUp"/>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid BackgroundColor="Black">
             <magic:GradientView VerticalOptions="FillAndExpand">
@@ -16,7 +12,7 @@
                     <magic:CssGradientSource>
                         <x:String>
                             <![CDATA[
-                    linear-gradient(to top, rgb(203,28,69,1), rgb(171,31,163), rgb(28,179,191));
+                    linear-gradient(to top, rgba(14,154,157,1) 0%, rgba(10,77,107,1) 23%, rgba(40,5,61,1) 100%)
                             ]]>
                         </x:String>
                     </magic:CssGradientSource>
@@ -26,15 +22,14 @@
 
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="100"/>
                     <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -45,18 +40,24 @@
                     <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
                 <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalOptions="Center" Margin="0,10,0,0">
-                    <Label Text="GL" TextColor="White" FontSize="130" FontAttributes="Bold, Italic"></Label>
+                    <Label Text="ZP" TextColor="White" FontSize="100" FontAttributes="Bold, Italic"></Label>
                 </StackLayout>
 
-                <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Log In" HorizontalTextAlignment="Center" TextColor="White" FontSize="40"></Label>
-                <Entry Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="username" Placeholder="University Email" PlaceholderColor="Black" FontSize="Medium" HorizontalTextAlignment="Center"/>
-                <Entry Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="password" Placeholder="Password" PlaceholderColor="Black" FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True"/>
+                <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Log In" HorizontalTextAlignment="Center" TextColor="White" FontSize="30"/>
+                <Entry Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="username" Placeholder="University Email" FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
+                <Entry Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="password" Placeholder="Password" FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White" IsPassword="True"/>
                 
-                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="" TextColor="Red" FontSize="20"/>
-                <Button Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="Sign In" BackgroundColor="Black" TextColor="White" HeightRequest="50" VerticalOptions="Start" Clicked="onSubmit"/>
+                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="Invalid email/password" TextColor="Red" FontSize="15" HorizontalTextAlignment="Center" IsVisible="False"/>
+                
+                <StackLayout Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2">
+                    <Label Text="Don't have an account? Sign Up." TextColor="Gray" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                </StackLayout>
+                <StackLayout Padding="30" VerticalOptions="EndAndExpand" Grid.ColumnSpan="4" Grid.Row="9">
+                    <Frame CornerRadius="30" Padding="0" BackgroundColor="Transparent">
+                        <Button Text="Sign In" HeightRequest="80" BackgroundColor="#57000000" TextColor="White" FontSize="40" Clicked="onSubmit"/>
 
-                <StackLayout Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2">
-                    <Label Text="Don't have an account? Sign Up." TextColor="Black" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                    </Frame>
+
                 </StackLayout>
             </Grid>
 

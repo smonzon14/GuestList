@@ -10,20 +10,51 @@
         <Grid BackgroundColor="Gray" x:Name="mainGrid" RowSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition x:Name="partyRow" Height="220"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="160"/>
+                <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
             <!-- Main Party Stack -->
             <StackLayout x:Name="partySearchStack" Grid.Row="1" Spacing="0">
 
                 <!--<ScrollView BackgroundColor="#C9000000" VerticalOptions="Fill" HeightRequest="260">
                 -->
-                <CarouselView x:Name="partyListView" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="50"></CarouselView>
+                <CarouselView x:Name="partyListView" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="50">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackLayout>
+                                <Frame CornerRadius="20" Padding="0" WidthRequest="320" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" BackgroundColor="#d0d0d0">
+                                    <AbsoluteLayout>
+
+                                        <StackLayout Spacing="5" Padding="12" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+
+                                            <Label Text="{Binding name}" FontSize="18" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                            <Label Text="Sebastian Monzon" FontSize="12" TextColor="Gray"/>
+                                            <Label Text="{Binding address}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                            <Label Text="{Binding time}" FontSize="14" TextColor="Black"/>
+                                            <!--, StringFormat='{0:d} @ {0:h:mm tt}'-->
+                                        </StackLayout>
+                                    </AbsoluteLayout>
+
+                                </Frame>
+
+                            </StackLayout>
+
+
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+
+                </CarouselView>
                 <!--
                 </ScrollView>
                 -->
             </StackLayout>
-            <Button Text="Post and Invite" Grid.Row="2" Clicked="postButtonClicked" BackgroundColor="Aquamarine" TextColor="Black" Padding="30,0,30,0"/>
+            <StackLayout Padding="20" VerticalOptions="EndAndExpand" Grid.Row="2">
+                <Frame CornerRadius="30" Padding="0">
+                    <Button Text="Post and invite" Clicked="postButtonClicked" HeightRequest="80" BackgroundColor="Black" TextColor="BlueViolet" FontSize="40"/>
+
+                </Frame>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

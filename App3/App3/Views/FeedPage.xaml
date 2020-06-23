@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="clr-namespace:App3.Models" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
+             xmlns:converters="clr-namespace:App3.Converters"
+             mc:Ignorable="d"
+             x:Class="App3.Views.FeedPage"
+             x:Name="feed"
+             NavigationPage.HasNavigationBar="False"
+             Title="Feed"
+             ControlTemplate="{StaticResource header}">
+    <ContentPage.Resources>
+        <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" PostTemplate="{StaticResource postTemplate}" PartyTemplate="{StaticResource partyTemplate}"/>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+
+
+
+
+        
+        <AbsoluteLayout>
+            <magic:GradientView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" >
+                <magic:GradientView.GradientSource >
+                    <magic:CssGradientSource>
+                        <x:String>
+                            <![CDATA[
+                linear-gradient(to right, #F50058, #D90B80)
+                        ]]>
+                        </x:String>
+                    </magic:CssGradientSource>
+                </magic:GradientView.GradientSource>
+            </magic:GradientView>
+            <ListView x:Name="feedListView" CachingStrategy="RecycleElement" BackgroundColor="Transparent" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                <ListView.Header>
+                    <CollectionView x:Name="storiesCollectionView" SelectionChanged="storiesCollectionView_SelectionChanged" HeightRequest="80" SelectionMode="Single" ItemsLayout="HorizontalList" HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" Grid.ColumnSpan="5" Grid.Row="2">
+                        <CollectionView.Header>
+                            <StackLayout Orientation="Vertical" Spacing="3" HorizontalOptions="Center" HeightRequest="80" WidthRequest="80" Padding="5">
+                                <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="StartAndExpand" Padding="0" IsClippedToBounds="True" BorderColor="Aqua" BackgroundColor="White">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                                    </Frame.GestureRecognizers>
+                                    <Image x:Name="userStory" Source="button_plus_simple" Aspect="AspectFill"/>
+                                    
+                                </Frame>
+                                <Label Text="Add Story" LineBreakMode="TailTruncation" FontSize="12" TextColor="White" Padding="0" HorizontalOptions="Center"/>
+                            </StackLayout>
+                        </CollectionView.Header>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Orientation="Vertical" Spacing="3" HorizontalOptions="Center" HeightRequest="80" WidthRequest="80" Padding="5">
+                                    <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="StartAndExpand" Padding="0" IsClippedToBounds="True" BorderColor="Aqua">
+                                        
+                                        <Image HorizontalOptions="Center" VerticalOptions="Center" Source="Profile"/>
+                                    </Frame>
+                                    <Label Text="Sebastian Monzon" LineBreakMode="TailTruncation" FontSize="12" TextColor="White" Padding="0" HorizontalOptions="Center"/>
+                                </StackLayout>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ListView.Header>
+            </ListView>
+            <Frame VerticalOptions="Center" HorizontalOptions="Center" Padding="0" CornerRadius="30" BackgroundColor="#0fb5b3" AbsoluteLayout.LayoutBounds="0.97,1,0.15,0.1" AbsoluteLayout.LayoutFlags="All" WidthRequest="60" HeightRequest="60">
+                <ImageButton Source="button_plus_simple_white" Clicked="NewPostButton_Clicked"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="15"/>
+            </Frame>
+        </AbsoluteLayout>
+
+
+
+    </ContentPage.Content>
+</ContentPage>

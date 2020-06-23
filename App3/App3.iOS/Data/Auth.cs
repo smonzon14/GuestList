@@ -3,13 +3,10 @@ using Auth0.OidcClient;
 using System.Diagnostics;
 using IdentityModel.OidcClient;
 using System.Threading.Tasks;
-using IdentityModel.OidcClient.Browser;
 using App3.Data;
 using App3.Models;
-using System.Threading;
 using RestSharp;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(App3.iOS.Auth))]

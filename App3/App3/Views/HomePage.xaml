@@ -5,110 +5,70 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="App3.HomePage"
-             Title="Home"
-             xmlns:views="clr-namespace:App3"
-             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
-             xmlns:custommap="clr-namespace:App3.Maps">
-    <ContentPage.ToolbarItems>
-        
-        <ToolbarItem Text="Settings" Clicked="OnSettingsButtonClicked" Order="Primary"/>
-    </ContentPage.ToolbarItems>
+             Title="Invites"
+             xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients" xmlns:models="clr-namespace:App3.Models"
+             x:Name="homePage"
+             ControlTemplate="{StaticResource header}">
     <ContentPage.Content>
 
         <!--<RefreshView x:Name="refreshView" RefreshColor="Turquoise" Refreshing="refresh">-->
-            
-        <Grid BackgroundColor="Gray" x:Name="mainGrid" Opacity="1.0" RowSpacing="0" ColumnSpacing="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="70"/>
-                <RowDefinition Height="220"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="15"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="5"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Host Button -->
-            <ImageButton Source="button_plus" Clicked="hostButtonClicked" Grid.Row="1" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+        
+        <AbsoluteLayout>
 
 
 
-            
-            <!-- Up Button -->
-            <ImageButton Source="button_up" Clicked="OnUpvoteButtonClicked" Grid.Row="3" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
-            
-            <!-- People Going button -->
-            <ImageButton Source="button_ppl" Clicked="openPeopleGoingView" Grid.Row="4" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+            <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"/>
+            <!--<Label Text="ZP" TextColor="White" FontSize="30" FontAttributes="Italic,Bold"  Grid.Column="2" HorizontalTextAlignment="Center" Grid.Row="1" Padding="15"/>-->
 
-            <!-- Comments Button -->
-            <ImageButton Source="button_comments" Clicked="openCommentsView" Grid.Row="5" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
+            <BoxView x:Name="searchResults" BackgroundColor="#8f000000" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.1"/>
+            <StackLayout Padding="70,5,70,0" HorizontalOptions="FillAndExpand" VerticalOptions="Start" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.1">
+                <Frame Padding="0" CornerRadius="15" BackgroundColor="Transparent">
+                    <Entry x:Name="searchStack" BackgroundColor="#d0ffffff" Placeholder="Search" PlaceholderColor="#F50058" FontSize="12" TextColor="White" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Focused="SearchBar_Focused" Unfocused="SearchBar_Unfocused" HeightRequest="30"/>
 
-            <!-- Share Button -->
-            <ImageButton Source="button_share" Clicked="OnShareButtonClickedAsync" Grid.Row="6" Grid.Column="3" VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
-
-            <!-- Go Button -->
-            <ImageButton Source="button_go" Clicked="OnGoButtonClickedAsync" Grid.Row="7" Grid.Column="3"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="0" HeightRequest="50"/>
-
-
-            <!-- Main Party Stack -->
-            <StackLayout x:Name="partySearchStack" Grid.Row="8" Grid.RowSpan="1" Grid.ColumnSpan="5" Spacing="0">
-                    
-                <!--<ScrollView BackgroundColor="#C9000000" VerticalOptions="Fill" HeightRequest="260">
-                -->
-                <CarouselView x:Name="partyListView" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="50"></CarouselView>
-                <!--
-                </ScrollView>
-                -->
+                </Frame>
             </StackLayout>
+
+            <StackLayout AbsoluteLayout.LayoutBounds="1,1,1,0.2" AbsoluteLayout.LayoutFlags="All">
+                <!-- Main Party Stack -->
                 
-                    
-                
-            <!-- People going view -->
-            <Grid ColumnSpacing="0" x:Name="peopleGoing" IsVisible="False" Grid.Row="5" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="5" Padding="0" BackgroundColor="#DF000000">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20"/>
-                </Grid.ColumnDefinitions>
+                <CarouselView x:Name="partyCarousel" VerticalOptions="EndAndExpand" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="40" EmptyView="Invites will appear here" HeightRequest="200">
 
-                <Label Text="People Going" Grid.Column="0" Grid.Row="0" HorizontalOptions="Center" Padding="0,10,0,0" TextColor="White"/>
-                <Button Text="x" TextColor="White" Grid.Column="1" Grid.Row="0" Clicked="closePeopleGoingVew"/>
-                <ListView x:Name="peopleGoingListView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" SeparatorVisibility="None">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
 
-                </ListView>
-            </Grid>
+                            <StackLayout>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Frame CornerRadius="20" Padding="0" WidthRequest="320" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" BackgroundColor="#d0d0d0">
+                                    <AbsoluteLayout>
 
-            <!-- Comments View -->
-            <Grid ColumnSpacing="0" x:Name="commentsView" IsVisible="False" Grid.Row="5" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="5" Padding="0" BackgroundColor="#DF000000">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20"/>
-                </Grid.ColumnDefinitions>
+                                        <StackLayout Spacing="5" Padding="12" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
 
-                <Label Text="Comments" Grid.Column="0" Grid.Row="0" HorizontalOptions="Center" Padding="0,10,0,0" TextColor="White"/>
-                <Button Text="x" TextColor="White" Grid.Column="1" Grid.Row="0" Clicked="closeCommentsVew"/>
-                <ListView x:Name="commentsListView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" SeparatorVisibility="None">
+                                            <Label Text="{Binding name}" FontSize="18" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                            <Label Text="{Binding thrower}" FontSize="12" TextColor="Gray"/>
+                                            <Label Text="{Binding address}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                            <Label Text="{Binding time}" FontSize="14" TextColor="Black"/>
+                                            <!--, StringFormat='{0:d} @ {0:h:mm tt}'-->
+                                        </StackLayout>
+                                    </AbsoluteLayout>
 
-                </ListView>
-            </Grid>
+                                </Frame>
 
-        </Grid>
+                            </StackLayout>
+
+
+                        </DataTemplate>
+
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+            </StackLayout>
+
+            <Frame VerticalOptions="Center" HorizontalOptions="Center" Padding="0" CornerRadius="26" BackgroundColor="#F50058" AbsoluteLayout.LayoutBounds="0.97,0.81,0.15,0.1" AbsoluteLayout.LayoutFlags="All">
+                <ImageButton Source="button_plus_simple_white" Clicked="hostButtonClicked"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="15"/>
+            </Frame>
+
+        </AbsoluteLayout>
         <!--</RefreshView>-->
 
     </ContentPage.Content>

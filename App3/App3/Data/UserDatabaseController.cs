@@ -1,10 +1,8 @@
 ﻿using App3.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace App3.Data
 {
@@ -15,9 +13,7 @@ namespace App3.Data
         public UserDatabaseController()
         {
             database = DependencyService.Get<ISQLite>().GetConnection();
-            Debug.WriteLine("Got DB connection.");
             database.CreateTable<User>();
-            Debug.WriteLine("created table.");
         }
         public User GetUser()
         {
@@ -28,19 +24,23 @@ namespace App3.Data
                 
             }
         }
-        public int SaveUser(User user)
+        public int SetUser(User user)
         {
-            Debug.WriteLine("locking");
             lock (locker)
             {
-                Debug.WriteLine("insert new user");
+                RemoveUserData();
                 return database.Insert(user);
             }
         }
-        public int DeleteUser(int id)
+        public int RemoveUserData()
+        {
+            return database.DeleteAll<User>();
+        }
+        
+        /*public int DeleteUser(int id)
         {
             lock (locker) return database.Delete<User>(id);
             
-        }
+        }*/
     }
 }

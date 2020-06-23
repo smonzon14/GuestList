@@ -1,12 +1,14 @@
 ﻿using App3.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using App3.Data;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Diagnostics;
+using System.Globalization;
+using Google.Rpc;
 
 namespace App3
 {
@@ -14,126 +16,134 @@ namespace App3
     public partial class ProfilePage : ContentPage
     {
         MasterTabbedPage parent;
-        Person currentUser;
-        public ProfilePage(Person user, MasterTabbedPage parent)
+        User user { get; set; }
+        public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
+        public string ToolbarRightSource { get; private set; }
+
+        public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
+        public string ToolbarLeftSource { get; private set; }
+        public ProfilePage(User userToDisplay, MasterTabbedPage parent)
         {
             this.parent = parent;
-            InitializeComponent();
-            if (user != null) displayUser(user);
-            
-        }
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            if(this.currentUser == null)
+
+            NavigationPage.SetHasNavigationBar(this, false);
+            user = userToDisplay;
+
+            if (user == null)
             {
-                User user = App.UserDatabase.GetUser();
-                if (user == null) parent.OnLogout();
-                else
+                ToolbarRightCommand = new Command(() =>
                 {
-                    displayUser(user);
+                    Navigation.PushAsync(new SettingsPage(this.parent));
+                });
+                ToolbarRightSource = "button_settings";
+                user = App.UserDatabase.GetUser();
+                if (user == null && parent != null)
+                {
+                    parent.OnLogout();
+                    return;
                 }
             }
-        }
-        public void displayUser(Person user)
-        {
-            if (this.currentUser != null) return;
-            this.currentUser = user;
-            var profileImage = new Frame
+            else
             {
-                WidthRequest = 200,
-                HeightRequest = 200,
-                CornerRadius = 100,
-                HorizontalOptions = LayoutOptions.Center,
-                Padding = 0,
-                IsClippedToBounds = true,
-                Content = new Image
+                ToolbarLeftCommand = new Command(() =>
                 {
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center,
-                    Source = "Profile"
-                }
-            };
-            profileStack.Children.Add(profileImage);
+                    Navigation.PopAsync();
+                });
+                ToolbarLeftSource = "button_back";
+            }
 
-            profileStack.Children.Add(new Label
+            InitializeComponent();
+
+            refreshView.IsRefreshing = true;
+            if (user != null)
             {
-                HorizontalTextAlignment = TextAlignment.Center,
-                Text = user.name,
-                FontAttributes = FontAttributes.Bold,
-                TextColor = Color.White,
-                FontSize = 30
+                if (user.uid.Equals(App.UserDatabase.GetUser().uid)) friendButton.IsVisible = false;
+                displayUser();
+            }
+            
+            refreshView.IsRefreshing = false;
 
-            });
+        }
 
-            var statusString = "Offline";
-            switch (user.status)
+        private void profileActionBtn_Clicked(object sender, EventArgs e)
+        {
+            
+            switch (user.friendStatus)
             {
+                case 0:
+                    addUserAsFriend(user.uid);
+
+                    App.UserFriends.Add(user);
+                    user.friendStatus = 1;
+                    break;
                 case 1:
-                    statusString = "Going Out";
+                    // Unadd
+                    removeFriend(user.uid);
+
+                    App.UserFriends.Remove(user);
+                    user.friendStatus = 0;
                     break;
                 case 2:
-                    statusString = "Staying In";
+                    addUserAsFriend(user.uid);
+
+                    App.UserFriends.Add(user);
+                    user.friendStatus = 3;
+                    break;
+                case 3:
+                    //Unadd
+                    removeFriend(user.uid);
+
+                    App.UserFriends.Remove(user);
+                    user.friendStatus = 2;
                     break;
                 default:
-                    statusString = "Offline";
                     break;
             }
-
-            profileStack.Children.Add(new Label
-            {
-                FontSize = 20,
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = Color.White,
-                Text = "Status: " + statusString
-
-            });
-
-            profileStack.Children.Add(new Label
-            {
-                FontSize = 20,
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = Color.White,
-                Text = "Bio: " + user.bio
-            });
-
-            profileStack.Children.Add(new Label
-            {
-                Padding = 20,
-                FontSize = 30,
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = Color.White,
-                Text = "My Parties",
-                FontAttributes = FontAttributes.Bold
-
-            });
-            var partyListView = new CarouselView
-            {
-                BackgroundColor = Color.Transparent,
-                PeekAreaInsets = 50
-            };
-
-            profileStack.Children.Add(partyListView);
-            List<Party> partiesList = new List<Party>();
-            for (var i = 0; i < 10; i++) partiesList.Add(new Party() { name = "past party", description = "party of mine"});
-
-
-
-
-            partyListView.ItemsSource = partiesList;
-            partyListView.ItemTemplate = Templates.PartyObjectUI();
-
-            profileStack.Children.Add(partyListView);
+            Debug.WriteLine(App.UserFriends.LastOrDefault());
+            BindingContext = null;
+            BindingContext = user;
         }
-        private void PartyListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        private void addUserAsFriend(string uid)
         {
-            throw new NotImplementedException();
+            var currentUser = App.UserDatabase.GetUser();
+            Debug.WriteLine(uid + " " + currentUser.uid);
+            if (uid != null && currentUser != null && currentUser.uid != null && !uid.Equals(currentUser.uid))
+            {
+                if (FirebaseHelper.AddFriend(currentUser.uid, uid).Result) user.friendStatus = 3;
+                else user.friendStatus = 1;
+            }
+        }
+        private void removeFriend(string uid)
+        {
+            var currentUser = App.UserDatabase.GetUser();
+            if (uid != null && currentUser != null && currentUser.uid != null && !uid.Equals(currentUser.uid))
+            {
+                if (!FirebaseHelper.RemoveFriend(currentUser.uid, uid).Result) Debug.WriteLine("Error");
+            }
+        }
+        void refreshView_Refreshing(object sender, EventArgs e)
+        {
+            displayUser();
+            refreshView.IsRefreshing = false;
+
+        }
+        public async void displayUser()
+        {
+            if (user == null) return;
+
+            user.friendStatus = await FirebaseHelper.FriendStatus(App.UserDatabase.GetUser().uid, user.uid);
+            BindingContext = user;
+            List<Party> partiesList = await FirebaseHelper.GetPartiesThrownByUser(user.uid);
+            if (partiesList.Count == 0) noPartiesMsg.IsVisible = true;
+            else noPartiesMsg.IsVisible = false;
+            partyView.ItemsSource = partiesList;
+
         }
 
-        async void OnSettingsButtonClicked(object sender, EventArgs e)
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new SettingsPage(this.parent));
-           
+            var current = partyView.CurrentItem as Party;
+            Navigation.PushAsync(new PartyDetailsPage(current));
         }
     }
 }
