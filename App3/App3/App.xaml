@@ -93,6 +93,21 @@
                 
             </AbsoluteLayout>
         </ControlTemplate>
+        <ControlTemplate x:Key="hiddenBarTemplate">
+            <AbsoluteLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+
+                <ContentPresenter VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" />
+                <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,0,1,0.1" Padding="20,35,20,0">
+
+                    <ImageButton Source="{Binding ToolbarLeftSource}" Command="{Binding ToolbarLeftCommand}" IsVisible="{Binding ToolbarLeftSource, Converter={StaticResource nullToFalse}, FallbackValue={StaticResource false}}" Padding="0,0,20,0" HorizontalOptions="StartAndExpand"/>
+                    <Label Text="{Binding Title}" TextColor="White" FontSize="24" HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+
+                    <ImageButton Source="{Binding ToolbarRightSource}" Command="{Binding ToolbarRightCommand}" IsVisible="{Binding ToolbarRightSource, Converter={StaticResource nullToFalse}, FallbackValue={StaticResource false}}" WidthRequest="30" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+
+                
+            </AbsoluteLayout>
+        </ControlTemplate>
         <DataTemplate x:Key="partyTemplate">
             <ViewCell>
                 <Grid VerticalOptions="Start" BackgroundColor="#292929">
@@ -114,13 +129,23 @@
                     <StackLayout Grid.Column="2" Grid.Row="1" Orientation="Vertical" Padding="10,0,10,0" Spacing="5" VerticalOptions="Start">
                         <StackLayout Padding="0" Orientation="Horizontal">
                             <Label Text="Sebastian Monzon" FontSize="14" TextColor="Gray"/>
-                            <ImageButton Source="button_dots" Padding="0" WidthRequest="20" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"/>
+                            <ImageButton Source="button_dots" Padding="0" WidthRequest="20" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent" Command="{Binding DotsCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}"/>
+                        </StackLayout>
+                        <StackLayout Padding="0,10,0,0">
+
+                            <Frame CornerRadius="20" Padding="0" HorizontalOptions="Center" VerticalOptions="Center" HasShadow="False" >
+                                <Image VerticalOptions="Center" HorizontalOptions="Center" Aspect="AspectFill" Source="https://previews.123rf.com/images/bastinda18/bastinda181906/bastinda18190600149/124579534-party-flyer-poster-futuristic-club-flyer-design-template.jpg"/>
+                            </Frame>
                         </StackLayout>
 
-                        <Label Text="{Binding name, StringFormat='Party: {0}'}" FontSize="18" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" Padding="0,0,20,0"/>
-                        <Frame CornerRadius="40" Padding="0" HorizontalOptions="Center" VerticalOptions="Center" HasShadow="False" BorderColor="Gray">
-                            <Image VerticalOptions="Center" HorizontalOptions="Center" Aspect="AspectFill" Source="https://previews.123rf.com/images/bastinda18/bastinda181906/bastinda18190600149/124579534-party-flyer-poster-futuristic-club-flyer-design-template.jpg"/>
-                        </Frame>
+                        <StackLayout Orientation="Horizontal" Spacing="10">
+                            <Image Source="tab_feed" HeightRequest="18"/>
+                            <Label Text="{Binding name}" FontSize="18" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" Padding="0,0,20,0"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal" Spacing="10">
+                            <Image Source="tab_home" HeightRequest="18"/>
+                            <Label Text="{Binding address}" FontSize="18" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" Padding="0,0,20,0"/>
+                        </StackLayout>
                         <Label Text="{Binding description}" FontSize="16" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" Padding="0,0,20,0"/>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Spacing="20" >
                             <StackLayout Spacing="5" Orientation="Horizontal">
@@ -159,7 +184,7 @@
                     <StackLayout Grid.Column="2" Grid.Row="1" Orientation="Vertical" Padding="10,0,10,0" Spacing="5" HorizontalOptions="FillAndExpand">
                         <StackLayout Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                             <Label Text="{Binding name}" FontSize="14" TextColor="Gray"/>
-                            <ImageButton Source="button_dots" Padding="0" WidthRequest="20" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"/>
+                            <ImageButton Source="button_dots" Padding="0" WidthRequest="20" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent" Command="{Binding DotsCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}"/>
                         </StackLayout>
 
                         <Label Text="{Binding message}" FontSize="16" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" Padding="0,0,20,0"/>
@@ -183,5 +208,6 @@
             </ViewCell>
 
         </DataTemplate>
+        
     </Application.Resources>
 </Application>

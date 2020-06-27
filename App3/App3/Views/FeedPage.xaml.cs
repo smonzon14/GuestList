@@ -18,10 +18,38 @@ namespace App3.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FeedPage : ContentPage
     {
-        
+        public ICommand DotsCommand { get; private set; }
         public FeedPage()
         {
+            DotsCommand = new Command(async (object item)=>
+            {
+                if(item is Post || item is Party)
+                {
+                    string[] options = { "Share", "Go to Profile", "Go to Comments" };
+                    var resp = await DisplayActionSheet(null, "Cancel", "Report", options);
 
+                    if (resp.Equals("Cancel")) return;
+                    if (resp.Equals("Report"))
+                    {
+                        //Report
+                    }
+
+                    int i;
+                    for (i = 0; i < options.Length; i++) if (options[i].Equals(resp)) break;
+                    switch (i)
+                    {
+                        case 0:
+                            //Share
+                            break;
+                        case 1:
+                            //Go to profile
+                            break;
+                        case 2:
+                            //Go to comments
+                            break;
+                    }
+                }
+            });
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
             update();
@@ -89,32 +117,6 @@ namespace App3.Views
             Navigation.PushModalAsync(new NewPostPage());
         }
 
-        private async void DotsButton_Clicked(object sender, EventArgs e)
-        {
-            string[] options = { "Share", "Go to Profile", "Go to Comments" };
-            var resp = await DisplayActionSheet(null, "Cancel", "Report", options);
-
-            if (resp.Equals("Cancel")) return;
-            if (resp.Equals("Report"))
-            {
-                //Report
-            }
-
-            int i;
-            for (i = 0; i < options.Length; i++) if (options[i].Equals(resp)) break;
-            switch (i)
-            {
-                case 0:
-                    //Share
-                    break;
-                case 1:
-                    //Go to profile
-                    break;
-                case 2:
-                    //Go to comments
-                    break;
-            }
-        }
 
         private void storiesCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

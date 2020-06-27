@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="App3.Views.PostViewPage"
+             x:Name="postView"
              ControlTemplate="{StaticResource header}">
     <ContentPage.Content>
         <RefreshView RefreshColor="White" Refreshing="RefreshView_Refreshing" >
@@ -36,7 +37,7 @@
                                     </StackLayout>
                                 </StackLayout>
                                 <StackLayout Spacing="5" Orientation="Vertical" Grid.Column="3" Grid.Row="1">
-                                    <ImageButton Source="button_up" Padding="0" HeightRequest="25" />
+                                    <ImageButton Source="button_like" Padding="0" WidthRequest="20" />
                                     <Label Text="{Binding likes}" FontSize="12" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </StackLayout>
 
@@ -46,8 +47,47 @@
 
                 </ListView.ItemTemplate>
                 <ListView.Header>
-                    <StackLayout>
-                        
+                    <StackLayout Spacing="0" BindingContext="{Binding Post}">
+
+                        <Grid  BackgroundColor="#292929">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="5"/>
+                            </Grid.RowDefinitions>
+                            <Frame Grid.Column="1" Grid.Row="1" WidthRequest="40" HeightRequest="40" CornerRadius="20" HorizontalOptions="EndAndExpand" VerticalOptions="StartAndExpand" Padding="0" IsClippedToBounds="True">
+                                <Image HorizontalOptions="Center" VerticalOptions="Center" Source="Profile"/>
+                            </Frame>
+                            <StackLayout Grid.Column="2" Grid.Row="1" Orientation="Vertical" Padding="10,0,10,0" Spacing="5" HorizontalOptions="FillAndExpand">
+                                <StackLayout Padding="0" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                    <Label Text="{Binding name}" FontSize="14" TextColor="Gray"/>
+                                    <ImageButton Source="button_dots" Padding="0" WidthRequest="20" HorizontalOptions="EndAndExpand" BackgroundColor="Transparent"/>
+                                </StackLayout>
+
+                                <Label Text="{Binding message}" FontSize="16" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" Padding="0,0,20,0"/>
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="Transparent" Spacing="20">
+                                    <StackLayout Spacing="5" Orientation="Horizontal">
+                                        <ImageButton Source="{Binding Liked, Converter={StaticResource likeToButtonSource}}" Padding="0" WidthRequest="20" Command="{Binding LikeCommand}" CommandParameter="{Binding .}"/>
+                                        <Label Text="{Binding likes}" FontSize="14" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </StackLayout>
+                                    <StackLayout Spacing="5" Padding="0" Orientation="Horizontal">
+                                        <ImageButton Source="button_comment_simple" Padding="0" WidthRequest="20" IsEnabled="False"/>
+                                        <Label Text="{Binding comments}" FontSize="14" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </StackLayout>
+                                </StackLayout>
+
+
+                            </StackLayout>
+
+
+                        </Grid>
                         <ProgressBar x:Name="progressBar" ProgressColor="Aqua" Progress="0"/>
                         <StackLayout Orientation="Horizontal" Padding="15">
 

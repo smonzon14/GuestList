@@ -4,11 +4,8 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using App3.Data;
-using System.Threading.Tasks;
 using System.Linq;
 using System.Diagnostics;
-using System.Globalization;
-using Google.Rpc;
 
 namespace App3
 {
@@ -22,6 +19,8 @@ namespace App3
 
         public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
         public string ToolbarLeftSource { get; private set; }
+        public List<Party> partiesList;
+        public List<Post> postsList;
         public ProfilePage(User userToDisplay, MasterTabbedPage parent)
         {
             this.parent = parent;
@@ -54,14 +53,12 @@ namespace App3
 
             InitializeComponent();
 
-            refreshView.IsRefreshing = true;
             if (user != null)
             {
                 if (user.uid.Equals(App.UserDatabase.GetUser().uid)) friendButton.IsVisible = false;
                 displayUser();
             }
             
-            refreshView.IsRefreshing = false;
 
         }
 
@@ -123,6 +120,7 @@ namespace App3
         }
         void refreshView_Refreshing(object sender, EventArgs e)
         {
+            var refreshView = sender as RefreshView;
             displayUser();
             refreshView.IsRefreshing = false;
 
@@ -133,17 +131,69 @@ namespace App3
 
             user.friendStatus = await FirebaseHelper.FriendStatus(App.UserDatabase.GetUser().uid, user.uid);
             BindingContext = user;
-            List<Party> partiesList = await FirebaseHelper.GetPartiesThrownByUser(user.uid);
-            if (partiesList.Count == 0) noPartiesMsg.IsVisible = true;
-            else noPartiesMsg.IsVisible = false;
-            partyView.ItemsSource = partiesList;
+            partiesList = await FirebaseHelper.GetPartiesThrownByUser(user.uid);
+            postsList = await FirebaseHelper.GetPostsForUser(user.uid);
+            
+            if (partiesList.Count > 0)
+            {
+
+                foreach (var p in partiesList) p.geoPosition = (await (new Xamarin.Forms.Maps.Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
+                map.generateMap(partiesList);
+
+                partyCarousel.ItemsSource = partiesList;
+                partyCarousel.CurrentItem = partiesList[0];
+                partyCarousel.IsVisible = true;
+                //noPartiesMsg.IsVisible = false;
+            }
+            else
+            {
+                partiesView.IsVisible = false;
+                //noPartiesMsg.IsVisible = true;
+            }
+
+            if(postsList.Count > 0)
+            {
+                postListView.ItemsSource = postsList;
+            }
 
         }
 
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            var current = partyView.CurrentItem as Party;
+            var current = partyCarousel.CurrentItem as Party;
             Navigation.PushAsync(new PartyDetailsPage(current));
+        }
+
+        private void ShowPosts(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Showing posts");
+            showPostsButton.BackgroundColor = Color.FromHex("#F50058");
+            showPartiesButton.BackgroundColor = Color.Transparent;
+            partiesView.IsVisible = false;
+            postListView.ItemsSource = postsList;
+            
+        }
+
+        private void ShowParties(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Showing parties");
+
+            showPostsButton.BackgroundColor = Color.Transparent;
+            showPartiesButton.BackgroundColor = Color.FromHex("#F50058");
+            partiesView.IsVisible = true;
+            postListView.ItemsSource = null;
+        }
+        private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
+        {
+
+            if (e == null) return;
+            Party party = e.CurrentItem as Party;
+            map.moveTo(party);
+
+            //goingCount.Text = party.numPeopleGoing.ToString();
+            //updateControls();
+            
+
         }
     }
 }

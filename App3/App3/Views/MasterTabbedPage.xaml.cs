@@ -14,6 +14,7 @@ namespace App3
     public partial class MasterTabbedPage : TabbedPage
 
     {
+        private Page _lastPage;
         public MasterTabbedPage()
         {
             InitializeComponent();
@@ -21,14 +22,16 @@ namespace App3
             else loadViews();
 
         }
+        internal class FakePage : ContentPage { }
         private void loadViews()
         {
             
-           
+            
             Children.Clear();
 
             NavigationPage friends = new NavigationPage(new FriendsPage())
             {
+                Title = "Friends",
                 IconImageSource = "tab_friends",
                 BarTextColor = Color.White,
                 BarBackgroundColor = Color.Black
@@ -38,15 +41,19 @@ namespace App3
             // Home Page
             NavigationPage home = new NavigationPage(new HomePage(this))
             {
-                IconImageSource = "tab_home",
+                Title = "Map",
+                IconImageSource = "tab_map",
                 BarTextColor = Color.White,
                 BarBackgroundColor = Color.Black
             };
-
-
+            Page host = new FakePage();
+            host.Title = "New Event";
+            host.IconImageSource = "tab_plus";
+            
             // Profile Page
             NavigationPage profile = new NavigationPage(new ProfilePage(null, this))
             {
+                Title = "Profile",
                 IconImageSource = "tab_profile",
                 BarTextColor = Color.White,
                 BarBackgroundColor = Color.Black
@@ -54,6 +61,7 @@ namespace App3
 
             NavigationPage feed = new NavigationPage(new FeedPage())
             {
+                Title = "Chatter",
                 IconImageSource = "tab_feed",
                 BarTextColor = Color.White,
                 BarBackgroundColor = Color.Black
@@ -61,15 +69,26 @@ namespace App3
 
             Children.Add(friends);
             Children.Add(home);
-            Children.Add(profile);
+            Children.Add(host);
             Children.Add(feed);
+            Children.Add(profile);
 
             CurrentPage = home;
-
+            _lastPage = home;
 
 
         }
-        
+        protected override async void OnCurrentPageChanged()
+        {
+            if (CurrentPage is FakePage)
+            {
+                CurrentPage = _lastPage;
+                await Navigation.PushModalAsync(new NavigationPage(new PartyHostPage()));
+            }
+            else  _lastPage = CurrentPage;
+
+            base.OnCurrentPageChanged();
+        }
         async private void switchToSignIn()
         {
             NavigationPage loginScreen = new NavigationPage(new SignUpPage());

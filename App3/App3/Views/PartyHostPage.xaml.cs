@@ -16,25 +16,28 @@ namespace App3
     {
         public int step = 0;
         Party party = new Party();
+        public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
+        public string ToolbarRightSource { get; private set; }
+
+        public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
+        public string ToolbarLeftSource { get; private set; }
         public PartyHostPage()
         { 
+            ToolbarLeftCommand = new Command(() => BackButton_Clicked());
+            ToolbarRightCommand = new Command(() => Navigation.PopModalAsync());
+            ToolbarRightSource = "x";
+            ToolbarLeftSource = "button_back";
             InitializeComponent();
-            ToolbarItems.Add(new ToolbarItem
-            {
-                Text = "back",
-                Command = new Command(() => BackButton_Clicked())
-            });
             datePicker.MinimumDate = DateTime.Now;
             update();
         }
         
-
         private async Task<bool> isStepComplete()
         {
             switch (step)
             {
                 case 0: // Title entry
-                    if(titleEntry.Text == null)
+                    if (titleEntry.Text == null)
                     {
                         await DisplayAlert("Invalid Title", "Party must have a name", "Ok").ConfigureAwait(false);
                         return false;
@@ -42,6 +45,7 @@ namespace App3
                     party.name = titleEntry.Text;
                     break;
                 case 1: // Location
+                    
                     if (locationEntry.Text == null)
                     {
                         await DisplayAlert("Invalid Address", "Please type a valid address", "Ok").ConfigureAwait(false);
@@ -99,10 +103,10 @@ namespace App3
         }
         private async void update()
         {
-            if (step < 0) step = 0;
+            if (step < 0) await Navigation.PopAsync();
             if (step > 4) step = 4;
-
-            if(step == 4)
+            
+            if (step == 4)
             {
                 
                 await Navigation.PushAsync(new PartyPostPreviewPage(party));

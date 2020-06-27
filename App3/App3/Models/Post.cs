@@ -11,13 +11,19 @@ namespace App3.Models
 {
     public class Post : INotifyPropertyChanged
     {
-        public ICommand LikeCommand { get; set; } = new Command<object>((object item) =>
+        public ICommand LikeCommand { get; set; } = new Command<Post>((Post item) =>
         {
-            var obj = item as Post;
-            if (obj.liked)
-                obj.likes--;
-            else obj.likes++;
-            obj.Liked = !obj.Liked;
+            if (item.liked)
+            {
+                item.likes--;
+                FirebaseHelper.RemoveLikeFromPost(item, App.UserDatabase.GetUser().uid);
+            }
+            else
+            {
+                item.likes++;
+                FirebaseHelper.AddLikeToPost(item, App.UserDatabase.GetUser().uid);
+            }
+            item.Liked = !item.Liked;
         });
         private bool liked = false;
         public bool Liked {

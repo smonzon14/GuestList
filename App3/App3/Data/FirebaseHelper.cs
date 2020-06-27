@@ -433,5 +433,14 @@ namespace App3.Data
             
             return stories;
         }
+
+        public static async void AddLikeToPost(Post post, string userid)
+        {
+            await firebase.Child("Likes").Child(post.pid).Child(userid).PutAsync(true).ConfigureAwait(false);
+        }
+        public static async void RemoveLikeFromPost(Post post, string userid) 
+        {
+            await firebase.Child("Likes").Child(post.pid).Child(userid).DeleteAsync().ConfigureAwait(false);
+        }
     }
 }

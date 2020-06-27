@@ -5,8 +5,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              
              mc:Ignorable="d"
-             x:Class="App3.Views.AddFriendPage" Title="Add Friends">
-    
+             x:Class="App3.Views.AddFriendPage"
+             Title="Add Friends"
+             >
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Scan" Clicked="btnScan_Clicked"/>
     </ContentPage.ToolbarItems>

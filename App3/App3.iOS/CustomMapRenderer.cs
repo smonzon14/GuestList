@@ -37,8 +37,6 @@ namespace App3.iOS
                     nativeMap.GetViewForAnnotation = null;
                     nativeMap.DidSelectAnnotationView -= OnDidSelectAnnotationView;
                     nativeMap.DidDeselectAnnotationView -= OnDidDeselectAnnotationView;
-
-                    nativeMap.CalloutAccessoryControlTapped -= CalloutAccessoryControlTapped;
                     nativeMap.RegionChanged -= NativeMap_RegionChanged;
                 }
             }
@@ -60,14 +58,9 @@ namespace App3.iOS
                 nativeMap.GetViewForAnnotation = GetViewForAnnotation;
                 nativeMap.DidSelectAnnotationView += OnDidSelectAnnotationView;
                 nativeMap.DidDeselectAnnotationView += OnDidDeselectAnnotationView;
-                nativeMap.CalloutAccessoryControlTapped += CalloutAccessoryControlTapped;
             }
         }
 
-        private void CalloutAccessoryControlTapped(object sender, MKMapViewAccessoryTappedEventArgs e)
-        {
-
-        }
 
         private void NativeMap_RegionChanged(object sender, MKMapViewChangeEventArgs e)
         {
@@ -121,7 +114,6 @@ namespace App3.iOS
                 annotationView = new CustomMKAnnotationView(annotation, annotation.GetTitle());
                 annotationView.Image = UIImage.FromFile("heatpin.png");
                 annotationView.CalloutOffset = new CGPoint(0, 0);
-                annotationView.RightCalloutAccessoryView = new UIImageView(UIImage.FromBundle("button_go"));
                 ((CustomMKAnnotationView)annotationView).Name = annotation.GetTitle();
                 
             }

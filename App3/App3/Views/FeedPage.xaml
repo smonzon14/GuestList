@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="clr-namespace:App3.Models" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
              xmlns:converters="clr-namespace:App3.Converters"
              mc:Ignorable="d"
              x:Class="App3.Views.FeedPage"
@@ -18,20 +19,10 @@
 
 
 
-        
+
         <AbsoluteLayout>
-            <magic:GradientView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" >
-                <magic:GradientView.GradientSource >
-                    <magic:CssGradientSource>
-                        <x:String>
-                            <![CDATA[
-                linear-gradient(to right, #F50058, #D90B80)
-                        ]]>
-                        </x:String>
-                    </magic:CssGradientSource>
-                </magic:GradientView.GradientSource>
-            </magic:GradientView>
-            <ListView x:Name="feedListView" CachingStrategy="RecycleElement" BackgroundColor="Transparent" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+
+            <ListView x:Name="feedListView" CachingStrategy="RecycleElement" BackgroundColor="#202020" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
                 <ListView.Header>
                     <CollectionView x:Name="storiesCollectionView" SelectionChanged="storiesCollectionView_SelectionChanged" HeightRequest="80" SelectionMode="Single" ItemsLayout="HorizontalList" HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" Grid.ColumnSpan="5" Grid.Row="2">
                         <CollectionView.Header>
@@ -40,7 +31,7 @@
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                                     </Frame.GestureRecognizers>
-                                    <Image x:Name="userStory" Source="button_plus_simple" Aspect="AspectFill"/>
+                                    <Image x:Name="userStory" Source="Profile" Aspect="AspectFill"/>
                                     
                                 </Frame>
                                 <Label Text="Add Story" LineBreakMode="TailTruncation" FontSize="12" TextColor="White" Padding="0" HorizontalOptions="Center"/>

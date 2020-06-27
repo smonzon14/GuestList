@@ -177,19 +177,8 @@ namespace App3
         }
         async public void hostButtonClicked(object sender, EventArgs e)
         {
-            ContentPage page = new PartyHostPage();
-            
-            
-            page.ToolbarItems.Add(new ToolbarItem
-             {
-
-                 Text = "Cancel",
-                    
-                 Command = new Command(() => Navigation.PopModalAsync())
-             });
-            NavigationPage nav = new NavigationPage(page);
-            nav.BarBackgroundColor = Color.Black;
-            nav.BarTextColor = Color.White;
+            NavigationPage nav = new NavigationPage(new PartyHostPage());
+            NavigationPage.SetHasNavigationBar(nav, false);
             await Navigation.PushModalAsync(nav);
         }
         async public void OnSettingsButtonClicked(object sender, EventArgs e)
@@ -215,9 +204,10 @@ namespace App3
             }
             partiesList.AddRange(await FirebaseHelper.GetPartiesThrownByUser(currentUserId));
 
-            foreach(var p in partiesList) p.geoPosition = (await (new Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
             if (partiesList.Count > 0)
             {
+
+                foreach (var p in partiesList) p.geoPosition = (await (new Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
                 map.generateMap(partiesList);
 
                 partyCarousel.ItemsSource = partiesList;
@@ -235,7 +225,6 @@ namespace App3
         
         private void CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
         {
-
             if (!partyViewIsExpanded)
             {
                 if (e == null) return;
@@ -255,14 +244,12 @@ namespace App3
 
         private void SearchBar_Focused(object sender, FocusEventArgs e)
         {
-            searchResults.IsVisible = true;
-            
             Animation a = new Animation();
-            a.Add(0, 1, new Animation(v => searchStack.Opacity = v, 0.6, 0.8));
+            searchBar.IsVisible = true;
+            a.Add(0, 1, new Animation(v => searchBar.Opacity = v, 0, 1.0));
             //a.Add(0, 1, new Animation(v => partyButtonsView.Opacity = v, 1.0, 0));
-            a.Add(0, 1, new Animation(v => searchResults.Opacity = v, 0, 1.0));
             //a.Add(0, 1, new Animation(v => bottomPaddingRow.Height = v, 0, 200));
-            a.Commit(owner: searchStack, "showSearch", 50, finished: (x, y) => { });
+            a.Commit(owner: searchBar, "showSearch", 50, finished: (x, y) => { });
             
             
         }
@@ -273,11 +260,10 @@ namespace App3
             //partyButtonsView.IsVisible = true;
             
             Animation a = new Animation();
-            a.Add(0, 1, new Animation(v => searchStack.Opacity = v, 0.8, 0.6));
+            a.Add(0, 1, new Animation(v => searchBar.Opacity = v, 1.0, 0));
             //a.Add(0, 1, new Animation(v => partyButtonsView.Opacity = v, 0, 1.0));
-            a.Add(0, 1, new Animation(v => searchResults.Opacity = v, 1.0, 0));
             //a.Add(0, 1, new Animation(v => bottomPaddingRow.Height = v, 200, 0));
-            a.Commit(owner: searchStack, "showSearch", 50, finished: (x, y) => { searchResults.IsVisible = false; });
+            a.Commit(owner: searchBar, "showSearch", 50, finished: (x, y) => { searchBar.IsVisible = false; });
             
             
         }
@@ -303,6 +289,11 @@ namespace App3
         {
             var current = getCurrentParty();
             Navigation.PushAsync(new PartyDetailsPage(current));
+        }
+
+        private void SearchButton_Clicked(object sender, EventArgs e)
+        {
+            searchBar.Focus();
         }
     }
 }

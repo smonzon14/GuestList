@@ -19,6 +19,7 @@ namespace App3
 
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
+        private List<User> friendsList;
         static Dictionary<User, ProfilePage> profileBuffer = new Dictionary<User, ProfilePage>();
         static AddFriendPage addFriendPage = new AddFriendPage();
         public FriendsPage()
@@ -59,16 +60,13 @@ namespace App3
             friendsListView.SelectedItem = null;
         }
         
-        private void update()
+        private async Task<bool> update()
         {
-            var friendsList = new List<User>();
             try
             {
                 var uid = App.UserDatabase.GetUser().uid;
-                friendsList = FirebaseHelper.GetFriendsList(uid).Result;
+                friendsList = await FirebaseHelper.GetFriendsList(uid);
                 friendsListView.ItemsSource = friendsList;//testPartyList();
-                App.UserFriends.Clear();
-                App.UserFriends.AddRange(friendsList);
             }
             catch (Exception e)
             {
@@ -76,8 +74,6 @@ namespace App3
             }
             finally
             {
-                App.UserFriends.Clear();
-                App.UserFriends.AddRange(friendsList);
                 if (friendsList.Count < 1)
                 {
                     //Implement no friends message :(
@@ -87,14 +83,20 @@ namespace App3
                 {
                     noFriendsMsg.IsVisible = false;
                 }
+                Dispatcher.BeginInvokeOnMainThread(() =>
+                {
+                    App.UserFriends.Clear();
+                    App.UserFriends.AddRange(friendsList);
+                });
             }
+            return true;
             
         }
 
-        private void refreshView_Refreshing(object sender, EventArgs e)
+        private async void refreshView_Refreshing(object sender, EventArgs e)
         {
             refreshView.IsRefreshing = true;
-            update();
+            await update();
             refreshView.IsRefreshing = false;
         }
 

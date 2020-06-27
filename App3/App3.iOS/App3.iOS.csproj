@@ -153,6 +153,9 @@
     <ImageAsset Include="Assets.xcassets\button_up.imageset\button_up.pdf">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\car.imageset\car.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\Images.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
@@ -210,10 +213,28 @@
     <ImageAsset Include="Assets.xcassets\button_liked.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_feed.imageset\Contents.json">
+    <ImageAsset Include="Assets.xcassets\car.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_feed.imageset\tab_feed1.pdf">
+    <ImageAsset Include="Assets.xcassets\tab_feed.imageset\balloons.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\tab_map.imageset\pin.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\tab_plus.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\tab_plus.imageset\_plus.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\tab_search.imageset\search.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\x.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\tab_feed.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\tab_search.imageset\Contents.json">
@@ -228,10 +249,7 @@
     <ImageAsset Include="Assets.xcassets\tab_friends.imageset\tab_friends.pdf">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_home.imageset\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_home.imageset\tab_home.pdf">
+    <ImageAsset Include="Assets.xcassets\tab_map.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\tab_profile.imageset\Contents.json">
@@ -243,7 +261,7 @@
     <ImageAsset Include="Assets.xcassets\tab_profile.imageset\tab_profile3.pdf">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\tab_search.imageset\tab_search.pdf">
+    <ImageAsset Include="Assets.xcassets\x.imageset\X.pdf">
       <Visible>false</Visible>
     </ImageAsset>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -297,10 +315,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\heatpin.png" />
+    <BundleResource Include="Resources\launchGradient.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\launchGradient.png" />
+    <BundleResource Include="Resources\heatpin.png" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

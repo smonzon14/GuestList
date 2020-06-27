@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using App3.Models;
@@ -15,25 +12,26 @@ namespace App3.Views
     public partial class PostViewPage : ContentPage
     {
         public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
-        public string ToolbarLeftSource { get; private set; }
-        private Post post;
+        public string ToolbarLeftSource { get; private set; } = "button_back";
+        public Post Post { get; set; }
         private List<Comment> comments;
         public PostViewPage(Post post)
         {
-            this.post = post;
-            BindingContext = post;
+
+            Post = post;
+            BindingContext = this;
             NavigationPage.SetHasNavigationBar(this, false);
             ToolbarLeftCommand = new Command(() =>
             {
                 Navigation.PopAsync();
             });
-            ToolbarLeftSource = "button_back";
+
             InitializeComponent();
             populateComments();
         }
         private async void populateComments()
         {
-            comments = await FirebaseHelper.GetCommentsForPost(post.pid);
+            comments = await FirebaseHelper.GetCommentsForPost(Post.pid);
             commentsListView.ItemsSource = comments;
         }
 
@@ -47,7 +45,7 @@ namespace App3.Views
             {
                 message = message,
                 name = App.UserDatabase.GetUser().name
-            }, post.pid);
+            }, Post.pid);
 
             comments.Insert(0, newComment);
             commentsListView.ItemsSource = null;

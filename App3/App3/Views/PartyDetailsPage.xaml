@@ -15,7 +15,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <AbsoluteLayout>
-            <ScrollView AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="Black" Padding="0" Margin="0,-70,0,-40">
+            <ScrollView AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="#1f1f1f" Padding="0" Margin="0,-70,0,-40">
                 <StackLayout BackgroundColor="Black">
                     <AbsoluteLayout HeightRequest="630">
                         <Image Source="https://rockymountevents.com/wp-content/uploads/2018/09/birthday_celebration.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1"/>
@@ -25,7 +25,7 @@
                                 <magic:CssGradientSource>
                                     <x:String>
                                         <![CDATA[
-                    linear-gradient(to top, #ff000000, #00000000)
+                    linear-gradient(to top, #ff1f1f1f, #001f1f1f)
                             ]]>
                                     </x:String>
                                 </magic:CssGradientSource>

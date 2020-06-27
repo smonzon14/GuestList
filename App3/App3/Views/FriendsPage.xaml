@@ -15,9 +15,9 @@
     <ContentPage.Content>
 
             <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
-                <StackLayout HorizontalOptions="Fill" Padding="0" BackgroundColor="#282828">
+                <StackLayout HorizontalOptions="Fill" Padding="0">
 
-                    <ListView x:Name="friendsListView" RowHeight="90" BackgroundColor="#282828" SeparatorVisibility="None" ItemTapped="friendItemTapped">
+                    <ListView x:Name="friendsListView" RowHeight="90" BackgroundColor="#202020" SeparatorVisibility="None" ItemTapped="friendItemTapped">
                         <ListView.Header>
                         <Label x:Name="noFriendsMsg" IsVisible="false" HeightRequest="50" FontSize="16" Text="Friends and requests will show up here." TextColor="DarkGray" HorizontalTextAlignment="Center" VerticalTextAlignment="End"/>
 
@@ -27,14 +27,14 @@
                                 <ViewCell>
                                     <StackLayout Padding="10">
 
-                                        <Frame CornerRadius="35" BackgroundColor="#202020" Padding="0">
+                                    <Frame CornerRadius="35" BackgroundColor="#C00Ba0" Padding="0">
                                             <StackLayout Padding = "10" BackgroundColor = "Transparent" Orientation = "Horizontal">
                                                 <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" IsClippedToBounds="True">
                                                     <Image Source="Profile" HorizontalOptions="Center" VerticalOptions="Center"/>
                                                 </Frame>
                                                 <StackLayout Padding="20,0,0,0" VerticalOptions="Center">
                                                     <Label Text="{Binding name}" FontSize="20" TextColor="White"/>
-                                                    <Label Text="{Binding status, Converter={StaticResource statusToMessage}}" FontSize="15" TextColor="Gray"/>
+                                                    <Label Text="{Binding status, Converter={StaticResource statusToMessage}}" FontSize="15" TextColor="White"/>
                                                 </StackLayout>
                                             </StackLayout>
                                         </Frame>
