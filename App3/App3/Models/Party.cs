@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 
 namespace App3.Models
 {
@@ -46,7 +46,16 @@ namespace App3.Models
         public string address { get; set; }
         public Position geoPosition { get; set; }
 
-
+        public Pin pin { get {
+                return new Pin
+                {
+                    Address = address,
+                    Position = geoPosition,
+                    Tag = pid,
+                    Label = name,
+                    Type = PinType.Place
+                };
+            } }
         public static List<string> GetRandomHexColor()
         {
             var rand = new Random();

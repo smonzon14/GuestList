@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Forms.GoogleMaps;
 
 namespace App3
 {
@@ -129,7 +130,7 @@ namespace App3
             if (partiesList.Count > 0)
             {
 
-                foreach (var p in partiesList) p.geoPosition = (await (new Xamarin.Forms.Maps.Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
+                foreach (var p in partiesList) p.geoPosition = (await (new Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
                 map.generateMap(partiesList);
 
                 partyCarousel.ItemsSource = partiesList;

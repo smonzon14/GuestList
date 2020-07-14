@@ -1,21 +1,20 @@
-﻿using App3.Maps;
+﻿
 using System;
 using System.Collections.Generic;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 
 namespace App3.Models
 {
     public class PartyMap : Map
     {
         public event EventHandler CallToNativeMethod;
-
+        
         public void RaiseCallToNativeMethod()
         {
             CallToNativeMethod?.Invoke(this, new EventArgs());
         }
-        public PartyPin selectedPin { get; set; }
+        public Pin selectedPin { get; set; }
 
-        public List<PartyPin> partyPins { get; set; } = new List<PartyPin>();
         public PartyMap()
         {
             //IsShowingUser = true;
@@ -23,26 +22,15 @@ namespace App3.Models
         }
         public void generateMap(List<Party> pList)
         {
-
+            Pins.Clear();
             if (pList.Count > 0)
             {
+                
                 foreach (Party p in pList)
                 {
-                    int index;
-                    // Update existing pin
-                    if ((index = partyPins.FindIndex(existingPin => existingPin.pid.Equals(p.pid))) > -1)
-                    {
-                        var updatedPin = new PartyPin(p);
-                        partyPins[index] = updatedPin;
-                        Pins[index] = updatedPin;
-                    }
-                    else // Create new pin
-                    {
-                        PartyPin pin = new PartyPin(p);
-                        Pins.Add(pin);
-                        partyPins.Add(pin);
+                    Pins.Add(p.pin);
 
-                    }
+                    
                 }
 
                 moveTo(pList[0]);
@@ -53,7 +41,7 @@ namespace App3.Models
         {
             if (party == null) return;
             MapSpan span = MapSpan.FromCenterAndRadius(party.geoPosition, Distance.FromMiles(0.12));
-            selectedPin = partyPins.Find(x => x.pid.Equals(party.pid));
+            selectedPin = party.pin;
 
             RaiseCallToNativeMethod();
             MoveToRegion(span);

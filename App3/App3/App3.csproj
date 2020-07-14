@@ -15,6 +15,7 @@
     <Compile Remove="Data\IAuthentication.cs" />
     <Compile Remove="Data\RestService.cs" />
     <Compile Remove="Data\TokenDatabaseController.cs" />
+    <Compile Remove="Maps\PartyPin.cs" />
     <Compile Remove="Models\Constants.cs" />
     <Compile Remove="Models\Friend.cs" />
     <Compile Remove="Models\Person.cs" />
@@ -23,18 +24,16 @@
   <ItemGroup>
     <PackageReference Include="FirebaseDatabase.net" Version="4.0.4" />
     <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
-    <PackageReference Include="Google.Cloud.Firestore" Version="2.0.0" />
-    <PackageReference Include="MagicGradients" Version="1.0.0" />
+    <PackageReference Include="MagicGradients" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
     <PackageReference Include="sqlite" Version="3.13.0" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
     <PackageReference Include="Xamarin.Auth" Version="1.7.0" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
-    <PackageReference Include="Xamarin.Forms" Version="4.6.0.772" />
+    <PackageReference Include="Xamarin.Forms" Version="4.7.0.1080" />
     <PackageReference Include="Xamarin.Forms.GoogleMaps" Version="3.3.0" />
-    <PackageReference Include="Xamarin.Forms.Maps" Version="4.5.0.725" />
     <PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
 ﻿using App3.Models;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 
 namespace App3.Maps
 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 
 namespace App3

@@ -22,7 +22,7 @@ namespace App3.iOS
             global::Xamarin.Forms.Forms.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             Firebase.Core.App.Configure();
-
+            Xamarin.FormsGoogleMaps.Init("AIzaSyAfzxGPri6oVkm_IMgtGrA38jXWOST3DXc");
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

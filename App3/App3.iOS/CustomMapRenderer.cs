@@ -10,7 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps.iOS;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(PartyMap), typeof(CustomMapRenderer))]
+//[assembly: ExportRenderer(typeof(PartyMap), typeof(CustomMapRenderer))]
 namespace App3.iOS
 {
     public class CustomMapRenderer : MapRenderer

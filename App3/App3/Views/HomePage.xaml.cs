@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 namespace App3
 {
@@ -20,7 +20,6 @@ namespace App3
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
         private bool partyViewIsExpanded;
-        string currentUserId;
         public HomePage()
         {
             ToolbarRightSource = "button_refresh";

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 
 namespace App3
@@ -23,7 +23,7 @@ namespace App3
             var previewPartyList = new List<Party> { previewParty };
 
             map = new PartyMap();
-            map.IsShowingUser = true;
+            map.MyLocationEnabled = true;
 
             partyListView.ItemsSource = previewPartyList;
 
