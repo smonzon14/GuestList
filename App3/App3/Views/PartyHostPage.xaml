@@ -26,14 +26,14 @@
             <StackLayout BackgroundColor="Transparent" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0,1,1,0.9" AbsoluteLayout.LayoutFlags="All" >
                 
                 <Label x:Name="promptLabel" Text="What do you want this event to be named?" FontSize="50" TextColor="White"  Padding="30" MaxLines="3" LineHeight="0.8"/>
-                <StackLayout Padding="20" VerticalOptions="CenterAndExpand">
+                <Grid Padding="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
 
                     <Editor x:Name="titleEntry" MaxLength="16" Placeholder="ex. Alpha Beta, B-Day" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" VerticalOptions="CenterAndExpand" AutoSize="TextChanges"/>
-                    <Editor x:Name="locationEntry" MaxLength="40" Placeholder="ex. 123 street st. City State" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White"  VerticalOptions="CenterAndExpand" AutoSize="TextChanges"/>
-                    <DatePicker x:Name="datePicker" Format="D"  FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand"/>
-                    <TimePicker x:Name="timePicker" Time="22:00:00" Format="T" FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand"/>
-                    <Editor x:Name="descriptionEntry" MaxLength="200" Placeholder="Optional" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" AutoSize="TextChanges" VerticalOptions="CenterAndExpand"/>
-                </StackLayout>
+                    <Editor x:Name="locationEntry" MaxLength="40" Placeholder="ex. 123 street st. City State" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White"  VerticalOptions="CenterAndExpand" AutoSize="TextChanges" IsVisible="false"/>
+                    <DatePicker x:Name="datePicker" Format="D"  FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false"/>
+                    <TimePicker x:Name="timePicker" Time="22:00:00" Format="T" FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false"/>
+                    <Editor x:Name="descriptionEntry" MaxLength="200" Placeholder="Optional" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" AutoSize="TextChanges" VerticalOptions="CenterAndExpand" IsVisible="false"/>
+                </Grid>
                 <!--
              <StackLayout Padding="30,20,30,20" Spacing="8" VerticalOptions="StartAndExpand">
                 

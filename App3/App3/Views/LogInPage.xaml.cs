@@ -1,9 +1,6 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Diagnostics;
-using App3.Data;
-using App3.Models;
 
 namespace App3.Views
 {
@@ -22,34 +19,10 @@ namespace App3.Views
         {
             //if(!await FirebaseHelper.UserWithEmailExists(username.Text)) errorMessage.IsVisible = true;
 
-            IFirebaseAuthenticator authenticator = DependencyService.Get<IFirebaseAuthenticator>();
+            await App.LoginAsync(username.Text, password.Text);
 
 
-            string tokenId = await authenticator.LoginWithEmailPassword(username.Text, password.Text);
-            if (tokenId == "")
-            {
-                errorMessage.IsVisible = true;
-            }
-            else
-            {
-                Debug.WriteLine(tokenId);
 
-                var user = authenticator.GetCurrentUser(); //await FirebaseHelper.GetUserFromUID(uid);
-                
-                if (user == null)
-                {
-                    Debug.WriteLine("User not found");
-                    await DisplayAlert("User not found", "Invalid email / password", "Ok");
-                    return;
-                }
-                //var user = await FirebaseHelper.GetUser(username.Text);
-                App.UserDatabase.SetUser(user);
-                Debug.WriteLine("User from database:");
-                await Navigation.PopModalAsync();
-            }
-            
-            
-            
         }
     }
 }

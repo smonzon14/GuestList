@@ -1,18 +1,12 @@
 ﻿using App3.iOS;
-using App3.Maps;
 using App3.Models;
 using CoreGraphics;
 using CoreLocation;
 using Foundation;
 using MapKit;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using UIKit;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.iOS;
 using Xamarin.Forms.Platform.iOS;
 
@@ -44,12 +38,12 @@ namespace App3.iOS
             if (e.NewElement != null)
             {
                 formsMap = (PartyMap)e.NewElement;
-                
+
                 OverrideUserInterfaceStyle = UIUserInterfaceStyle.Dark;
                 var nativeMap = Control as MKMapView;
                 nativeMap.ShowsCompass = false;
                 nativeMap.ShowsUserLocation = true;
-                
+
                 formsMap.CallToNativeMethod += (sender, ev) =>
                 {
                     newPinSelected = true;
@@ -69,12 +63,12 @@ namespace App3.iOS
                 SelectCurrentPin();
                 newPinSelected = false;
             }
-            
+
         }
 
         private void SelectCurrentPin()
         {
-            
+
             var pin = formsMap.selectedPin;
             if (pin == null) return;
             var nativeMap = Control as MKMapView;
@@ -82,7 +76,7 @@ namespace App3.iOS
 
             var annotations = nativeMap.GetAnnotations(nativeMap.VisibleMapRect);
             MKPointAnnotation annotation = null;
-            foreach(NSObject anno in annotations)
+            foreach (NSObject anno in annotations)
             {
                 if (anno is MKPointAnnotation an)
                 {
@@ -103,11 +97,11 @@ namespace App3.iOS
 
             MKAnnotationView annotationView;
             if (annotation == null || annotation.GetTitle() == null) return null;
-            if (annotation.GetTitle().Equals("My Location"))
+            if (annotation is MKUserLocation)
             {
                 return null;
             }
-            
+
             annotationView = mapView.DequeueReusableAnnotation(annotation.GetTitle());
             if (annotationView == null)
             {
@@ -115,7 +109,7 @@ namespace App3.iOS
                 annotationView.Image = UIImage.FromFile("heatpin.png");
                 annotationView.CalloutOffset = new CGPoint(0, 0);
                 ((CustomMKAnnotationView)annotationView).Name = annotation.GetTitle();
-                
+
             }
             annotationView.CanShowCallout = true;
 
@@ -130,7 +124,7 @@ namespace App3.iOS
                 customPinView.Dispose();
                 customPinView = null;
             }
-            
+
         }
 
         private void OnDidSelectAnnotationView(object sender, MKAnnotationViewEventArgs e)
@@ -156,10 +150,10 @@ namespace App3.iOS
     {
         public CustomMKAnnotationView(IMKAnnotation annotation, object name)
         {
-            
+
             Annotation = annotation;
             Name = name;
-            
+
         }
 
         public object Name { get; internal set; }

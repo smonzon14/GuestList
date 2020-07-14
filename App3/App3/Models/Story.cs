@@ -1,9 +1,4 @@
-﻿using Plugin.Media.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace App3.Models
+﻿namespace App3.Models
 {
     public class Story
     {

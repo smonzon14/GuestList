@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
-
-namespace App3.Models
+﻿namespace App3.Models
 {
     public class Comment
     {

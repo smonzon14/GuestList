@@ -6,7 +6,7 @@
              xmlns:convert="clr-namespace:App3.Converters" xmlns:models="clr-namespace:App3.Models"
              mc:Ignorable="d"
              x:Class="App3.ProfilePage" Title="{Binding name}"
-             ControlTemplate="{StaticResource header}">
+             ControlTemplate="{StaticResource hiddenBarTemplate}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <convert:friendStatusToAction x:Key="friendStatusToAction"/>
@@ -15,9 +15,10 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ListView BackgroundColor="#2f2f2f" ItemTemplate="{StaticResource postTemplate}" x:Name="postListView" Refreshing="refreshView_Refreshing" RefreshControlColor="White" HasUnevenRows="True">
+        <ListView BackgroundColor="#202020" ItemTemplate="{StaticResource postTemplate}" x:Name="postListView" Refreshing="refreshView_Refreshing" RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True">
+
             <ListView.Header>
-                <StackLayout x:Name="profileStack" Padding="0,50,0,0" Spacing="0" BackgroundColor="#1f1f1f">
+                <StackLayout x:Name="profileStack" Padding="0,100,0,0" Spacing="0">
                     <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="Center" Padding="0" IsClippedToBounds="True">
                         <Image HorizontalOptions="Center" VerticalOptions="Center" Source="Profile"/>
                     </Frame>
@@ -86,7 +87,8 @@
             </ListView.Header>
 
         </ListView>
-            
+
+
 
     </ContentPage.Content>
 </ContentPage>

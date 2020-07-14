@@ -1,8 +1,5 @@
-﻿using App3.Data;
-using App3.Models;
+﻿using App3.Models;
 using App3.Views;
-using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Diagnostics;
 using Xamarin.Forms;
@@ -57,7 +54,7 @@ namespace App3
             
         }
         */
-        
+
         public async void onSubmit(object sender, EventArgs e)
         {
             Debug.WriteLine(username.Text);
@@ -78,40 +75,19 @@ namespace App3
             }*/
             else
             {
-                IFirebaseAuthenticator authenticator = DependencyService.Get<IFirebaseAuthenticator>();
-                
-                
-                string tokenId = await authenticator.SignUpUser(username.Text, password.Text);
-                if (tokenId == "")
+                User user = await App.SignupAsync(username.Text, password.Text);
+                if (user == null)
                 {
                     errorMessage.IsVisible = true;
                 }
                 else
                 {
-                    Debug.WriteLine(tokenId);
 
-                    var user = authenticator.GetCurrentUser(); //await FirebaseHelper.GetUserFromUID(uid);
-
-                    if (user == null)
-                    {
-                        Debug.WriteLine("User not found");
-                        await DisplayAlert("User not found", "Invalid email / password", "Ok");
-                        return;
-                    }
-
-                    if(!await FirebaseHelper.AddUser(user))
-                    {
-                        Debug.WriteLine("Could not add user to database");
-                        return;
-                    }
                     user.printUser();
-                    //var user = await FirebaseHelper.GetUser(username.Text);
-                    App.UserDatabase.SetUser(user);
-                    await Navigation.PopModalAsync();
                 }
             }
-            
+
         }
-        
+
     }
 }

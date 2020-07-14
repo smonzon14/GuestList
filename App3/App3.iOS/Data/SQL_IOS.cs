@@ -1,7 +1,6 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.IO;
-
-using SQLite;
 using Xamarin.Forms;
 [assembly: Dependency(typeof(App3.iOS.Data.SQL_IOS))]
 

@@ -7,10 +7,10 @@
              mc:Ignorable="d"
              x:Class="App3.MasterTabbedPage"
              BarBackgroundColor="Black"
-             BarTextColor="White" 
              SelectedTabColor="#F50058" 
-             UnselectedTabColor="Gray">
-    
+             UnselectedTabColor="Gray"
+            
+             >
     <!--Pages can be added as references or inline-->
     <!--<local:Host></local:Host>
     <local:Home></local:Home>

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms.Maps;
-using Xamarin.Forms;
-using System.Windows.Input;
-using System.Diagnostics;
 using System.ComponentModel;
+using System.Windows.Input;
+using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
 namespace App3.Models
 {
@@ -67,7 +65,9 @@ namespace App3.Models
                 0.3f, 0.75);
             return new List<string> { c1.ToHex(), c2.ToHex() };
         }
-        public string primaryHexColor { get
+        public string primaryHexColor
+        {
+            get
             {
                 if (primaryHexColor == null)
                 {
@@ -83,6 +83,6 @@ namespace App3.Models
             }
         }
         public string secondaryHexColor { get; set; }
-        
+
     }
 }

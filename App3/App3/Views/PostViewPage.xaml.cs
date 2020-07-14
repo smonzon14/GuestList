@@ -1,10 +1,10 @@
-﻿using System;
+﻿using App3.Data;
+using App3.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using App3.Models;
-using App3.Data;
 
 namespace App3.Views
 {

@@ -1,5 +1,5 @@
-﻿using Xamarin.Forms.Maps;
-using App3.Models;
+﻿using App3.Models;
+using Xamarin.Forms.Maps;
 
 namespace App3.Maps
 {
@@ -7,7 +7,8 @@ namespace App3.Maps
     public class PartyPin : Pin
     {
         public PartyPin() { }
-        public PartyPin(Party p) {
+        public PartyPin(Party p)
+        {
             pid = p.pid;
             Type = PinType.Place;
             Position = p.geoPosition;

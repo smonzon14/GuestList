@@ -1,7 +1,4 @@
-﻿
-using SQLite;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 
 namespace App3.Models
@@ -15,7 +12,7 @@ namespace App3.Models
         public string name { get; set; }
         public string email { get; set; }
         public int friendStatus { get; set; }
-        
+
         public void printUser()
         {
             Debug.WriteLine("id: " + uid);

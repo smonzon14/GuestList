@@ -1,18 +1,17 @@
-﻿using App3.Models;
+﻿using App3.Data;
+using App3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using App3.Data;
-using System.Linq;
-using System.Diagnostics;
 
 namespace App3
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ProfilePage : ContentPage
     {
-        MasterTabbedPage parent;
         User user { get; set; }
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
@@ -21,9 +20,8 @@ namespace App3
         public string ToolbarLeftSource { get; private set; }
         public List<Party> partiesList;
         public List<Post> postsList;
-        public ProfilePage(User userToDisplay, MasterTabbedPage parent)
+        public ProfilePage(User userToDisplay)
         {
-            this.parent = parent;
 
             NavigationPage.SetHasNavigationBar(this, false);
             user = userToDisplay;
@@ -32,15 +30,10 @@ namespace App3
             {
                 ToolbarRightCommand = new Command(() =>
                 {
-                    Navigation.PushAsync(new SettingsPage(this.parent));
+                    Navigation.PushAsync(new SettingsPage());
                 });
                 ToolbarRightSource = "button_settings";
                 user = App.UserDatabase.GetUser();
-                if (user == null && parent != null)
-                {
-                    parent.OnLogout();
-                    return;
-                }
             }
             else
             {
@@ -58,13 +51,13 @@ namespace App3
                 if (user.uid.Equals(App.UserDatabase.GetUser().uid)) friendButton.IsVisible = false;
                 displayUser();
             }
-            
+
 
         }
 
         private void profileActionBtn_Clicked(object sender, EventArgs e)
         {
-            
+
             switch (user.friendStatus)
             {
                 case 0:
@@ -120,9 +113,8 @@ namespace App3
         }
         void refreshView_Refreshing(object sender, EventArgs e)
         {
-            var refreshView = sender as RefreshView;
             displayUser();
-            refreshView.IsRefreshing = false;
+            postListView.IsRefreshing = false;
 
         }
         public async void displayUser()
@@ -133,7 +125,7 @@ namespace App3
             BindingContext = user;
             partiesList = await FirebaseHelper.GetPartiesThrownByUser(user.uid);
             postsList = await FirebaseHelper.GetPostsForUser(user.uid);
-            
+
             if (partiesList.Count > 0)
             {
 
@@ -151,7 +143,7 @@ namespace App3
                 //noPartiesMsg.IsVisible = true;
             }
 
-            if(postsList.Count > 0)
+            if (postsList.Count > 0)
             {
                 postListView.ItemsSource = postsList;
             }
@@ -171,7 +163,7 @@ namespace App3
             showPartiesButton.BackgroundColor = Color.Transparent;
             partiesView.IsVisible = false;
             postListView.ItemsSource = postsList;
-            
+
         }
 
         private void ShowParties(object sender, EventArgs e)
@@ -192,7 +184,7 @@ namespace App3
 
             //goingCount.Text = party.numPeopleGoing.ToString();
             //updateControls();
-            
+
 
         }
     }

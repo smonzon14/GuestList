@@ -22,7 +22,7 @@ namespace App3.Views
 
         private async void PostButton_Clicked(object sender, EventArgs e)
         {
-            if(message.Text == null || message.Text.Length < 1)
+            if (message.Text == null || message.Text.Length < 1)
             {
                 await DisplayAlert("Can't post an empty message!", null, "Ok");
                 return;

@@ -5,76 +5,86 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="App3.HomePage"
-             Title="Invites"
              xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients" xmlns:models="clr-namespace:App3.Models"
              x:Name="homePage"
              ControlTemplate="{StaticResource hiddenBarTemplate}">
     <ContentPage.Content>
 
         <!--<RefreshView x:Name="refreshView" RefreshColor="Turquoise" Refreshing="refresh">-->
-        
-        <AbsoluteLayout>
 
+        <Grid RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="0" x:Name="keyboardSpacing"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
 
-
-            <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"/>
+            <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" Grid.RowSpan="6" Grid.ColumnSpan="2"/>
             <!--<Label Text="ZP" TextColor="White" FontSize="30" FontAttributes="Italic,Bold"  Grid.Column="2" HorizontalTextAlignment="Center" Grid.Row="1" Padding="15"/>-->
-            
-
-            <StackLayout AbsoluteLayout.LayoutBounds="1,1,1,0.2" AbsoluteLayout.LayoutFlags="All">
-                <!-- Main Party Stack -->
-                <StackLayout>
-                    <CarouselView x:Name="partyCarousel" VerticalOptions="EndAndExpand" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="40" EmptyView="Invites will appear here" HeightRequest="200">
-
-                        <CarouselView.ItemTemplate>
-                            <DataTemplate>
-
-                                <StackLayout>
-                                    <StackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
-                                    </StackLayout.GestureRecognizers>
-                                    <Frame CornerRadius="20" Padding="0" WidthRequest="320" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" BackgroundColor="#d0d0d0">
-                                        <AbsoluteLayout>
-
-                                            <StackLayout Spacing="5" Padding="12" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
-
-                                                <Label Text="{Binding name}" FontSize="18" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                                <Label Text="{Binding thrower}" FontSize="12" TextColor="Gray"/>
-                                                <Label Text="{Binding address}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation" MaxLines="1"/>
-                                                <Label Text="{Binding time}" FontSize="14" TextColor="Black"/>
-                                                <!--, StringFormat='{0:d} @ {0:h:mm tt}'-->
-                                            </StackLayout>
-                                        </AbsoluteLayout>
-
-                                    </Frame>
-
-                                </StackLayout>
-
-
-                            </DataTemplate>
-
-                        </CarouselView.ItemTemplate>
-                    </CarouselView>
-                    
-                </StackLayout>
-                
-            </StackLayout>
-            <StackLayout Padding="70,5,70,0" HorizontalOptions="FillAndExpand" VerticalOptions="Start" AbsoluteLayout.LayoutBounds="0,0.05,1,0.05" AbsoluteLayout.LayoutFlags="All">
+            <StackLayout Padding="70,5,70,0" HorizontalOptions="FillAndExpand" VerticalOptions="Start" Grid.Row="1" Grid.ColumnSpan="2">
                 <Frame Padding="0" CornerRadius="15" BackgroundColor="Transparent">
-                    <SearchBar x:Name="searchBar" IsVisible="false" BackgroundColor="#d0ffffff" Placeholder="Search Invites" PlaceholderColor="#F50058" FontSize="14" TextColor="White" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Focused="SearchBar_Focused" Unfocused="SearchBar_Unfocused" HeightRequest="30"/>
+                    <SearchBar x:Name="searchBar" IsVisible="false" BackgroundColor="#d0ffffff" Placeholder="Search Invites" PlaceholderColor="#F50058" FontSize="14" TextColor="White" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Focused="SearchBar_Focused" Unfocused="SearchBar_Unfocused" HeightRequest="30" TextChanged="searchBar_TextChanged"/>
 
                 </Frame>
             </StackLayout>
-            <StackLayout AbsoluteLayout.LayoutBounds="0.97,0.8,0.15,0.25" AbsoluteLayout.LayoutFlags="All" Spacing="15">
+
+            <StackLayout x:Name="controls" Spacing="15" Grid.Row="3" Grid.Column="1">
                 <Frame VerticalOptions="Center" HorizontalOptions="Center" Padding="0" CornerRadius="26" BackgroundColor="#F50058">
                     <ImageButton Source="button_plus_simple_white" Clicked="hostButtonClicked"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="15"/>
                 </Frame>
                 <ImageButton Source="tab_search" Clicked="SearchButton_Clicked" Padding="10"/>
                 <ImageButton Source="car" Padding="10"/>
             </StackLayout>
-            
 
-        </AbsoluteLayout>
+            <StackLayout Grid.Row="4" Grid.ColumnSpan="2">
+                <CarouselView x:Name="partyCarousel" VerticalOptions="EndAndExpand" BackgroundColor="#00000000" Opacity="1.0" PeekAreaInsets="40" HeightRequest="200">
+                    <CarouselView.EmptyView>
+                        <Label Text="No Invites" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="White" BackgroundColor="#57000000" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    </CarouselView.EmptyView>
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackLayout>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Frame CornerRadius="20" Padding="0" WidthRequest="320" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" BackgroundColor="#d0d0d0">
+                                    <AbsoluteLayout>
+
+                                        <StackLayout Spacing="5" Padding="12" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+
+                                            <Label Text="{Binding name}" FontSize="18" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                            <Label Text="{Binding thrower}" FontSize="12" TextColor="Gray"/>
+                                            <Label Text="{Binding address}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                            <Label Text="{Binding time}" FontSize="14" TextColor="Black"/>
+                                            <!--, StringFormat='{0:d} @ {0:h:mm tt}'-->
+                                        </StackLayout>
+                                    </AbsoluteLayout>
+
+                                </Frame>
+
+                            </StackLayout>
+
+
+                        </DataTemplate>
+
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+
+            </StackLayout>
+
+
+
+
+        </Grid>
+
         <!--</RefreshView>-->
 
     </ContentPage.Content>

@@ -1,14 +1,10 @@
 ﻿using App3.Data;
 using App3.Models;
-using Firebase.Storage;
 using Plugin.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -21,9 +17,9 @@ namespace App3.Views
         public ICommand DotsCommand { get; private set; }
         public FeedPage()
         {
-            DotsCommand = new Command(async (object item)=>
+            DotsCommand = new Command(async (object item) =>
             {
-                if(item is Post || item is Party)
+                if (item is Post || item is Party)
                 {
                     string[] options = { "Share", "Go to Profile", "Go to Comments" };
                     var resp = await DisplayActionSheet(null, "Cancel", "Report", options);
@@ -53,7 +49,7 @@ namespace App3.Views
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
             update();
-            
+
         }
 
 
@@ -137,10 +133,11 @@ namespace App3.Views
                 if (file == null)
                     return;
                 userStory.Source = ImageSource.FromStream(() => { return file.GetStream(); });
-                FirebaseHelper.PostStory(new Story {
-                    media = file.GetStream(), 
-                    location = Xamarin.Essentials.Geolocation.GetLastKnownLocationAsync().ToString(), 
-                    uid = App.UserDatabase.GetUser().uid 
+                FirebaseHelper.PostStory(new Story
+                {
+                    media = file.GetStream(),
+                    location = Xamarin.Essentials.Geolocation.GetLastKnownLocationAsync().ToString(),
+                    uid = App.UserDatabase.GetUser().uid
                 });
             }
             catch (Exception ex)

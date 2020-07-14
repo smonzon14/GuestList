@@ -1,10 +1,7 @@
 ﻿using App3.Maps;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms.Maps;
-using Xamarin.Forms;
-using System.Linq;
 
 namespace App3.Models
 {
@@ -26,7 +23,7 @@ namespace App3.Models
         }
         public void generateMap(List<Party> pList)
         {
-            
+
             if (pList.Count > 0)
             {
                 foreach (Party p in pList)
@@ -44,13 +41,13 @@ namespace App3.Models
                         PartyPin pin = new PartyPin(p);
                         Pins.Add(pin);
                         partyPins.Add(pin);
-                        
+
                     }
                 }
 
                 moveTo(pList[0]);
             }
-            
+
         }
         public void moveTo(Party party)
         {
@@ -60,8 +57,8 @@ namespace App3.Models
 
             RaiseCallToNativeMethod();
             MoveToRegion(span);
-            
+
         }
-        
+
     }
 }

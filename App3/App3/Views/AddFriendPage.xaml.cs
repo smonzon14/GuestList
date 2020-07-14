@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using App3.Services;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using App3.Data;
+﻿using App3.Data;
 using App3.Models;
-using System.Threading;
+using App3.Services;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace App3.Views
 {
@@ -49,7 +48,7 @@ namespace App3.Views
             if (profileBuffer.ContainsKey(friend)) page = profileBuffer[friend];
             else
             {
-                page = new ProfilePage(friend, null);
+                page = new ProfilePage(friend);
                 profileBuffer.Add(friend, page);
             }
             await Navigation.PushAsync(page);
@@ -66,13 +65,13 @@ namespace App3.Views
                 return;
             }
             await Task.Run(() => Thread.Sleep(500));
-            if(text == entry.Text)
+            if (text == entry.Text)
             {
-                var users = FirebaseHelper.FindUsersMatching(entry.Text, ct);
+                var users = FirebaseHelper.FindUsersMatching(entry.Text);
                 //foreach (User u in users) u.friendStatus = FirebaseHelper.FriendStatus(App.UserDatabase.GetUser().uid, u.uid).Result;
                 var uid = App.UserDatabase.GetUser().uid;
                 userList.ItemsSource = users;
-               Debug.WriteLine("done.");
+                Debug.WriteLine("done.");
             }
         }
         private void btnAdd_Clicked(object sender, EventArgs e)
@@ -97,12 +96,12 @@ namespace App3.Views
         private void addUserAsFriend(string uid)
         {
             var currentUser = App.UserDatabase.GetUser();
-            if(uid != null && currentUser != null && currentUser.uid != null && !uid.Equals(currentUser.uid))
+            if (uid != null && currentUser != null && currentUser.uid != null && !uid.Equals(currentUser.uid))
             {
                 if (!FirebaseHelper.AddFriend(currentUser.uid, uid).Result) Debug.WriteLine("Error");
             }
 
-            
+
         }
         private async void btnScan_Clicked(object sender, EventArgs e)
         {

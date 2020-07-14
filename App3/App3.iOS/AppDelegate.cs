@@ -18,7 +18,7 @@ namespace App3.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            
+
             global::Xamarin.Forms.Forms.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             Firebase.Core.App.Configure();

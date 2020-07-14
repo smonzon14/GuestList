@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using App3.Data;
+using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
-using App3.Data;
-using System.Diagnostics;
-using System.ComponentModel;
 
 namespace App3.Models
 {
@@ -26,7 +22,8 @@ namespace App3.Models
             item.Liked = !item.Liked;
         });
         private bool liked = false;
-        public bool Liked {
+        public bool Liked
+        {
             get { return liked; }
             set
             {
@@ -44,7 +41,7 @@ namespace App3.Models
         public string uid;
         public string pid;
 
-        
+
 
         public string name { get; set; }
         public string message { get; set; }

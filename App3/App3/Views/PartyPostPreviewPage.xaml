@@ -49,9 +49,9 @@
                 </ScrollView>
                 -->
             </StackLayout>
-            <StackLayout Padding="20" VerticalOptions="EndAndExpand" Grid.Row="2">
+            <StackLayout Padding="30" VerticalOptions="EndAndExpand" Grid.Row="2">
                 <Frame CornerRadius="30" Padding="0">
-                    <Button Text="Post and invite" Clicked="postButtonClicked" HeightRequest="80" BackgroundColor="Black" TextColor="BlueViolet" FontSize="40"/>
+                    <Button Text="Post" Clicked="postButtonClicked" HeightRequest="80" BackgroundColor="#57000000" TextColor="BlueViolet" FontSize="40"/>
 
                 </Frame>
             </StackLayout>

@@ -1,15 +1,12 @@
-﻿using App3.Models;
-using App3.Services;
+﻿using App3.Data;
+using App3.Models;
+using App3.Views;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
-using App3.Data;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Diagnostics;
-using App3.Views;
 
 namespace App3
 {
@@ -19,7 +16,6 @@ namespace App3
 
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
-        private List<User> friendsList;
         static Dictionary<User, ProfilePage> profileBuffer = new Dictionary<User, ProfilePage>();
         static AddFriendPage addFriendPage = new AddFriendPage();
         public FriendsPage()
@@ -33,12 +29,10 @@ namespace App3
             InitializeComponent();
             //friendsListView.ItemTemplate = Templates.friendDescriptionLayout();
             NavigationPage.SetHasNavigationBar(this, false);
-            update();
         }
 
         private void FriendsPage_Appearing(object sender, EventArgs e)
         {
-            Debug.WriteLine("wtf");
             friendsListView.ItemsSource = null;
             friendsListView.ItemsSource = App.UserFriends;
             if (App.UserFriends.Count > 0) noFriendsMsg.IsVisible = false;
@@ -47,49 +41,40 @@ namespace App3
 
         private async void friendItemTapped(object sender, ItemTappedEventArgs e)
         {
-            
+
             var friend = e.Item as User;
             ProfilePage page;
             if (profileBuffer.ContainsKey(friend)) page = profileBuffer[friend];
             else
             {
-                page = new ProfilePage(friend, null);
+                page = new ProfilePage(friend);
                 profileBuffer.Add(friend, page);
             }
             await Navigation.PushAsync(page);
             friendsListView.SelectedItem = null;
         }
-        
-        private async Task<bool> update()
+
+        private async Task update()
         {
-            try
-            {
-                var uid = App.UserDatabase.GetUser().uid;
-                friendsList = await FirebaseHelper.GetFriendsList(uid);
-                friendsListView.ItemsSource = friendsList;//testPartyList();
+            List<User> list;
+            try { 
+                list = await App.GetFriendsAsync();
+                if (list.Count < 1)
+                {
+                    noFriendsMsg.IsVisible = true;
+                    friendsListView.ItemsSource = null;
+                }
+                else
+                {
+                    noFriendsMsg.IsVisible = false;
+                    friendsListView.ItemsSource = null;
+                    friendsListView.ItemsSource = list;
+                }
             }
             catch (Exception e)
             {
                 Debug.WriteLine("Error getting friends: " + e);
             }
-            finally
-            {
-                if (friendsList.Count < 1)
-                {
-                    //Implement no friends message :(
-                    noFriendsMsg.IsVisible = true;
-                }
-                else
-                {
-                    noFriendsMsg.IsVisible = false;
-                }
-                Dispatcher.BeginInvokeOnMainThread(() =>
-                {
-                    App.UserFriends.Clear();
-                    App.UserFriends.AddRange(friendsList);
-                });
-            }
-            return true;
             
         }
 

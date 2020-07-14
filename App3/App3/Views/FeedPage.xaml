@@ -7,12 +7,11 @@
              xmlns:converters="clr-namespace:App3.Converters"
              mc:Ignorable="d"
              x:Class="App3.Views.FeedPage"
-             x:Name="feed"
              NavigationPage.HasNavigationBar="False"
-             Title="Feed"
+             Title="Chatter"
              ControlTemplate="{StaticResource header}">
     <ContentPage.Resources>
-        <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" PostTemplate="{StaticResource postTemplate}" PartyTemplate="{StaticResource partyTemplate}"/>
+        <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" PostTemplate="{StaticResource postTemplate}" SecondaryTemplate="{StaticResource partyTemplate}"/>
     </ContentPage.Resources>
     <ContentPage.Content>
 

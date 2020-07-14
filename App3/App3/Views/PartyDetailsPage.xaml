@@ -3,73 +3,84 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
-             xmlns:local="clr-namespace:App3"
+             xmlns:local="clr-namespace:App3" xmlns:converters="clr-namespace:App3.Converters" xmlns:models="clr-namespace:App3.Models"
              mc:Ignorable="d"
              x:Class="App3.PartyDetailsPage"
-             
-             >
+             NavigationPage.HasNavigationBar="False"
+             ControlTemplate="{StaticResource hiddenBarTemplate}">
     <ContentPage.Resources>
         <Color x:Key="defaultTint">#ffff00ff</Color>
         <Color x:Key="defaultDeselected">#ffffffff</Color>
+        <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" PostTemplate="{StaticResource postTemplate}" SecondaryTemplate="{StaticResource partyTemplate}"/>
 
     </ContentPage.Resources>
     <ContentPage.Content>
         <AbsoluteLayout>
-            <ScrollView AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="#1f1f1f" Padding="0" Margin="0,-70,0,-40">
-                <StackLayout BackgroundColor="Black">
-                    <AbsoluteLayout HeightRequest="630">
-                        <Image Source="https://rockymountevents.com/wp-content/uploads/2018/09/birthday_celebration.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1"/>
+            <ListView x:Name="partyDetailsListView" SeparatorVisibility="None" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="#202020" Margin="0,-30,0,0">
+                <ListView.Header>
+                    <StackLayout Spacing="0">
+                        <AbsoluteLayout HeightRequest="500">
+                            <Image Source="https://rockymountevents.com/wp-content/uploads/2018/09/birthday_celebration.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1"/>
 
-                        <magic:GradientView AbsoluteLayout.LayoutBounds="1,1,1,0.7" AbsoluteLayout.LayoutFlags="All">
-                            <magic:GradientView.GradientSource >
-                                <magic:CssGradientSource>
-                                    <x:String>
-                                        <![CDATA[
-                    linear-gradient(to top, #ff1f1f1f, #001f1f1f)
+                            <magic:GradientView AbsoluteLayout.LayoutBounds="1,1,1,0.5" AbsoluteLayout.LayoutFlags="All">
+                                <magic:GradientView.GradientSource >
+                                    <magic:CssGradientSource>
+                                        <x:String>
+                                            <![CDATA[
+                    linear-gradient(to top, #ff202020, #00202020)
                             ]]>
-                                    </x:String>
-                                </magic:CssGradientSource>
-                            </magic:GradientView.GradientSource>
-                        </magic:GradientView>
-                        <StackLayout Padding="25,0,25,0" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="End">
-                            
+                                        </x:String>
+                                    </magic:CssGradientSource>
+                                </magic:GradientView.GradientSource>
+                            </magic:GradientView>
 
-                            <Label Text="{Binding name}" TextColor="White" FontAttributes="Bold" FontSize="40" LineBreakMode="WordWrap" MaxLines="2" VerticalTextAlignment="End"/>
-                            <Label Text="{Binding time}" FontSize="20" TextColor="LightGray"/>
-                            <Label Text="{Binding address}" FontSize="20" TextColor="LightGray"/>
-                            
+                            <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" Padding="5,0,5,25">
+                                <StackLayout HorizontalOptions="StartAndExpand">
+
+
+                                    <Label Text="{Binding name}" TextColor="White" FontAttributes="Bold" FontSize="40" LineBreakMode="WordWrap" MaxLines="2" VerticalOptions="EndAndExpand"/>
+                                    <Label Text="{Binding thrower}" FontSize="16" TextColor="LightGray" FontAttributes="Italic" HorizontalTextAlignment="Start"/>
+                                    <Label Text="{Binding time}" FontSize="16" TextColor="LightGray" FontAttributes="Italic" HorizontalTextAlignment="Start"/>
+                                    <Label Text="{Binding address}" FontSize="16" TextColor="LightGray" FontAttributes="Italic" HorizontalTextAlignment="Start"/>
+
+                                </StackLayout>
+                                <StackLayout WidthRequest="60" VerticalOptions="End" Spacing="15">
+                                    <ImageButton Source="car" BackgroundColor="Transparent" Padding="10"/>
+                                    <ImageButton Source="button_share" BackgroundColor="Transparent" Padding="10"/>
+                                </StackLayout>
+                            </StackLayout>
+
+
+
+                        </AbsoluteLayout>
+                        <StackLayout Orientation="Horizontal" Spacing="0">
+                            <StackLayout  x:Name="showPeopleButton"  BackgroundColor="#F50058" HorizontalOptions="FillAndExpand">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ShowPeople"/>
+                                </StackLayout.GestureRecognizers>
+                                <Label Padding="20" FontSize="20" TextColor="White" Text="People"  HeightRequest="30" HorizontalTextAlignment="Center"/>
+                            </StackLayout>
+                            <StackLayout  x:Name="showCommentsButton"  BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" >
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ShowComments"/>
+                                </StackLayout.GestureRecognizers>
+                                <Label Padding="20" FontSize="20" TextColor="White" Text="Comments"  HeightRequest="30" HorizontalTextAlignment="Center"/>
+                            </StackLayout>
+                            <StackLayout  x:Name="showMapButton"  BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" >
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ShowMap"/>
+                                </StackLayout.GestureRecognizers>
+                                <Label Padding="20" FontSize="20" TextColor="White" Text="Map"  HeightRequest="30" HorizontalTextAlignment="Center"/>
+                            </StackLayout>
                         </StackLayout>
-                    </AbsoluteLayout>
-                    <StackLayout IsVisible="True" x:Name="partyButtonsView" Opacity="1.0" HorizontalOptions="Fill" Padding="30,0,30,0" BackgroundColor="Transparent" Orientation="Horizontal">
-
-
-                        <!-- People Going button -->
-                        <Frame CornerRadius="24.5" Padding="-1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" WidthRequest="50" HeightRequest="50" HasShadow="False">
-                            <ImageButton Source="button_ppl" BackgroundColor="#ff1919" Padding="0" />
-                        </Frame>
-                        <!-- Comments Button -->
-                        <Frame CornerRadius="24.5" Padding="-1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" WidthRequest="50" HeightRequest="50" HasShadow="False">
-                            <ImageButton Source="button_comments" BackgroundColor="#c219ff" Padding="0" />
-                        </Frame>
-                        <!-- Go Button -->
-                        <Frame CornerRadius="24.5" Padding="-1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" WidthRequest="50" HeightRequest="50" HasShadow="False">
-                            <ImageButton Source="button_go" BackgroundColor="#19ffd9" Padding="0"/>
-                        </Frame>
-                        <!-- Share Button -->
-                        <Frame CornerRadius="24.5" Padding="-1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" WidthRequest="50" HeightRequest="50" HasShadow="False">
-                            <ImageButton Source="button_share" BackgroundColor="#f7ff19" Padding="0"/>
-                        </Frame>
-                        <!-- Up Button -->
-                        <Frame CornerRadius="24.5" Padding="-1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" WidthRequest="50" HeightRequest="50" HasShadow="False">
-                            <ImageButton x:Name="upButton" Source="button_up" BackgroundColor="#ff9b19" Padding="0"/>
-                        </Frame>
-
+                        
+                        <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="Gray"/>
+                        
+                        <models:PartyMap x:Name="map" IsVisible="false"  HeightRequest="300" IsEnabled="False"/>
                     </StackLayout>
-                </StackLayout>
-            </ScrollView>
-            <Frame CornerRadius="10" Padding="0" AbsoluteLayout.LayoutBounds="0.05,0.05,0.08,0.03" AbsoluteLayout.LayoutFlags="All">
-                <Button Text="X" Clicked="ExitButton_Clicked" TextColor="Black" FontSize="20" WidthRequest="20" HeightRequest="20" BackgroundColor="White"/>
-            </Frame>
+                </ListView.Header>
+                
+            </ListView>
         </AbsoluteLayout>
         
         

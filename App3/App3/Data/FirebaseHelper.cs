@@ -2,15 +2,12 @@
 using App3.Models;
 using Firebase.Database;
 using Firebase.Database.Query;
+using Firebase.Storage;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System;
-using System.Diagnostics;
-using ZXing.OneD;
-using Firebase.Storage;
-using System.IO;
 
 namespace App3.Data
 {
@@ -21,11 +18,13 @@ namespace App3.Data
 
         public static FirebaseClient firebase = new FirebaseClient("https://tribal-dispatch-276722.firebaseio.com/");
 
+
+
         public static FirebaseStorage storage = new FirebaseStorage("tribal-dispatch-276722.appspot.com");
         /*
          * User
          */
-        public static List<User> FindUsersMatching(string query, System.Threading.CancellationToken ct)
+        public static List<User> FindUsersMatching(string query)
         {
             if (query.Length == 0) return new List<User>();
             try
@@ -243,19 +242,22 @@ namespace App3.Data
             }
         }
 
-        public static async Task<List<Party>> GetInvitedParties(string userid)
+        public static async Task<List<Party>> GetInvitedParties(List<User> friends)
         {
             Debug.WriteLine("Getting Invites...");
             List<Party> parties = new List<Party>();
-            var partiesList = firebase.Child("Invites").Child(userid).OnceAsync<string>().Result;
-            if (partiesList == null) return parties;
-            var partiesIdList = partiesList.Select(item => item.Object).ToList();
-
-            Debug.WriteLine("OK");
-            foreach (string id in partiesIdList)
+            foreach (User friend in friends)
             {
-                var p = await GetParty(id, userid);
-                if (p != null) parties.Add(p);
+                var partiesList = await firebase.Child("Parties").Child(friend.uid).OnceAsync<Party>().ConfigureAwait(false);
+                if (partiesList != null)
+                {
+                    foreach(var obj in partiesList)
+                    {
+                        Party party = obj.Object;
+                        party.pid = obj.Key;
+                        parties.Add(party);
+                    }
+                }
             }
             return parties;
         }
@@ -380,7 +382,7 @@ namespace App3.Data
         {
             try
             {
-                var firebaseObj = await firebase.Child("Stories").Child(story.uid).PostAsync(new StoryPostMetaData { location = "HEllo"}).ConfigureAwait(false);
+                var firebaseObj = await firebase.Child("Stories").Child(story.uid).PostAsync(new StoryPostMetaData { location = "HEllo" }).ConfigureAwait(false);
                 var key = firebaseObj?.Key;
                 var storyRef = storage
                     .Child("Stories")
@@ -391,11 +393,12 @@ namespace App3.Data
 
 
                 Debug.WriteLine("Story posted: " + url);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.WriteLine("Could not post story: " + e.Message);
             }
-            
+
         }
         public static async Task<string> GetStoryURL(string uid, string key)
         {
@@ -430,7 +433,7 @@ namespace App3.Data
             {
                 Debug.WriteLine("Error Getting user stories: " + e);
             }
-            
+
             return stories;
         }
 
@@ -438,7 +441,7 @@ namespace App3.Data
         {
             await firebase.Child("Likes").Child(post.pid).Child(userid).PutAsync(true).ConfigureAwait(false);
         }
-        public static async void RemoveLikeFromPost(Post post, string userid) 
+        public static async void RemoveLikeFromPost(Post post, string userid)
         {
             await firebase.Child("Likes").Child(post.pid).Child(userid).DeleteAsync().ConfigureAwait(false);
         }

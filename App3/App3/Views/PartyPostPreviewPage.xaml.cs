@@ -2,7 +2,6 @@
 using App3.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -33,7 +32,7 @@ namespace App3
             map.generateMap(previewPartyList);
             MapSpan span = MapSpan.FromCenterAndRadius(previewParty.geoPosition, Distance.FromMiles(0.3));
             map.MoveToRegion(span);
-            
+
         }
         private async Task<bool> postParty(Party party)
         {
@@ -54,7 +53,11 @@ namespace App3
             {
                 await Navigation.PopModalAsync();
             }
-            
+            else
+            {
+                await DisplayAlert("Couldn't post", null, "Ok");
+            }
+
         }
     }
 }

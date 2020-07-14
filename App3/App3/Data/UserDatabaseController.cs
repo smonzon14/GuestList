@@ -1,8 +1,6 @@
 ﻿using App3.Models;
 using SQLite;
 using Xamarin.Forms;
-using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace App3.Data
 {
@@ -19,9 +17,9 @@ namespace App3.Data
         {
             lock (locker)
             {
-                if(database.Table<User>().Count() == 0) return null;
+                if (database.Table<User>().Count() == 0) return null;
                 else return database.Table<User>().First();
-                
+
             }
         }
         public int SetUser(User user)
@@ -36,7 +34,7 @@ namespace App3.Data
         {
             return database.DeleteAll<User>();
         }
-        
+
         /*public int DeleteUser(int id)
         {
             lock (locker) return database.Delete<User>(id);

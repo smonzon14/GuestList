@@ -1,8 +1,6 @@
-﻿using App3.Models;
-using MagicGradients;
+﻿using MagicGradients;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace App3
@@ -20,12 +18,12 @@ namespace App3
 
             hue -= 10;
             if (hue < 0) hue += 255;
-            
+
             Color c2 = Color.FromHsla(
                 (hue / 255.0f),
                 0.5f,
                 0.5f, 0.5);
-            return new List<string> {c1.ToHex(),c2.ToHex() };
+            return new List<string> { c1.ToHex(), c2.ToHex() };
         }
         private static ViewCell friendCell()
         {
@@ -50,7 +48,7 @@ namespace App3
 
             StackLayout info = new StackLayout
             {
-                Padding = new Thickness(20,0,0,0),
+                Padding = new Thickness(20, 0, 0, 0),
                 VerticalOptions = LayoutOptions.Center,
                 Orientation = StackOrientation.Vertical,
                 Children =
@@ -96,7 +94,7 @@ namespace App3
                 }
             };
         }
-        
+
         private static ViewCell commentCell()
         {
             Label nameLabel = new Label
@@ -114,7 +112,7 @@ namespace App3
                 FontSize = 12
             };
             comment.SetBinding(Label.TextProperty, "comment");
-            
+
             StackLayout info = new StackLayout
             {
                 Padding = 0,
@@ -184,14 +182,14 @@ namespace App3
                 FontSize = 18,
                 TextColor = defaultTextColor,
                 Padding = new Thickness(20, 0, 20, 0),
-                LineBreakMode= LineBreakMode.TailTruncation
+                LineBreakMode = LineBreakMode.TailTruncation
             };
             whereLabel.SetBinding(Label.TextProperty, "address");
 
             Label descriptionLabel = new Label();
             descriptionLabel.SetBinding(Label.TextProperty, "description");
             descriptionLabel.TextColor = defaultTextColor;
-            descriptionLabel.Padding = new Thickness(20,10,20,0);
+            descriptionLabel.Padding = new Thickness(20, 10, 20, 0);
             descriptionLabel.LineBreakMode = LineBreakMode.TailTruncation;
             descriptionLabel.MaxLines = 2;
 
@@ -237,12 +235,12 @@ namespace App3
 
 
             };
-            
+
             var img = new Image
             {
                 HorizontalOptions = LayoutOptions.Fill,
-                Aspect=Aspect.AspectFill,
-                
+                Aspect = Aspect.AspectFill,
+
                 Source = "https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/8/shutterstock_199419065.jpg"
             };
 
@@ -256,8 +254,8 @@ namespace App3
 
             return new StackLayout
             {
-                
-                
+
+
                 Children = { new Frame
                     {
 
@@ -277,7 +275,7 @@ namespace App3
         }
         public static DataTemplate PartyObjectUI()
         {
-            
+
             return new DataTemplate(() => { return partyLayout(); });
         }
         public static DataTemplate friendDescriptionLayout()
