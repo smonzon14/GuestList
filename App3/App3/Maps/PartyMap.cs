@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using Xamarin.Forms.GoogleMaps;
+//using Xamarin.Forms.GoogleMaps;
 
 namespace App3.Models
 {
@@ -29,7 +29,7 @@ namespace App3.Models
                 foreach (Party p in pList)
                 {
                     Pins.Add(p.pin);
-
+                    
                     
                 }
 
