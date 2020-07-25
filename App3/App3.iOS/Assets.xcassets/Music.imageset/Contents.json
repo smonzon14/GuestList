@@ -2,11 +2,6 @@
   "images": [
     {
       "appearances": [],
-      "scale": "3x",
-      "idiom": "universal"
-    },
-    {
-      "appearances": [],
       "scale": "1x",
       "idiom": "universal"
     },
@@ -17,8 +12,13 @@
     },
     {
       "appearances": [],
+      "scale": "3x",
+      "idiom": "universal"
+    },
+    {
+      "appearances": [],
       "idiom": "universal",
-      "filename": "friends.pdf"
+      "filename": "music.pdf"
     }
   ],
   "properties": {},

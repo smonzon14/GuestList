@@ -15,7 +15,7 @@ namespace App3
             loadViews();
 
         }
-        internal class FakePage : ContentPage { }
+        internal class FakePage : ContentPage { public FakePage() { BackgroundColor = Color.Black; } }
         private void loadViews()
         {
 
@@ -39,19 +39,20 @@ namespace App3
                 BarTextColor = Color.White,
                 BarBackgroundColor = Color.Black
             };
-            Page host = new FakePage();
-            //host.Title = "Create";
-            host.IconImageSource = "tab_plus";
-
+            Page host = new FakePage()
+            {
+                IconImageSource = "tab_plus"
+            };
+            
             // Profile Page
-            NavigationPage profile = new NavigationPage(new ProfilePage(null))
+            NavigationPage profile = new NavigationPage(new CurrentUserProfilePage())
             {
                 //Title = "Profile",
                 IconImageSource = "tab_profile",
                 BarTextColor = Color.White,
                 BarBackgroundColor = Color.Black
             };
-
+            
             NavigationPage feed = new NavigationPage(new FeedPage())
             {
                 //Title = "Chatter",
@@ -60,10 +61,11 @@ namespace App3
                 BarBackgroundColor = Color.Black
             };
 
-            Children.Add(friends);
-            Children.Add(home);
-            Children.Add(host);
+            //Children.Add(friends);
+            //Children.Add(home);
+            
             Children.Add(feed);
+            Children.Add(host);
             Children.Add(profile);
 
             CurrentPage = home;
@@ -75,8 +77,9 @@ namespace App3
         {
             if (CurrentPage is FakePage)
             {
+                var createPage = new NavigationPage(new PartyHostPage()) { BarTextColor = Color.White, BarBackgroundColor = Color.Black };
                 CurrentPage = _lastPage;
-                await Navigation.PushModalAsync(new NavigationPage(new PartyHostPage()));
+                await Navigation.PushModalAsync(createPage);
             }
             else _lastPage = CurrentPage;
 

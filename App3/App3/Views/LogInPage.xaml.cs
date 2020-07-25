@@ -19,7 +19,11 @@ namespace App3.Views
         {
             //if(!await FirebaseHelper.UserWithEmailExists(username.Text)) errorMessage.IsVisible = true;
 
-            await App.LoginAsync(username.Text, password.Text);
+            if(await App.LoginAsync(username.Text, password.Text) == null)
+            {
+                errorMessage.Text = "User not found with username/password";
+                errorMessage.IsVisible = true;
+            }
 
 
 

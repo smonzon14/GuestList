@@ -7,48 +7,50 @@
              mc:Ignorable="d"
              x:Class="App3.FriendsPage"
              Title="Friends"
-             ControlTemplate="{StaticResource header}">
+             ControlTemplate="{StaticResource header}"
+             >
     <ContentPage.Resources>
         <converters:statusToMessage x:Key="statusToMessage"/>
         
     </ContentPage.Resources>
     <ContentPage.Content>
 
-            <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
-                <StackLayout HorizontalOptions="Fill" Padding="0">
+        <RefreshView x:Name="refreshView" Refreshing="refreshView_Refreshing" RefreshColor="White">
+            <StackLayout HorizontalOptions="Fill" Padding="0">
 
-                    <ListView x:Name="friendsListView" RowHeight="90" BackgroundColor="#202020" SeparatorVisibility="None" ItemTapped="friendItemTapped">
-                        <ListView.Header>
+                <ListView x:Name="friendsListView" RowHeight="90" BackgroundColor="Black" SeparatorVisibility="None" ItemTapped="friendItemTapped">
+                    <ListView.Header>
                         <Label x:Name="noFriendsMsg" IsVisible="false" HeightRequest="50" FontSize="16" Text="Friends and requests will show up here." TextColor="DarkGray" HorizontalTextAlignment="Center" VerticalTextAlignment="End"/>
-
-                        </ListView.Header>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout Padding="10">
-
-                                    <Frame CornerRadius="35" BackgroundColor="#C00Ba0" Padding="0">
-                                            <StackLayout Padding = "10" BackgroundColor = "Transparent" Orientation = "Horizontal">
-                                                <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" IsClippedToBounds="True">
-                                                    <Image Source="Profile" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                                </Frame>
-                                                <StackLayout Padding="20,0,0,0" VerticalOptions="Center">
-                                                    <Label Text="{Binding name}" FontSize="20" TextColor="White"/>
-                                                    <Label Text="{Binding status, Converter={StaticResource statusToMessage}}" FontSize="15" TextColor="White"/>
-                                                </StackLayout>
+                    </ListView.Header>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Padding="10">
+                                    <Frame CornerRadius="35" BackgroundColor="#303030" Padding="0">
+                                        <StackLayout Padding = "10" BackgroundColor = "Transparent" Orientation = "Horizontal">
+                                            <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" IsClippedToBounds="True">
+                                                <Image Source="Profile" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                            </Frame>
+                                            <StackLayout Padding="20,0,0,0" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                                                <Label Text="{Binding name}" FontSize="18" TextColor="White"/>
+                                                <Label Text="{Binding status, Converter={StaticResource statusToMessage}}" FontSize="14" TextColor="White"/>
                                             </StackLayout>
-                                        </Frame>
+                                            <StackLayout  HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding acceptRequestCommand, Converter={StaticResource nullToFalse}}">
+                                                <Frame CornerRadius="20" BackgroundColor="Black"  Padding="0" HasShadow="False" WidthRequest="40" HeightRequest="40">
+                                                    <Button Text="Add" TextColor="#f0c030" FontSize="12" Padding="5" Command="{Binding acceptRequestCommand}"/>
+                                                </Frame>
+                                            </StackLayout>
+                                            
+                                        </StackLayout>
+                                    </Frame>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
 
-
-                                    </StackLayout>
-                                </ViewCell>
-
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackLayout>
-
-            </RefreshView>
+        </RefreshView>
 
     </ContentPage.Content>
 </ContentPage>

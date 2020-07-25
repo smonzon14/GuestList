@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:convert="clr-namespace:App3.Converters" xmlns:models="clr-namespace:App3.Models"
+             mc:Ignorable="d"
+             x:Class="App3.Views.CurrentUserProfilePage"
+             ControlTemplate="{StaticResource hiddenBarTemplate}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <convert:friendStatusToAction x:Key="friendStatusToAction"/>
+            <convert:statusToMessage x:Key="statusToMessage" />
+            <convert:ActionToColor x:Key="actionToColor"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource partyTemplate}" VerticalScrollBarVisibility="Never" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True" ItemTapped="postListView_ItemTapped" SeparatorVisibility="None">
+
+            <ListView.Header>
+                <StackLayout x:Name="profileStack" Padding="0,50,0,0" Spacing="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="0" VerticalOptions="CenterAndExpand">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Friends_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                            <Image Source="tab_friends" HorizontalOptions="Center" WidthRequest="50"/>
+                            <Label Text="Friends" TextColor="White" HorizontalOptions="Center" FontSize="12"/>
+                        </StackLayout>
+                        <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="CenterAndExpand" Padding="0" IsClippedToBounds="True" Grid.Column="1">
+                            <Image HorizontalOptions="Center"  Aspect="AspectFill" Source="{Binding ProfileImageSource}">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ChangeProfileImage"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </Frame>
+                        <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Music_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                            <Image Source="Music" HorizontalOptions="Center" WidthRequest="50"/>
+                            <Label Text="Music" TextColor="White" HorizontalOptions="Center" FontSize="12"/>
+                        </StackLayout>
+                    </Grid>
+                    <Label Text="{Binding name}" TextColor="White" HorizontalTextAlignment="Center" FontSize="22" Padding="5"/>
+                    <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
+                    <Label FontSize="20" HorizontalTextAlignment="Center" Padding="10" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>
+                    <!--<StackLayout Padding="15">
+                        <Frame Padding="0" CornerRadius="40">
+
+                            <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.65"/>
+                        </Frame>
+                    </StackLayout>-->
+                    
+
+
+                </StackLayout>
+            </ListView.Header>
+
+        </ListView>
+
+
+
+    </ContentPage.Content>
+</ContentPage>

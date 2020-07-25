@@ -1,8 +1,15 @@
-﻿using App3.Models;
+﻿using App3.Data;
+using App3.Models;
+using Firebase.Database.Query;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
@@ -14,6 +21,7 @@ namespace App3
     {
         public int step = 0;
         Party party = new Party();
+        MediaFile ImageFile = null;
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
 
@@ -26,7 +34,8 @@ namespace App3
                 "Where is it going down?",
                 "Which day is it going down?",
                 "What time should people be there?",
-                "(Optional) type a short description"
+                "(Optional) type a short description",
+                "Ready to post?"
             };
         private List<VisualElement> entries;
         public PartyHostPage()
@@ -67,7 +76,7 @@ namespace App3
                         await DisplayAlert("Invalid Address", "Please type a valid address", "Ok").ConfigureAwait(false);
                         return false;
                     }
-                    var locations = await (new Geocoder()).GetPositionsForAddressAsync(locationEntry.Text);
+                    var locations = await new Geocoder().GetPositionsForAddressAsync(locationEntry.Text);
                     var location = locations?.FirstOrDefault();
                     if (location == null)
                     {
@@ -117,11 +126,14 @@ namespace App3
             a1.Commit(owner: entries[step], "hide", 50, easing: Easing.SinInOut, finished: (x, y) =>
             {
                 entries[step].IsVisible = false;
-                entries[step + d].Opacity = 0;
-                entries[step + d].IsVisible = true;
-                promptLabel.Text = prompts[step];
+                step += d;
+                entries[step].IsVisible = true;
+                
 
-                a2.Commit(owner: entries[step += d], "show", 50, easing: Easing.SinInOut);
+                promptLabel.Text = prompts[step];
+                mapLayout.IsVisible = step == 1 ? true : false; 
+                
+                a2.Commit(owner: entries[step], "show", 50, easing: Easing.SinInOut);
 
             });
 
@@ -132,15 +144,27 @@ namespace App3
             {
                 if (step == 3)
                 {
-                    await Navigation.PushAsync(new PartyPostPreviewPage(party));
-                    step--;
+                    await postParty();
+                    await Navigation.PopModalAsync();
+                    App.UserParties.Add(party);
                     return;
                 }
                 animateBetweenPrompts(true);
-
             }
         }
+        private async Task<bool> postParty()
+        {
+            try
+            {
 
+                return await FirebaseHelper.CreateParty(party, App.UserDatabase.GetUser().uid, ImageFile ,0);
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Could not post.", "Ok");
+                return false;
+            }
+        }
         private async void BackButton_Clicked()
         {
 
@@ -150,6 +174,68 @@ namespace App3
                 return;
             }
             animateBetweenPrompts(false);
+        }
+
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            await CrossMedia.Current.Initialize();
+            try
+            {
+                ImageFile = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+                {
+                    PhotoSize = PhotoSize.Medium
+                });
+                Animation a1 = new Animation();
+                if (ImageFile == null)
+                {
+                    partyImage.Source = null;
+                    a1.Add(0, 1, new Animation(v => partyImage.HeightRequest = v, partyImage.Height, 150));
+
+                }
+                else
+                {
+                    partyImage.Source = ImageSource.FromStream(() => { return ImageFile.GetStream(); });
+                    a1.Add(0, 1, new Animation(v => partyImage.HeightRequest = v, partyImage.Height, 400));
+                }
+                a1.Commit(partyImage, "resize", 16, 250, Easing.SinInOut);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void entry_Focused(object sender, FocusEventArgs e)
+        {
+            
+            Animation a1 = new Animation();
+            a1.Add(0, 1, new Animation(v => partyImage.HeightRequest = v, partyImage.Height, 150));
+            a1.Commit(partyImage, "focusedEntry", 16, 250, Easing.SinInOut);
+        }
+        private void entry_UnFocused(object sender, FocusEventArgs e)
+        {
+            Animation a1 = new Animation();
+            a1.Add(0, 1, new Animation(v => partyImage.HeightRequest = v, partyImage.Height, partyImage.Source == null ? 150 : 400));
+            a1.Commit(partyImage, "focusedEntry", 16, 250, Easing.SinInOut);
+        }
+
+        private async void locationEntry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var editor = sender as Editor;
+            var text = editor.Text;
+            if (text == null || text.Length == 0)
+            {
+                //deal with empty text here
+            }
+            await Task.Run(() => Thread.Sleep(700));
+            if(text == editor.Text)
+            {
+                var geo = (await new Geocoder().GetPositionsForAddressAsync(text).ConfigureAwait(false)).FirstOrDefault();
+                if (geo == null) return;
+                MapSpan region = MapSpan.FromCenterAndRadius(geo, Distance.FromMiles(0.1));
+                MainThread.BeginInvokeOnMainThread(()=>map.MoveToRegion(region));
+            }
+            
         }
     }
 }

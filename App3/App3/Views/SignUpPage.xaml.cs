@@ -21,39 +21,7 @@ namespace App3
         async public void OnSwitchToSignIn(object sender, EventArgs e)
         {
             await Navigation.PushAsync(logInPage);
-            /*
-            Debug.WriteLine("User Sign-in initiated.");
-            User user;
-            do
-            {
-                user = await DependencyService.Get<IAuthentication>().Login();
-                
-            } while (user != null || ! await FirebaseHelper.UserWithEmailExists(user.email));
-            user.printUser();
-            var firebaseUser = await FirebaseHelper.GetUser(user.email);
-            Debug.WriteLine("User Authorized.");
-            App.UserDatabase.SetUser(firebaseUser);
-            Debug.WriteLine("User Saved.");
-
-            await Navigation.PopModalAsync();*/
         }
-
-        /*
-        public async void onSubmit(object sender, EventArgs e)
-        {
-            if (await FirebaseHelper.AddUser(username.Text, password.Text))
-            {
-                var user = await FirebaseHelper.GetUser(username.Text);
-                App.UserDatabase.SaveUser(user);
-                await Navigation.PopModalAsync();
-            }
-            else
-            {
-                errorMessage.IsVisible = true;
-            }
-            
-        }
-        */
 
         public async void onSubmit(object sender, EventArgs e)
         {
@@ -68,6 +36,11 @@ namespace App3
                 await DisplayAlert("Username Invalid", "Username must be at least 5 characters long", "Ok");
                 return;
             }
+            if (name.Text == null || name.Text.Length < 3)
+            {
+                await DisplayAlert("Name Invalid", "Full name must be at least 3 characters long", "Ok");
+                return;
+            }
             /*if (await FirebaseHelper.UserWithEmailExists(username.Text))
             {
                 await DisplayAlert("Username Exists", "Try a different username", "Ok");
@@ -75,7 +48,7 @@ namespace App3
             }*/
             else
             {
-                User user = await App.SignupAsync(username.Text, password.Text);
+                User user = await App.SignupAsync(username.Text, password.Text, name.Text);
                 if (user == null)
                 {
                     errorMessage.IsVisible = true;

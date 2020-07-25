@@ -19,8 +19,10 @@ namespace App3
         // Party object visualization template
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
+        public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
+        public string ToolbarLeftSource { get; private set; }
+
         private bool partyViewIsExpanded;
-        string currentUserId;
         public HomePage()
         {
             ToolbarRightSource = "button_refresh";
@@ -29,6 +31,11 @@ namespace App3
                 await App.GetInvitesAsync();
                 update();
             });
+            ToolbarLeftCommand = new Command(async () =>
+            {
+                await Navigation.PopModalAsync();
+            });
+            ToolbarLeftSource = "x";
             Debug.WriteLine("Loading Home Page");
             InitializeComponent();
             partyViewIsExpanded = false;
@@ -161,7 +168,7 @@ namespace App3
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             var current = getCurrentParty();
-            Navigation.PushAsync(new PartyDetailsPage(current));
+            Navigation.PushModalAsync(new PartyDetailsPage(current));
         }
 
         private void SearchButton_Clicked(object sender, EventArgs e)

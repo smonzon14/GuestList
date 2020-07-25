@@ -18,6 +18,7 @@ namespace App3.Models
         public List<PartyPin> partyPins { get; set; } = new List<PartyPin>();
         public PartyMap()
         {
+            
             //IsShowingUser = true;
             MapType = MapType.Street;
         }

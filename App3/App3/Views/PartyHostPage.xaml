@@ -3,11 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
+             xmlns:maps="clr-namespace:App3.Models"
              mc:Ignorable="d"
              x:Class="App3.PartyHostPage"
              ControlTemplate="{StaticResource hiddenBarTemplate}"
              
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False"
+             >
     
     <ContentPage.Content>
 
@@ -17,57 +19,57 @@
                     <magic:CssGradientSource>
                         <x:String>
                             <![CDATA[
-                radial-gradient(at bottom right, #D90B80 0%, rgba(245,0,88,1) 100%)
+                linear-gradient(60 deg, rgba(11,188,217,1) 0%, rgba(0,161,245,1) 20%, rgba(79,21,98,1) 100%)
                         ]]>
                         </x:String>
                     </magic:CssGradientSource>
                 </magic:GradientView.GradientSource>
             </magic:GradientView>
-            <StackLayout BackgroundColor="Transparent" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0,1,1,0.9" AbsoluteLayout.LayoutFlags="All" >
-                
-                <Label x:Name="promptLabel" Text="What do you want this event to be named?" FontSize="50" TextColor="White"  Padding="30" MaxLines="3" LineHeight="0.8"/>
-                <Grid Padding="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+            <AbsoluteLayout x:Name="mapLayout" IsVisible="false" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All" >
 
-                    <Editor x:Name="titleEntry" MaxLength="16" Placeholder="ex. Alpha Beta, B-Day" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" VerticalOptions="CenterAndExpand" AutoSize="TextChanges"/>
-                    <Editor x:Name="locationEntry" MaxLength="40" Placeholder="ex. 123 street st. City State" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White"  VerticalOptions="CenterAndExpand" AutoSize="TextChanges" IsVisible="false"/>
-                    <DatePicker x:Name="datePicker" Format="D"  FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false"/>
-                    <TimePicker x:Name="timePicker" Time="22:00:00" Format="T" FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false"/>
-                    <Editor x:Name="descriptionEntry" MaxLength="200" Placeholder="Optional" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" AutoSize="TextChanges" VerticalOptions="CenterAndExpand" IsVisible="false"/>
-                </Grid>
-                <!--
-             <StackLayout Padding="30,20,30,20" Spacing="8" VerticalOptions="StartAndExpand">
-                
-                
-                <Label Text="What do you want to call this event?" FontSize="14" TextColor="White"/>
-
-                <Entry x:Name="nameEntry"  MaxLength="16" Placeholder="ex. Alpha Beta, B-Day Bash" FontSize="18" BackgroundColor="Black" TextColor="White"/>
-
-                <Label Text="Where is it going down?" FontSize="14" TextColor="White" />
-                <Entry x:Name="locationEntry" Placeholder="ex. 123 street rd., City State 00000" BackgroundColor="Black" TextColor="White"/>
-
-                <Label Text="Which day is it going down?" FontSize="14" TextColor="White"/>
-                <DatePicker x:Name="datePicker" Format="D"  BackgroundColor="Black" TextColor="White"/>
-
-                <Label Text="What time should people be there?" FontSize="14" TextColor="White"/>
-                <TimePicker x:Name="timePicker" Time="22:00:00" Format="T" BackgroundColor="Black" TextColor="White"/>
-                
-                <Label Text="(Optional) type a short description" FontSize="14" TextColor="White"/>
-                <Entry x:Name="descriptionEntry" MaxLength="40" Placeholder="ex. 123 street rd., City State 00000" BackgroundColor="Black" TextColor="White"/>
-                
-
-
-
-            </StackLayout>
-            -->
-
-                <StackLayout Padding="30" VerticalOptions="EndAndExpand">
-                    <Frame CornerRadius="30" Padding="0" BackgroundColor="Transparent">
-                        <Button Text="Next" Clicked="NextButton_Clicked" HeightRequest="80" BackgroundColor="#57000000" TextColor="White" FontSize="40"/>
-
+                <maps:PartyMap x:Name="map" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All" IsShowingUser="True"/>
+                <Image Source="tab_map" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </AbsoluteLayout>
+            <StackLayout VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All" >
+                <StackLayout>
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                    </StackLayout.GestureRecognizers>
+                    <Frame Padding="0" HorizontalOptions="FillAndExpand" BackgroundColor="Black" CornerRadius="40">
+                        <AbsoluteLayout>
+                            <StackLayout AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand" Padding="20">
+                                
+                                <Label Text="Add Image" FontSize="16" TextColor="White"/>
+                                <Image Source="button_plus_simple_white" HeightRequest="25"/>
+                            </StackLayout>
+                            <Image x:Name="partyImage" Aspect="AspectFill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" HeightRequest="150"></Image>
+                        </AbsoluteLayout>
                     </Frame>
                     
                 </StackLayout>
+                <StackLayout Padding="20" Spacing="10">
 
+
+                    <Label x:Name="promptLabel" Text="What do you want this event to be named?" FontSize="35" TextColor="White" MaxLines="3" LineHeight="0.8"/>
+                    <Grid VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+
+                        <Editor x:Name="titleEntry" MaxLength="30" Placeholder="ex. Alpha Beta, B-Day" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" VerticalOptions="CenterAndExpand" AutoSize="TextChanges" Focused="entry_Focused" Unfocused="entry_UnFocused"/>
+
+                        <Editor x:Name="locationEntry" MaxLength="50" Placeholder="ex. 123 street st. City State" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White"  VerticalOptions="CenterAndExpand" AutoSize="TextChanges" IsVisible="false" Focused="entry_Focused" Unfocused="entry_UnFocused" TextChanged="locationEntry_TextChanged"/>
+                        <DatePicker x:Name="datePicker" Format="D"  FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false" Focused="entry_Focused" Unfocused="entry_UnFocused"/>
+                        <TimePicker x:Name="timePicker" Time="22:00:00" Format="T" FontSize="25" BackgroundColor="#57000000" TextColor="White" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" IsVisible="false" Focused="entry_Focused" Unfocused="entry_UnFocused"/>
+                        <Editor x:Name="descriptionEntry" MaxLength="250" Placeholder="Optional" FontSize="25" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" AutoSize="TextChanges" VerticalOptions="CenterAndExpand" IsVisible="false" Focused="entry_Focused" Unfocused="entry_UnFocused"/>
+                    </Grid>
+                    
+
+
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Padding="30" VerticalOptions="EndAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,0.2" AbsoluteLayout.LayoutFlags="All">
+                <Frame CornerRadius="35" Padding="0" BackgroundColor="Transparent">
+                    <Button Text="Next" Clicked="NextButton_Clicked" HeightRequest="70" BackgroundColor="#57000000" TextColor="White" FontSize="30"/>
+
+                </Frame>
 
             </StackLayout>
         </AbsoluteLayout>

@@ -48,6 +48,7 @@ namespace App3.iOS.Data
         {
             var authUserData = Auth.DefaultInstance.CurrentUser;
             if (authUserData == null) return null;
+            Debug.WriteLine("Auth: " + authUserData.Uid);
             return new Models.User
             {
                 uid = authUserData.Uid,

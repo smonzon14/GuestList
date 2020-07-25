@@ -48,15 +48,16 @@ namespace App3.Views
             if (profileBuffer.ContainsKey(friend)) page = profileBuffer[friend];
             else
             {
+                Debug.WriteLine("Moving to page: " + friend.name);
                 page = new ProfilePage(friend);
                 profileBuffer.Add(friend, page);
             }
             await Navigation.PushAsync(page);
-            userList.SelectedItem = null;
+            //userList.SelectedItem = null;
         }
         private async void FriendSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Debug.WriteLine("Searching...");
+            
             var entry = sender as SearchBar;
             var text = entry.Text;
             if (text == null || text.Length == 0)
@@ -67,11 +68,11 @@ namespace App3.Views
             await Task.Run(() => Thread.Sleep(500));
             if (text == entry.Text)
             {
-                var users = FirebaseHelper.FindUsersMatching(entry.Text);
+                Debug.WriteLine("Searching...");
+                var users = await FirebaseHelper.FindUsersMatching(entry.Text);
                 //foreach (User u in users) u.friendStatus = FirebaseHelper.FriendStatus(App.UserDatabase.GetUser().uid, u.uid).Result;
-                var uid = App.UserDatabase.GetUser().uid;
+                
                 userList.ItemsSource = users;
-                Debug.WriteLine("done.");
             }
         }
         private void btnAdd_Clicked(object sender, EventArgs e)

@@ -14,6 +14,7 @@ namespace App3.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FeedPage : ContentPage
     {
+        public double ToolbarOpacity { get; private set; } = 1.0;
         public ICommand DotsCommand { get; private set; }
         public FeedPage()
         {
@@ -75,17 +76,19 @@ namespace App3.Views
         async void populateFeed()
         {
             string uid = App.UserDatabase.GetUser().uid;
-            List<object> items = new List<object>();
-            var posts = await FirebaseHelper.GetPostsForUser(uid);
-            items.AddRange(posts);
+            List<Party> items = new List<Party>();
+            
             foreach (var user in App.UserFriends)
             {
-                items.AddRange(await FirebaseHelper.GetPostsForUser(user.uid));
-                items.AddRange(await FirebaseHelper.GetPartiesThrownByUser(user.uid));
+                //items.AddRange(await FirebaseHelper.GetPostsForUser(user.uid));
+                items.AddRange(await FirebaseHelper.GetPartiesThrownByUser(user));
             }
-            var parties = App.UserParties;
-            items.AddRange(parties);
+            //var posts = await FirebaseHelper.GetPostsForUser(uid);
+            //items.AddRange(posts);
+            items.AddRange(App.UserParties);
+
             feedListView.ItemsSource = items;
+
         }
         async void populateStories()
         {
@@ -103,9 +106,8 @@ namespace App3.Views
 
         private async void feedListView_ItemSelected(object sender, ItemTappedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(e.Item.GetType());
             if (e.Item is Post post) await Navigation.PushAsync(new PostViewPage(post));
-            else if (e.Item is Party party) await Navigation.PushAsync(new PartyDetailsPage(party));
+            else if (e.Item is Party party) await Navigation.PushModalAsync(new PartyDetailsPage(party));
             feedListView.SelectedItem = null;
         }
         private void NewPostButton_Clicked(object sender, EventArgs e)
@@ -144,6 +146,19 @@ namespace App3.Views
             {
                 Debug.WriteLine(ex.Message);
             }
+        }
+
+        private void MapButton_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new NavigationPage(new HomePage()));
+        }
+
+        private void feedListView_Scrolled(object sender, ScrolledEventArgs e)
+        {
+            if (e.ScrollY <= 0) ToolbarOpacity = 1.0;
+            else if (e.ScrollY > 100) ToolbarOpacity = 0.0;
+            else ToolbarOpacity = 1.0 - e.ScrollY / 100;
+            
         }
 
     }

@@ -15,15 +15,15 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ListView BackgroundColor="#202020" ItemTemplate="{StaticResource postTemplate}" x:Name="postListView" Refreshing="refreshView_Refreshing" RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True">
+        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource postTemplate}" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True">
 
             <ListView.Header>
                 <StackLayout x:Name="profileStack" Padding="0,100,0,0" Spacing="0">
-                    <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="Center" Padding="0" IsClippedToBounds="True">
-                        <Image HorizontalOptions="Center" VerticalOptions="Center" Source="Profile"/>
+                    <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="CenterAndExpand" Padding="0" IsClippedToBounds="True">
+                        <Image HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ProfileImageSource}"/>
                     </Frame>
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="10">
-                        <Button x:Name="friendButton" BackgroundColor="{Binding Source={RelativeSource Self}, Path=Text, Converter={StaticResource actionToColor}}" HeightRequest="35" TextColor="White" FontSize="16" Padding="8" Clicked="profileActionBtn_Clicked" Text="{Binding friendStatus,Converter={StaticResource friendStatusToAction}, TargetNullValue='...'}"/>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="30">
+                        <Button x:Name="friendButton" BackgroundColor="{Binding Source={RelativeSource Self}, Path=Text, Converter={StaticResource actionToColor}}" HeightRequest="35" TextColor="White" FontSize="16" Padding="8" Clicked="profileActionBtn_Clicked" Text="{Binding FriendStatus,Converter={StaticResource friendStatusToAction}, TargetNullValue='...'}"/>
                     </StackLayout>
                     <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
                     <Label FontSize="20" HorizontalTextAlignment="Center" Padding="10" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>

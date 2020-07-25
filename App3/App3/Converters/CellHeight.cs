@@ -5,11 +5,11 @@ using Xamarin.Forms;
 
 namespace App3.Converters
 {
-    public class NullToFalse : IValueConverter
+    public class CellHeight : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null;
+            return (bool)value ? 580 : 180;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

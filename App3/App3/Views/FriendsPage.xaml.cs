@@ -7,15 +7,17 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using System.Windows.Input;
 namespace App3
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FriendsPage : ContentPage
     {
 
-        public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
+        public ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
+        public ICommand ToolbarLeftCommand { get; private set; }
+        public string ToolbarLeftSource { get; private set; }
         static Dictionary<User, ProfilePage> profileBuffer = new Dictionary<User, ProfilePage>();
         static AddFriendPage addFriendPage = new AddFriendPage();
         public FriendsPage()
@@ -26,17 +28,22 @@ namespace App3
             });
             Appearing += FriendsPage_Appearing;
             ToolbarRightSource = "button_addfriend";
+            ToolbarLeftCommand = new Command(() =>
+            {
+                Navigation.PopModalAsync();
+            });
+            ToolbarLeftSource = "x";
             InitializeComponent();
             //friendsListView.ItemTemplate = Templates.friendDescriptionLayout();
             NavigationPage.SetHasNavigationBar(this, false);
+            
         }
 
-        private void FriendsPage_Appearing(object sender, EventArgs e)
+        private async void FriendsPage_Appearing(object sender, EventArgs e)
         {
-            friendsListView.ItemsSource = null;
+            await App.GetFriendsAsync();
+            noFriendsMsg.IsVisible = App.UserFriends.Count < 1;
             friendsListView.ItemsSource = App.UserFriends;
-            if (App.UserFriends.Count > 0) noFriendsMsg.IsVisible = false;
-            else noFriendsMsg.IsVisible = true;
         }
 
         private async void friendItemTapped(object sender, ItemTappedEventArgs e)
@@ -89,5 +96,6 @@ namespace App3
         {
             Navigation.PushAsync(addFriendPage);
         }
+
     }
 }

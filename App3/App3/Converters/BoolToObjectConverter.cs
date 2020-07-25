@@ -1,20 +1,25 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using Xamarin.Forms;
 
 namespace App3.Converters
 {
-    public class NullToFalse : IValueConverter
+    class BoolToObjectConverter<T> : IValueConverter
     {
+        public T TrueObject { set; get; }
+
+        public T FalseObject { set; get; }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null;
+            return (bool)value ? TrueObject : FalseObject;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return ((T)value).Equals(TrueObject);
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using App3.Models;
+using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
 
 namespace App3
@@ -9,42 +12,59 @@ namespace App3
     {
         public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
         public string ToolbarLeftSource { get; private set; }
+        
         public PartyDetailsPage(Party party)
         {
             BindingContext = party;
             ToolbarLeftSource = "button_back";
             ToolbarLeftCommand = new Command(async () =>
             {
-                await Navigation.PopAsync();
+                await Navigation.PopModalAsync();
             });
             InitializeComponent();
+            updateMap();
         }
 
-        private void ShowPeople(object sender, System.EventArgs e)
+        async void updateMap()
         {
-
-            showCommentsButton.BackgroundColor = Color.Transparent;
-            showPeopleButton.BackgroundColor = Color.FromHex("#F50058");
-            showMapButton.BackgroundColor = Color.Transparent;
-            map.IsVisible = false;
+            var party = (BindingContext as Party);
+            var locations = await new Geocoder().GetPositionsForAddressAsync(party.address);
+            party.geoPosition = (Position)locations?.FirstOrDefault();
+            
+            map.moveTo(party);
         }
-        private void ShowComments(object sender, System.EventArgs e)
+
+        private async void partyDetailsListView_Refreshing(object sender, System.EventArgs e)
         {
-
-            showCommentsButton.BackgroundColor = Color.FromHex("#F50058");
-            showPeopleButton.BackgroundColor = Color.Transparent;
-            showMapButton.BackgroundColor = Color.Transparent;
-
-            map.IsVisible = false;
+            var party = BindingContext as Party;
+            BindingContext = null;
+            BindingContext = await Data.FirebaseHelper.GetParty(party.pid, party.Thrower);
+            partyDetailsListView.IsRefreshing = false;
         }
-        private void ShowMap(object sender, System.EventArgs e)
+        private List<Post> getPostsForParty()
+        {
+            var list = new List<Post>();
+            list.Add(new Post
+            {
+                message = "This is a test Post. Also testing multiline text wrap.",
+                name = "Diego El Fuego",
+                likes = 100
+            });
+            list.Add(new Post
+            {
+                message = "This is a another test Post.",
+                name = "Father John",
+                likes = 10
+            });
+            return list;
+        }
+        private void populatePosts()
         {
 
-            showCommentsButton.BackgroundColor = Color.Transparent;
-            showPeopleButton.BackgroundColor = Color.Transparent;
-            showMapButton.BackgroundColor = Color.FromHex("#F50058");
-
-            map.IsVisible = true;
+            partyDetailsListView.ItemsSource = getPostsForParty();
+        }
+        private void Button_Clicked(object sender, System.EventArgs e)
+        {
 
         }
     }

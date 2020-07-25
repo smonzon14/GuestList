@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using static App3.Data.UserDatabaseController;
 
 namespace App3
 {
@@ -66,6 +67,7 @@ namespace App3
             {
 
                 userFriends = FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid).Result;
+                Debug.WriteLine("HELLO@#");
                 if (userFriends != null) userInvites = FirebaseHelper.GetInvitedParties(userFriends).Result;
                 MainPage = createMainPage();
                     
@@ -77,12 +79,12 @@ namespace App3
         }
         private static bool RefreshUser()
         {
-            User currentUser = UserDatabase.GetUser();
+            var currentUser = UserDatabase.GetUser();
             if (currentUser == null) return false;
             User updatedUser = DependencyService.Get<IFirebaseAuthenticator>().RefreshCurrentUser();
             UserDatabase.RemoveUserData();
             if (updatedUser == null) return false;
-            var userData = FirebaseHelper.GetUserFromUID(updatedUser.uid).Result;
+            User userData = FirebaseHelper.GetUserFromUID(updatedUser.uid).Result;
             if (userData != null)
             {
                 userData.uid = updatedUser.uid;
@@ -104,17 +106,19 @@ namespace App3
             loginScreen.BarBackgroundColor = Color.FromHex("#28053d");
             Current.MainPage = loginScreen;
         }
-        public static async Task<User> SignupAsync(string email, string password)
+        public static async Task<User> SignupAsync(string email, string password, string name)
         {
             string tokenId = await authenticator.SignUpUser(email, password);
             if (tokenId == "") return null;
             Debug.WriteLine("tokenId = " + tokenId);
             User user = authenticator.GetCurrentUser();
+            user.name = name;
             if (!await FirebaseHelper.AddUser(user))
             {
                 Debug.WriteLine("Could not add user to database");
                 return null;
             }
+            user.printUser();
             UserDatabase.SetUser(user);
             await GetUserMediaAndDisplay();
             return user;
@@ -125,15 +129,16 @@ namespace App3
 
             string tokenId = await authenticator.LoginWithEmailPassword(email, password);
             if (tokenId == "") return null;
+            Debug.WriteLine(tokenId);
             var user = authenticator.GetCurrentUser(); //await FirebaseHelper.GetUserFromUID(uid);
-
+            user.printUser();
             if (user == null)
             {
                 Debug.WriteLine("User not found");
                 return null;
             }
             UserDatabase.SetUser(user);
-            
+            Debug.WriteLine("OK");
             await GetUserMediaAndDisplay();
             return user;
 
@@ -146,7 +151,9 @@ namespace App3
         }
         public static async Task<List<User>> GetFriendsAsync()
         {
+            
             userFriends = await FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid);
+            Debug.WriteLine("Got Friends");
             return userFriends;
         }
         public static async Task<List<Party>> GetInvitesAsync()
@@ -155,6 +162,11 @@ namespace App3
             if (userFriends == null) return userInvites;
             userInvites = await FirebaseHelper.GetInvitedParties(userFriends);
             return userInvites;
+        }
+        public static async Task<List<Party>> GetPartiesAsync()
+        {
+            userParties = await FirebaseHelper.GetPartiesThrownByUser(UserDatabase.GetUser());
+            return userParties;
         }
     }
 }

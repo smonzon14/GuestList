@@ -26,31 +26,17 @@ namespace App3
             NavigationPage.SetHasNavigationBar(this, false);
             user = userToDisplay;
 
-            if (user == null)
+            
+            ToolbarLeftCommand = new Command(() =>
             {
-                ToolbarRightCommand = new Command(() =>
-                {
-                    Navigation.PushAsync(new SettingsPage());
-                });
-                ToolbarRightSource = "button_settings";
-                user = App.UserDatabase.GetUser();
-            }
-            else
-            {
-                ToolbarLeftCommand = new Command(() =>
-                {
-                    Navigation.PopAsync();
-                });
-                ToolbarLeftSource = "button_back";
-            }
-
+                Navigation.PopAsync();
+            });
+            ToolbarLeftSource = "button_back";
             InitializeComponent();
 
-            if (user != null)
-            {
-                if (user.uid.Equals(App.UserDatabase.GetUser().uid)) friendButton.IsVisible = false;
-                displayUser();
-            }
+
+
+            displayUser();
 
 
         }
@@ -58,40 +44,38 @@ namespace App3
         private void profileActionBtn_Clicked(object sender, EventArgs e)
         {
 
-            switch (user.friendStatus)
+            switch (user.FriendStatus)
             {
                 case 0:
                     addUserAsFriend(user.uid);
 
                     App.UserFriends.Add(user);
-                    user.friendStatus = 1;
+                    user.FriendStatus = 1;
                     break;
                 case 1:
                     // Unadd
                     removeFriend(user.uid);
 
                     App.UserFriends.Remove(user);
-                    user.friendStatus = 0;
+                    user.FriendStatus = 0;
                     break;
                 case 2:
                     addUserAsFriend(user.uid);
 
                     App.UserFriends.Add(user);
-                    user.friendStatus = 3;
+                    user.FriendStatus = 3;
                     break;
                 case 3:
                     //Unadd
                     removeFriend(user.uid);
 
                     App.UserFriends.Remove(user);
-                    user.friendStatus = 2;
+                    user.FriendStatus = 2;
                     break;
                 default:
                     break;
             }
             Debug.WriteLine(App.UserFriends.LastOrDefault());
-            BindingContext = null;
-            BindingContext = user;
         }
         private void addUserAsFriend(string uid)
         {
@@ -99,8 +83,8 @@ namespace App3
             Debug.WriteLine(uid + " " + currentUser.uid);
             if (uid != null && currentUser != null && currentUser.uid != null && !uid.Equals(currentUser.uid))
             {
-                if (FirebaseHelper.AddFriend(currentUser.uid, uid).Result) user.friendStatus = 3;
-                else user.friendStatus = 1;
+                if (FirebaseHelper.AddFriend(currentUser.uid, uid).Result) user.FriendStatus = 3;
+                else user.FriendStatus = 1;
             }
         }
         private void removeFriend(string uid)
@@ -121,11 +105,11 @@ namespace App3
         {
             if (user == null) return;
 
-            user.friendStatus = await FirebaseHelper.FriendStatus(App.UserDatabase.GetUser().uid, user.uid);
             BindingContext = user;
-            partiesList = await FirebaseHelper.GetPartiesThrownByUser(user.uid);
+            Debug.WriteLine("OK");
+            partiesList = await FirebaseHelper.GetPartiesThrownByUser(user);
             postsList = await FirebaseHelper.GetPostsForUser(user.uid);
-
+            Debug.WriteLine("KK");
             if (partiesList.Count > 0)
             {
 
@@ -150,10 +134,10 @@ namespace App3
 
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             var current = partyCarousel.CurrentItem as Party;
-            Navigation.PushAsync(new PartyDetailsPage(current));
+            await Navigation.PushModalAsync(new PartyDetailsPage(current));
         }
 
         private void ShowPosts(object sender, EventArgs e)

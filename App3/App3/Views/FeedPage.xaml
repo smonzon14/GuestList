@@ -21,7 +21,14 @@
 
         <AbsoluteLayout>
 
-            <ListView x:Name="feedListView" CachingStrategy="RecycleElement" BackgroundColor="#202020" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+            <ListView x:Name="feedListView" SeparatorVisibility="None" Scrolled="feedListView_Scrolled" CachingStrategy="RecycleElement" BackgroundColor="Black" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                <ListView.Footer>
+                    <StackLayout>
+                        <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="Center"/>
+                        <Label Text="No More Invites" TextColor="Gray" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" HorizontalTextAlignment="Center" FontSize="18" Padding="15,15,15,50"/>
+                    </StackLayout>
+                    
+                </ListView.Footer>
                 <ListView.Header>
                     <CollectionView x:Name="storiesCollectionView" SelectionChanged="storiesCollectionView_SelectionChanged" HeightRequest="80" SelectionMode="Single" ItemsLayout="HorizontalList" HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" Grid.ColumnSpan="5" Grid.Row="2">
                         <CollectionView.Header>
@@ -51,8 +58,14 @@
                     </CollectionView>
                 </ListView.Header>
             </ListView>
-            <Frame VerticalOptions="Center" HorizontalOptions="Center" Padding="0" CornerRadius="30" BackgroundColor="#0fb5b3" AbsoluteLayout.LayoutBounds="0.97,1,0.15,0.1" AbsoluteLayout.LayoutFlags="All" WidthRequest="60" HeightRequest="60">
-                <ImageButton Source="button_plus_simple_white" Clicked="NewPostButton_Clicked"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="15"/>
+            <Frame VerticalOptions="Center"  HorizontalOptions="CenterAndExpand" Padding="0" CornerRadius="20" BackgroundColor="#303030" AbsoluteLayout.LayoutBounds="1,1,1,0.1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Horizontal" Padding="10,0,10,0">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="MapButton_Tapped"/>
+                    </StackLayout.GestureRecognizers>
+                    <Image Source="tab_map" Margin="10" HeightRequest="20"/>
+                    <Label Text="Map" TextColor="White" FontSize="18" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="0,5,20,5"/>
+                </StackLayout>
             </Frame>
         </AbsoluteLayout>
 

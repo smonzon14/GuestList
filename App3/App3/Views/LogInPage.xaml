@@ -12,7 +12,7 @@
                     <magic:CssGradientSource>
                         <x:String>
                             <![CDATA[
-                    linear-gradient(to top, rgba(14,154,157,1) 0%, rgba(10,77,107,1) 23%, rgba(40,5,61,1) 100%)
+                    linear-gradient(to top, rgba(20,140,200,1) 0%, rgba(40,5,61,1) 100%)
                             ]]>
                         </x:String>
                     </magic:CssGradientSource>
@@ -44,14 +44,13 @@
                 </StackLayout>
 
                 <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Log In" HorizontalTextAlignment="Center" TextColor="White" FontSize="30"/>
-                <Entry Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="username" Placeholder="University Email" FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                <Entry Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="password" Placeholder="Password" FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White" IsPassword="True"/>
+                <Entry Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="username" Placeholder="University Email" FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White"/>
+                <Entry Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="password" Placeholder="Password" FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="#57000000" TextColor="White" PlaceholderColor="White" IsPassword="True"/>
                 
-                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="Invalid email/password" TextColor="Red" FontSize="15" HorizontalTextAlignment="Center" IsVisible="False"/>
+                <Label Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="" TextColor="Red" FontSize="14" HorizontalTextAlignment="Center"/>
                 
-                <StackLayout Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2">
-                    <Label Text="Don't have an account? Sign Up." TextColor="Gray" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-                </StackLayout>
+                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Text="Don't have an account? Sign Up." TextColor="Gray" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                
                 <StackLayout Padding="30" VerticalOptions="EndAndExpand" Grid.ColumnSpan="4" Grid.Row="9">
                     <Frame CornerRadius="30" Padding="0" BackgroundColor="Transparent">
                         <Button Text="Sign In" HeightRequest="80" BackgroundColor="#57000000" TextColor="White" FontSize="40" Clicked="onSubmit"/>

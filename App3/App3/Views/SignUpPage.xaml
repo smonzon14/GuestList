@@ -51,21 +51,26 @@
 
                 <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Sign Up" HorizontalTextAlignment="Center" TextColor="White" FontSize="25"/>
 
-                <Entry Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" x:Name="name" Placeholder="Full Name"  FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                <Entry Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="username" Placeholder="University Email"  FontSize="Medium" HorizontalTextAlignment="Center" Keyboard="Email" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                <Entry Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" x:Name="password" Placeholder="Password"  FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                <Entry Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" x:Name="retypePassword" Placeholder="Retype Password" FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                
-                
-                <Label Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="Error signing up. Try again." TextColor="Red" HorizontalTextAlignment="Center" IsVisible="False"/>
-                
+                <Frame Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
+                    <Entry x:Name="name" Placeholder="Full Name"  FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
 
-                <StackLayout Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2">
-                    <Label Text="Already have an account? Sign In." TextColor="Gray" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-                </StackLayout>
+                </Frame>
+
+                <Frame Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
+                    <Entry x:Name="username" Placeholder="University Email"  FontSize="Medium" HorizontalTextAlignment="Center" Keyboard="Email" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
+                </Frame>
+                <Frame  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
+                    <Entry x:Name="password" Placeholder="Password"  FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
+                </Frame>
+                <Frame Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
+                    <Entry  x:Name="retypePassword" Placeholder="Retype Password" FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
+                </Frame>
+
+                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="Error signing up. Try again." TextColor="Red" HorizontalTextAlignment="Center" IsVisible="False"/>
+                <Label Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="Already have an account? Sign In." TextColor="Gray" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                 <StackLayout Padding="30" VerticalOptions="EndAndExpand" Grid.ColumnSpan="4" Grid.Row="9">
                     <Frame CornerRadius="30" Padding="0" BackgroundColor="Transparent">
-                        <Button Text="Sign Up" HeightRequest="80" BackgroundColor="#57000000" TextColor="White" FontSize="40" Clicked="onSubmit"/>
+                        <Button Text="Sign Up" HeightRequest="80" BackgroundColor="#92000000" TextColor="White" FontSize="40" Clicked="onSubmit"/>
 
                     </Frame>
 

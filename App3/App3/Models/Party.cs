@@ -1,6 +1,8 @@
-﻿using System;
+﻿using App3.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -10,14 +12,30 @@ namespace App3.Models
 
     public class Party : INotifyPropertyChanged
     {
-        public ICommand LikeCommand { get; set; } = new Command<object>((object item) =>
+        
+        public ICommand LikeCommand { get; set; } = new Command<Party>((Party item) =>
         {
-            var obj = item as Party;
-            if (obj.liked)
-                obj.likes--;
-            else obj.likes++;
-            obj.Liked = !obj.Liked;
+            item.likes += item.Liked ? -1 : 1;
+            item.Liked = !item.Liked;
         });
+
+        public ICommand GoCommand { get; set; } = new Command<Party>((Party item) =>
+        {
+            if (item.Going)
+            {
+                item.Going = false;
+                FirebaseHelper.UndoGoToParty(item.pid, App.UserDatabase.GetUser().uid);
+            }
+            else
+            {
+                item.Going = true;
+                FirebaseHelper.GoToParty(item.pid, App.UserDatabase.GetUser().uid);
+            }
+        });
+        public Party()
+        {
+
+        }
         private bool liked = false;
         public bool Liked
         {
@@ -39,13 +57,13 @@ namespace App3.Models
         public int likes { get; set; }
         public int comments { get; set; }
         public string description { get; set; }
-        public bool going { get; set; }
-        public string thrower { get; set; }
-        public string throwerid { get; set; }
+        private bool going { get; set; } = false;
+        public bool Going { get { return going; } set { going = value; OnPropertyChanged("Going"); } } 
+        public User Thrower { get; set; }
         public DateTime time { get; set; }
         public string address { get; set; }
         public Position geoPosition { get; set; }
-
+        public bool img { get; set; }
 
         public static List<string> GetRandomHexColor()
         {
@@ -81,6 +99,18 @@ namespace App3.Models
             {
                 primaryHexColor = value;
             }
+        }
+        private string imageSource { get; set; }
+        public string ImageSource { get { return imageSource; } 
+            set {
+                imageSource = value;
+                OnPropertyChanged("ImageSource");
+            } 
+        }
+        public async void updateImageSource()
+        {
+            
+            ImageSource = await FirebaseHelper.GetPostedImageURL(pid);
         }
         public string secondaryHexColor { get; set; }
 
