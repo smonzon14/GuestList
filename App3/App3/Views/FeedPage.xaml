@@ -11,14 +11,9 @@
              Title="Chatter"
              ControlTemplate="{StaticResource header}">
     <ContentPage.Resources>
-        <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" PostTemplate="{StaticResource postTemplate}" SecondaryTemplate="{StaticResource partyTemplate}"/>
+        <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" MyTemplate="{StaticResource myPartyTemplate}" InviteTemplate="{StaticResource partyTemplate}"/>
     </ContentPage.Resources>
     <ContentPage.Content>
-
-
-
-
-
         <AbsoluteLayout>
 
             <ListView x:Name="feedListView" SeparatorVisibility="None" Scrolled="feedListView_Scrolled" CachingStrategy="RecycleElement" BackgroundColor="Black" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">

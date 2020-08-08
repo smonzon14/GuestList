@@ -5,12 +5,19 @@ namespace App3.Converters
 {
     public class FeedDataTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate PostTemplate { get; set; }
-        public DataTemplate SecondaryTemplate { get; set; }
+        public static string uid = App.UserDatabase.GetUser().uid;
+        public DataTemplate MyTemplate { get; set; }
+        public DataTemplate InviteTemplate { get; set; }
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
-            if (item is Post) return PostTemplate;
-            return SecondaryTemplate;
+            if (item is Party p && p.Thrower.uid == uid)
+            {
+                return MyTemplate;
+            }
+            else
+            {
+                return InviteTemplate;
+            }
         }
     }
 }

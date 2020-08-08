@@ -20,6 +20,7 @@ namespace App3.iOS.Data
             try
             {
                 var user = await Auth.DefaultInstance.CreateUserAsync(email, password);
+                
                 return await user.User.GetIdTokenAsync();
             }
             catch (Exception e)

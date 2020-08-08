@@ -64,6 +64,7 @@ namespace App3.Models
         public string address { get; set; }
         public Position geoPosition { get; set; }
         public bool img { get; set; }
+        
 
         public static List<string> GetRandomHexColor()
         {
