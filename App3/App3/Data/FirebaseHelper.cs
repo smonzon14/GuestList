@@ -293,6 +293,8 @@ namespace App3.Data
             {
                 Party party = await firebase.Child("Parties").Child(thrower.uid).Child(partyId).OnceSingleAsync<Party>();
                 party.Thrower = thrower;
+                party.pid = partyId;
+                if (party.img) party.updateImageSource();
                 return party;
             }
             catch (Exception e)
@@ -316,6 +318,7 @@ namespace App3.Data
                         var party = obj.Object;
                         party.pid = obj.Key;
                         party.Thrower = user;
+                        
                         if(party.img) party.updateImageSource();
                         partiesList.Add(party);
                         
@@ -370,17 +373,76 @@ namespace App3.Data
         /*
          * Comments
          */
+        internal class CommentDataModel
+        {
+            public CommentDataModel() { }
+            public CommentDataModel(Comment comment)
+            {
+                cid = comment.cid;
+                name = comment.name;
+                uid = comment.uid;
+                message = comment.message;
+                likes = 0;
+            }
+            public string cid { get; set; }
+            public string name { get; set; }
+            public string uid { get; set; }
+            public string message { get; set; }
+            public int likes { get; set; }
+        }
         public static async Task<Comment> AddCommentToPost(Comment comment, string pid)
         {
-            var c = await firebase.Child("Comments").Child(pid).PostAsync(comment).ConfigureAwait(false);
+            var data = new CommentDataModel(comment);
+            var c = await firebase.Child("Comments").Child(pid).PostAsync(data).ConfigureAwait(false);
             var newComment = c.Object;
             newComment.cid = c.Key;
-            return newComment;
+            return new Comment
+            {
+                cid = c.Key,
+                name = c.Object.name,
+                uid = c.Object.uid,
+                message = c.Object.message,
+                likes = 0
+            };
         }
         public static async Task<List<Comment>> GetCommentsForPost(string pid)
         {
             var list = new List<Comment>();
 
+            var firebaseObjects = (await firebase.Child("Comments").Child(pid).OrderBy("likes").OnceAsync<Comment>().ConfigureAwait(false));
+            if (firebaseObjects != null)
+            {
+                foreach (var obj in firebaseObjects)
+                {
+                    var c = obj.Object;
+                    c.cid = obj.Key;
+                    list.Add(c);
+                }
+            }
+            return list;
+        }
+
+
+
+        public static async Task<Comment> AddCommentToParty(Comment comment, string pid)
+        {
+            var data = new CommentDataModel(comment);
+            var c = await firebase.Child("Comments").Child(pid).PostAsync(data).ConfigureAwait(false);
+            var newComment = c.Object;
+            newComment.cid = c.Key;
+            return new Comment
+            {
+                cid = c.Key,
+                name = c.Object.name,
+                uid = c.Object.uid,
+                message = c.Object.message,
+                likes = 0
+            };
+        }
+        public static async Task<List<Comment>> GetCommentsForParty(string pid)
+        {
+            var list = new List<Comment>();
+            
             var firebaseObjects = (await firebase.Child("Comments").Child(pid).OrderBy("likes").OnceAsync<Comment>().ConfigureAwait(false));
             if (firebaseObjects != null)
             {

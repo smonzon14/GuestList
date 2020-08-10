@@ -1,4 +1,5 @@
 ﻿using App3.Models;
+using Google.Api;
 using SQLite;
 using Xamarin.Forms;
 
@@ -7,62 +8,32 @@ namespace App3.Data
     public class UserDatabaseController
     {
         static IUserData userData;
-        
+        User user;
         public UserDatabaseController()
         {
             userData = DependencyService.Get<IUserData>();
-            
+            user = userData.GetUser();
+            user.updateProfileImageSource();
         }
         public User GetUser()
         {
-            return userData.GetUser();
+            if(user == null)
+            {
+                user = userData.GetUser();
+                if (user != null) user.updateProfileImageSource();
+            }
+            return user;
         }
         public void SetUser(User user)
         {
             userData.SetUser(user);
+            user = userData.GetUser();
+            user.updateProfileImageSource();
         }
         public void RemoveUserData()
         {
             userData.RemoveUserData();
+            user = null;
         }
-        /*
-        static object locker = new object();
-        SQLiteConnection database;
-        
-        public UserDatabaseController()
-        {
-
-            database = DependencyService.Get<ISQLite>().GetConnection();
-            database.CreateTable<UserBase>();
-        }
-        public UserBase GetUser()
-        {
-            lock (locker)
-            {
-                if (database.Table<UserBase>().Count() == 0) return null;
-                else return database.Table<UserBase>().First();
-
-            }
-        }
-        public int SetUser(UserBase user)
-        {
-            
-            lock (locker)
-            {
-                RemoveUserData();
-                
-                return database.Insert(user);
-            }
-        }
-        public int RemoveUserData()
-        {
-            return database.DeleteAll<UserBase>();
-        }
-        */
-        /*public int DeleteUser(int id)
-        {
-            lock (locker) return database.Delete<User>(id);
-            
-        }*/
     }
 }

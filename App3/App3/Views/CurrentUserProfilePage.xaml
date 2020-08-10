@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource partyTemplate}" VerticalScrollBarVisibility="Never" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True" ItemTapped="postListView_ItemTapped" SeparatorVisibility="None">
+        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource myPartyTemplate}" VerticalScrollBarVisibility="Never" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True" ItemTapped="postListView_ItemTapped" SeparatorVisibility="None">
 
             <ListView.Header>
                 <StackLayout x:Name="profileStack" Padding="0,50,0,0" Spacing="0">
@@ -50,15 +50,7 @@
                     <Label Text="{Binding name}" TextColor="White" HorizontalTextAlignment="Center" FontSize="22" Padding="5"/>
                     <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
                     <Label FontSize="20" HorizontalTextAlignment="Center" Padding="10" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>
-                    <!--<StackLayout Padding="15">
-                        <Frame Padding="0" CornerRadius="40">
-
-                            <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.65"/>
-                        </Frame>
-                    </StackLayout>-->
-                    
-
-
+                    <BoxView WidthRequest="100" HorizontalOptions="Center" HeightRequest="1" Color="Gray"/>
                 </StackLayout>
             </ListView.Header>
 

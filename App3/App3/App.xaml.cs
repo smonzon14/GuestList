@@ -67,7 +67,6 @@ namespace App3
             {
 
                 userFriends = FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid).Result;
-                Debug.WriteLine("HELLO@#");
                 if (userFriends != null) userInvites = FirebaseHelper.GetInvitedParties(userFriends).Result;
                 MainPage = createMainPage();
                     
@@ -119,6 +118,7 @@ namespace App3
                 return null;
             }
             user.printUser();
+            
             UserDatabase.SetUser(user);
             await GetUserMediaAndDisplay();
             return user;

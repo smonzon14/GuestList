@@ -19,7 +19,7 @@
                     <magic:CssGradientSource>
                         <x:String>
                             <![CDATA[
-                linear-gradient(60 deg, rgba(11,188,217,1) 0%, rgba(0,161,245,1) 20%, rgba(79,21,98,1) 100%)
+                linear-gradient(120 deg, #A50028, #690580)
                         ]]>
                         </x:String>
                     </magic:CssGradientSource>

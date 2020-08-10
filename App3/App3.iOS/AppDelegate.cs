@@ -1,6 +1,8 @@
 ﻿
 using Foundation;
 using UIKit;
+using Sharpnado.Presentation.Forms.iOS;
+
 namespace App3.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -18,8 +20,9 @@ namespace App3.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-
+            Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             global::Xamarin.Forms.Forms.Init();
+            SharpnadoInitializer.Initialize();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             Firebase.Core.App.Configure();
 

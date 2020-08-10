@@ -9,7 +9,7 @@
              x:Class="App3.Views.FeedPage"
              NavigationPage.HasNavigationBar="False"
              Title="Chatter"
-             ControlTemplate="{StaticResource header}">
+             ControlTemplate="{StaticResource minimizedBarTemplate}">
     <ContentPage.Resources>
         <converters:FeedDataTemplateSelector x:Key="FeedTemplateSelector" MyTemplate="{StaticResource myPartyTemplate}" InviteTemplate="{StaticResource partyTemplate}"/>
     </ContentPage.Resources>
@@ -18,14 +18,15 @@
 
             <ListView x:Name="feedListView" SeparatorVisibility="None" Scrolled="feedListView_Scrolled" CachingStrategy="RecycleElement" BackgroundColor="Black" Refreshing="RefreshView_Refreshing" RefreshControlColor="White" IsPullToRefreshEnabled="True" HasUnevenRows="True" ItemTemplate="{StaticResource FeedTemplateSelector}" VerticalOptions="FillAndExpand" ItemTapped="feedListView_ItemSelected" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
                 <ListView.Footer>
-                    <StackLayout>
+                    <StackLayout x:Name="noInvitesMsg" IsVisible="false">
                         <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="Center"/>
                         <Label Text="No More Invites" TextColor="Gray" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" HorizontalTextAlignment="Center" FontSize="18" Padding="15,15,15,50"/>
                     </StackLayout>
-                    
+
                 </ListView.Footer>
+                <!--
                 <ListView.Header>
-                    <CollectionView x:Name="storiesCollectionView" SelectionChanged="storiesCollectionView_SelectionChanged" HeightRequest="80" SelectionMode="Single" ItemsLayout="HorizontalList" HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" Grid.ColumnSpan="5" Grid.Row="2">
+                    <CollectionView IsVisible="false" x:Name="storiesCollectionView" SelectionChanged="storiesCollectionView_SelectionChanged" HeightRequest="80" SelectionMode="Single" ItemsLayout="HorizontalList" HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" >
                         <CollectionView.Header>
                             <StackLayout Orientation="Vertical" Spacing="3" HorizontalOptions="Center" HeightRequest="80" WidthRequest="80" Padding="5">
                                 <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="StartAndExpand" Padding="0" IsClippedToBounds="True" BorderColor="Aqua" BackgroundColor="White">
@@ -52,6 +53,8 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </ListView.Header>
+                -->
+                
             </ListView>
             <Frame VerticalOptions="Center"  HorizontalOptions="CenterAndExpand" Padding="0" CornerRadius="20" BackgroundColor="#303030" AbsoluteLayout.LayoutBounds="1,1,1,0.1" AbsoluteLayout.LayoutFlags="All">
                 <StackLayout Orientation="Horizontal" Padding="10,0,10,0">

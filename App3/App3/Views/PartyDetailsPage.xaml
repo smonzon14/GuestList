@@ -11,15 +11,28 @@
     <ContentPage.Resources>
         <Color x:Key="defaultTint">#ffff00ff</Color>
         <Color x:Key="defaultDeselected">#ffffffff</Color>
-
     </ContentPage.Resources>
     <ContentPage.Content>
         <AbsoluteLayout>
-            <ListView x:Name="partyDetailsListView" VerticalScrollBarVisibility="Never" ItemTemplate="{StaticResource postTemplate}" SeparatorVisibility="None" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="Black" Margin="0,-30,0,0" IsPullToRefreshEnabled="True" RefreshControlColor="White" Refreshing="partyDetailsListView_Refreshing">
+            <ListView ItemTemplate="{StaticResource commentTemplate}" HasUnevenRows="True" x:Name="partyDetailsListView" VerticalScrollBarVisibility="Never" SeparatorVisibility="None" AbsoluteLayout.LayoutFlags="All"  AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="Black" Margin="0,-30,0,0" IsPullToRefreshEnabled="True" RefreshControlColor="White" Refreshing="partyDetailsListView_Refreshing">
                 <ListView.Footer>
-                    <StackLayout>
-                        <BoxView HeightRequest="1" BackgroundColor="Gray" HorizontalOptions="Center"/>
-                        <Label Text="Nothing More to Show" TextColor="Gray" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" HorizontalTextAlignment="Center" FontSize="18" Padding="15,15,15,50"/>
+                    <StackLayout Padding="20,20,20,50" BackgroundColor="Black">
+                        <Frame CornerRadius="20" Padding="10,0,10,10" BackgroundColor="#202020" HasShadow="False">
+                            <StackLayout>
+                                <ProgressBar x:Name="progressBar" ProgressColor="#F50058" Progress="0"/>
+                                <Editor x:Name="message" MaxLength="200" BackgroundColor="Transparent" Placeholder="Let people know what's up!" TextColor="White" FontSize="16" AutoSize="TextChanges" PlaceholderColor="Gray" MinimumHeightRequest="100" Keyboard="Chat"/>
+
+                                <StackLayout HorizontalOptions="Fill" Orientation="Horizontal">
+                                    <Label Text="{Binding Text.Length, Source={x:Reference message}, FallbackValue='0/200', StringFormat='{0}/200'}" TextColor="Gray" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontSize="16"/>
+
+                                    <Frame Padding="0" BackgroundColor="Transparent" HorizontalOptions="End" HeightRequest="30" CornerRadius="15">
+                                        <Button Text="Send" FontSize="14" TextColor="#F50058" BackgroundColor="White" Padding="10" Clicked="SendCommentButtonClicked"/>
+                                    </Frame>
+
+                                </StackLayout>
+
+                            </StackLayout>
+                        </Frame>
                     </StackLayout>
 
                 </ListView.Footer>
@@ -41,7 +54,7 @@
                             </magic:GradientView>
 
                             <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All">
-                                
+
                                 <StackLayout HorizontalOptions="FillAndExpand" Spacing="5" Padding="15" >
 
 
@@ -52,19 +65,55 @@
                                         <Image Source="tab_map" HeightRequest="18"/>
                                         <Label Text="{Binding address}" FontSize="14" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
                                     </StackLayout>
-                                    
+
                                 </StackLayout>
-                                <StackLayout VerticalOptions="End" HeightRequest="60" Padding="15">
-                                    <Frame Padding="0" CornerRadius="20" BackgroundColor="White" HorizontalOptions="End" WidthRequest="100" VerticalOptions="Center">
+                                <StackLayout Padding="15"  HorizontalOptions="Center" VerticalOptions="EndAndExpand">
+                                    <Frame CornerRadius="35" Padding="0" >
+                                        <Button WidthRequest="70" HeightRequest="70" Command="{Binding GoCommand}" CommandParameter="{Binding .}" Padding="0" FontAttributes="Bold">
+                                            <Button.FontSize>
+                                                <Binding Path="Going">
+                                                    <Binding.Converter>
+                                                        <converters:BoolToObjectConverter x:TypeArguments="x:Int16"
+                                                                                      TrueObject="14"
+                                                                                      FalseObject="25"/>
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Button.FontSize>
+                                            <Button.Text>
+                                                <Binding Path="Going">
+                                                    <Binding.Converter>
+                                                        <converters:BoolToObjectConverter x:TypeArguments="x:String"
+                                                                                          TrueObject="Back Out"
+                                                                                          FalseObject="GO"/>
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Button.Text>
+                                            <Button.TextColor>
+                                                <Binding Path="Going">
+                                                    <Binding.Converter>
+                                                        <converters:BoolToObjectConverter x:TypeArguments="Color"
+                                                                                      TrueObject="#F50058"
+                                                                                      FalseObject="White"/>
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Button.TextColor>
 
-
-                                        <Button Text="Rides" HeightRequest="40" TextColor="#F50058" FontSize="20"/>
-
+                                        </Button>
+                                        <Frame.BackgroundColor>
+                                            <Binding Path="Going">
+                                                <Binding.Converter>
+                                                    <converters:BoolToObjectConverter x:TypeArguments="Color"
+                                                                                      TrueObject="White"
+                                                                                      FalseObject="#F50058"/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Frame.BackgroundColor>
                                     </Frame>
+
                                 </StackLayout>
-                                
+
                             </StackLayout>
-                            
+
 
 
 
@@ -72,10 +121,11 @@
 
 
 
-                        <StackLayout Padding="15" Spacing="10">
-                            
-                            <Label Text="Demographics" FontSize="20" TextColor="White" FontAttributes="Bold" />
+                        <StackLayout Padding="20" Spacing="20">
+
+                            <Label Text="Demographics" FontSize="20" TextColor="White" FontAttributes="Bold"/>
                             <Frame Padding="0" CornerRadius="40" BackgroundColor="#202020">
+
                                 <StackLayout Spacing="10" Padding="20">
                                     <StackLayout Orientation="Horizontal">
                                         <StackLayout HorizontalOptions="CenterAndExpand">
@@ -101,28 +151,23 @@
                             <Frame Padding="0" CornerRadius="40">
                                 <models:PartyMap x:Name="map" IsVisible="true"  HeightRequest="300" IsEnabled="False"/>
                             </Frame>
-                        </StackLayout>
-                        
-                    </StackLayout>
-                </ListView.Header>
-                
-            </ListView>
-            <StackLayout Padding="0,0,0,20"  HorizontalOptions="Center" VerticalOptions="EndAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,0.2" AbsoluteLayout.LayoutFlags="All">
-                <Frame CornerRadius="40" Padding="0" BackgroundColor="#F50058" >
-                    <Button WidthRequest="80" HeightRequest="80" Command="{Binding GoCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="16" Padding="0" FontAttributes="Bold">
-                        <Button.Text>
-                            <Binding Path="Going">
-                                <Binding.Converter>
-                                    <converters:BoolToObjectConverter x:TypeArguments="x:String"
-                                                                                          TrueObject="Back Out"
-                                                                                          FalseObject="Go"/>
-                                </Binding.Converter>
-                            </Binding>
-                        </Button.Text>
-                    </Button>
-                </Frame>
+                            <!--
+                            Commenting field
+                            -->
 
-            </StackLayout>
+                            <Label Text="Comments" FontSize="20" TextColor="White" FontAttributes="Bold"/>
+                            
+
+                        </StackLayout>
+
+
+
+                    </StackLayout>
+
+                </ListView.Header>
+            </ListView>
+            
+            
         </AbsoluteLayout>
         
         

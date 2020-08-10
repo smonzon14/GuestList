@@ -53,21 +53,6 @@ namespace App3.Views
 
         }
 
-
-        List<Story> getTestStories()
-        {
-
-            var list = new List<Story>();
-            var post = new Story
-            {
-                uid = "123",
-                name = "Sebastian Monzon"
-            };
-
-            for (int i = 0; i < 20; i++) list.Add(post);
-
-            return list;
-        }
         void update()
         {
             populateFeed();
@@ -75,7 +60,6 @@ namespace App3.Views
         }
         async void populateFeed()
         {
-            string uid = App.UserDatabase.GetUser().uid;
             List<Party> items = new List<Party>();
             
             foreach (var user in App.UserFriends)
@@ -88,6 +72,8 @@ namespace App3.Views
             items.AddRange(App.UserParties);
 
             feedListView.ItemsSource = items;
+            noInvitesMsg.IsVisible = items.Count == 0;
+            
 
         }
         async void populateStories()

@@ -112,6 +112,7 @@ namespace App3.Models
         {
             
             ImageSource = await FirebaseHelper.GetPostedImageURL(pid);
+            if (ImageSource == null) img = false;
         }
         public string secondaryHexColor { get; set; }
 
