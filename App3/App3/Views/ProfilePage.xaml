@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:convert="clr-namespace:App3.Converters" xmlns:models="clr-namespace:App3.Models"
              mc:Ignorable="d"
-             x:Class="App3.ProfilePage" Title="{Binding name}"
+             x:Class="App3.ProfilePage"
              ControlTemplate="{StaticResource hiddenBarTemplate}">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,78 +15,29 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource postTemplate}" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True">
+        
 
-            <ListView.Header>
-                <StackLayout x:Name="profileStack" Padding="0,100,0,0" Spacing="0">
-                    <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="CenterAndExpand" Padding="0" IsClippedToBounds="True">
-                        <Image HorizontalOptions="Center" VerticalOptions="Center" Source="{Binding ProfileImageSource}"/>
-                    </Frame>
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="30">
-                        <Button x:Name="friendButton" BackgroundColor="{Binding Source={RelativeSource Self}, Path=Text, Converter={StaticResource actionToColor}}" HeightRequest="35" TextColor="White" FontSize="16" Padding="8" Clicked="profileActionBtn_Clicked" Text="{Binding FriendStatus,Converter={StaticResource friendStatusToAction}, TargetNullValue='...'}"/>
-                    </StackLayout>
-                    <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
-                    <Label FontSize="20" HorizontalTextAlignment="Center" Padding="10" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>
-                    <StackLayout Orientation="Horizontal" Spacing="0">
-                        <StackLayout  x:Name="showPostsButton"  BackgroundColor="#F50058" HorizontalOptions="FillAndExpand" >
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="ShowPosts"/>
-                            </StackLayout.GestureRecognizers>
-                            <Label Padding="20" FontSize="20" TextColor="White" Text="Posts"  HeightRequest="30" HorizontalTextAlignment="Center"/>
+        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource myPartyTemplate}" VerticalScrollBarVisibility="Never" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True" ItemTapped="postListView_ItemTapped" SeparatorVisibility="None">
+                <ListView.Header>
+                    <StackLayout x:Name="profileStack" Padding="0,100,0,0" Spacing="0">
+                        <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="CenterAndExpand" Padding="0" IsClippedToBounds="True" Grid.Column="1">
+                            <Image Aspect="AspectFill" Source="{Binding ProfileImageSource}"/>
+                        </Frame>
+
+                        <Label Text="{Binding name}" TextColor="White" HorizontalTextAlignment="Center" FontSize="22" Padding="5"/>
+                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="30">
+                            <Button x:Name="friendButton" BackgroundColor="{Binding Source={RelativeSource Self}, Path=Text, Converter={StaticResource actionToColor}}" HeightRequest="35" TextColor="White" FontSize="16" Padding="8" Clicked="profileActionBtn_Clicked" Text="{Binding FriendStatus,Converter={StaticResource friendStatusToAction}, TargetNullValue='...'}"/>
                         </StackLayout>
-                        <StackLayout  x:Name="showPartiesButton"  BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" >
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="ShowParties"/>
-                            </StackLayout.GestureRecognizers>
-                            <Label Padding="20" FontSize="20" TextColor="White" Text="Parties"  HeightRequest="30" HorizontalTextAlignment="Center"/>
-                        </StackLayout>
+                        <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
+                        <Label FontSize="20" HorizontalTextAlignment="Center" Padding="10" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>
+                        <BoxView WidthRequest="100" HorizontalOptions="Center" HeightRequest="1" Color="Gray"/>
+
 
                     </StackLayout>
-                    <AbsoluteLayout HeightRequest="400" HorizontalOptions="Fill" x:Name="partiesView" IsVisible="false">
+                </ListView.Header>
 
-                        <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.65"/>
-                        <!--<Label Text="ZP" TextColor="White" FontSize="30" FontAttributes="Italic,Bold"  Grid.Column="2" HorizontalTextAlignment="Center" Grid.Row="1" Padding="15"/>-->
-
-                        <StackLayout AbsoluteLayout.LayoutBounds="1,1,1,0.35" AbsoluteLayout.LayoutFlags="All" Padding="0,0,0,0">
-                            <!-- Main Party Stack -->
-
-                            <CarouselView x:Name="partyCarousel" BackgroundColor="Transparent" PeekAreaInsets="40" HeightRequest="100" CurrentItemChanged="CurrentItemChanged" VerticalOptions="CenterAndExpand">
-                                <CarouselView.ItemTemplate>
-                                    <DataTemplate>
-
-                                        <StackLayout VerticalOptions="Start">
-                                            <StackLayout.GestureRecognizers>
-                                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
-                                            </StackLayout.GestureRecognizers>
-                                            <Frame CornerRadius="20" Padding="0" WidthRequest="320" HorizontalOptions="Center" VerticalOptions="Start" BackgroundColor="#d0d0d0">
-                                                <AbsoluteLayout >
-
-                                                    <StackLayout Spacing="5" Padding="12" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" >
-
-                                                        <Label Text="{Binding name}" FontSize="18" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                                        <Label Text="{Binding address}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation" MaxLines="1"/>
-                                                        <Label Text="{Binding time}" FontSize="14" TextColor="Black"/>
-                                                        <!--, StringFormat='{0:d} @ {0:h:mm tt}'-->
-                                                    </StackLayout>
-                                                </AbsoluteLayout>
-
-                                            </Frame>
-
-                                        </StackLayout>
-
-
-                                    </DataTemplate>
-                                </CarouselView.ItemTemplate>
-                            </CarouselView>
-                        </StackLayout>
-
-                    </AbsoluteLayout>
-
-
-                </StackLayout>
-            </ListView.Header>
-
-        </ListView>
+            </ListView>
+            
 
 
 

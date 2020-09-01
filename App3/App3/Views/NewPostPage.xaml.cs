@@ -36,7 +36,7 @@ namespace App3.Views
                 comments = 0,
                 likes = 0
             };
-            FirebaseHelper.CreatePost(post, user.uid);
+            FirebaseHelper.CreatePost(post);
             await Navigation.PopModalAsync();
         }
 

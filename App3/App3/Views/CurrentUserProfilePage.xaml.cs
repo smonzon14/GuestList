@@ -15,6 +15,8 @@ namespace App3.Views
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; } 
         public string ToolbarRightSource { get; private set; } = "button_settings";
 
+        NavigationPage FriendsPage = new NavigationPage(new FriendsPage()) { BarTextColor = Color.White };
+        NavigationPage MusicPage = new NavigationPage(new MusicPage()) { BarTextColor = Color.White };
         public CurrentUserProfilePage()
         {
 
@@ -24,7 +26,9 @@ namespace App3.Views
                 Navigation.PushAsync(new SettingsPage());
             });
             InitializeComponent();
+            
             displayUser();
+
         }
 
         void refreshView_Refreshing(object sender, EventArgs e)
@@ -38,31 +42,29 @@ namespace App3.Views
         }
         public async void displayUser()
         {
+            friendsCount.SetBinding(Label.TextProperty, "Count");
+            friendsCount.BindingContext = App.UserFriends;
+            partiesCount.SetBinding(Label.TextProperty, "Count");
+            partiesCount.BindingContext = App.UserParties;
             var user = App.UserDatabase.GetUser();
             if (user == null) return;
             user.updateProfileImageSource();
             BindingContext = user;
             var partiesList = await App.GetPartiesAsync();
 
-            if (partiesList.Count > 0)
-            {
+            if (partiesList.Count > 0) postListView.ItemsSource = partiesList;
 
-                //foreach (var p in partiesList) p.geoPosition = (await (new Xamarin.Forms.Maps.Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
-
-                //noPartiesMsg.IsVisible = false;
-                postListView.ItemsSource = partiesList;
-            }
-
+            
 
         }
         private void Friends_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new NavigationPage(new FriendsPage()) { BarBackgroundColor = Color.Black});
+            Navigation.PushModalAsync(FriendsPage);
         }
 
         private void Music_Tapped(object sender, EventArgs e)
         {
-            Debug.WriteLine("Music Tapped");
+            Navigation.PushModalAsync(MusicPage);
         }
 
         private async void postListView_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -88,7 +90,7 @@ namespace App3.Views
                     }
                     else
                     {
-                        await FirebaseHelper.SetProfileImage(App.UserDatabase.GetUser().uid, ImageFile);
+                        await FirebaseHelper.SetProfileImage(ImageFile);
                         currentImage.Source = ImageSource.FromStream(() => { return ImageFile.GetStream(); });
                     }
                 }
@@ -97,6 +99,21 @@ namespace App3.Views
                     Debug.WriteLine(ex.Message);
                 }
             }  
+        }
+
+        private void EditProfileButton_Clicked(object sender, EventArgs e)
+        {
+
+        }
+        private double toolbarOpacity = 1.0;
+        public double ToolbarOpacity { get { return toolbarOpacity; } private set { toolbarOpacity = value; } }
+
+        private void ListView_Scrolled(object sender, ScrolledEventArgs e)
+        {
+            if (e.ScrollY <= 0) toolbarOpacity = 0.0;
+            else if (e.ScrollY > 60) toolbarOpacity = 1.0;
+            else toolbarOpacity = e.ScrollY / 60;
+            OnPropertyChanged("ToolbarOpacity");
         }
     }
 }

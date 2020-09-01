@@ -1,5 +1,6 @@
 ﻿using App3.Data;
 using App3.Models;
+using App3.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +18,7 @@ namespace App3
         //static RestService restService;
 
         static IFirebaseAuthenticator authenticator = DependencyService.Get<IFirebaseAuthenticator>();
+        
         public static UserDatabaseController UserDatabase
         {
             get
@@ -66,8 +68,9 @@ namespace App3
             else
             {
 
-                userFriends = FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid).Result;
+                userFriends = FirebaseHelper.GetFriendsList().Result;
                 if (userFriends != null) userInvites = FirebaseHelper.GetInvitedParties(userFriends).Result;
+                
                 MainPage = createMainPage();
                     
             }
@@ -80,7 +83,7 @@ namespace App3
         {
             var currentUser = UserDatabase.GetUser();
             if (currentUser == null) return false;
-            User updatedUser = DependencyService.Get<IFirebaseAuthenticator>().RefreshCurrentUser();
+            User updatedUser = authenticator.RefreshCurrentUser();
             UserDatabase.RemoveUserData();
             if (updatedUser == null) return false;
             User userData = FirebaseHelper.GetUserFromUID(updatedUser.uid).Result;
@@ -99,19 +102,21 @@ namespace App3
         {
 
             UserDatabase.RemoveUserData();
-            if (!DependencyService.Get<IFirebaseAuthenticator>().SignOut()) Debug.WriteLine("Error Signing out");
-            NavigationPage loginScreen = new NavigationPage(new SignUpPage());
-            loginScreen.BarTextColor = Color.White;
-            loginScreen.BarBackgroundColor = Color.FromHex("#28053d");
+            if (!authenticator.SignOut()) Debug.WriteLine("Error Signing out");
+            NavigationPage loginScreen = new NavigationPage(new MasterAuthPage());
+            loginScreen.BarTextColor = Color.FromHex("#F50058");
+            loginScreen.BarBackgroundColor = Color.Black;
             Current.MainPage = loginScreen;
         }
-        public static async Task<User> SignupAsync(string email, string password, string name)
+        public static async Task<User> SignupAsync(string email, string password, string name, int gender, DateTime birthday)
         {
             string tokenId = await authenticator.SignUpUser(email, password);
             if (tokenId == "") return null;
             Debug.WriteLine("tokenId = " + tokenId);
             User user = authenticator.GetCurrentUser();
             user.name = name;
+            user.gender = gender;
+            user.birthday = birthday;
             if (!await FirebaseHelper.AddUser(user))
             {
                 Debug.WriteLine("Could not add user to database");
@@ -131,6 +136,7 @@ namespace App3
             if (tokenId == "") return null;
             Debug.WriteLine(tokenId);
             var user = authenticator.GetCurrentUser(); //await FirebaseHelper.GetUserFromUID(uid);
+            user = await FirebaseHelper.GetUserFromUID(user.uid);
             user.printUser();
             if (user == null)
             {
@@ -143,6 +149,11 @@ namespace App3
             return user;
 
         }
+        public static async Task<bool> ResetPassword(string email)
+        {
+            return await authenticator.ResetPassword(email);
+            
+        }
         public static async Task GetUserMediaAndDisplay()
         {
             await GetFriendsAsync();
@@ -152,20 +163,18 @@ namespace App3
         public static async Task<List<User>> GetFriendsAsync()
         {
             
-            userFriends = await FirebaseHelper.GetFriendsList(UserDatabase.GetUser().uid);
-            Debug.WriteLine("Got Friends");
+            userFriends = await FirebaseHelper.GetFriendsList();
             return userFriends;
         }
         public static async Task<List<Party>> GetInvitesAsync()
         {
-
-            if (userFriends == null) return userInvites;
-            userInvites = await FirebaseHelper.GetInvitedParties(userFriends);
+            if (userFriends != null) userInvites = await FirebaseHelper.GetInvitedParties(userFriends);
             return userInvites;
         }
         public static async Task<List<Party>> GetPartiesAsync()
         {
             userParties = await FirebaseHelper.GetPartiesThrownByUser(UserDatabase.GetUser());
+            
             return userParties;
         }
     }

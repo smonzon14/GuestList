@@ -6,55 +6,85 @@
              xmlns:convert="clr-namespace:App3.Converters" xmlns:models="clr-namespace:App3.Models"
              mc:Ignorable="d"
              x:Class="App3.Views.CurrentUserProfilePage"
-             ControlTemplate="{StaticResource hiddenBarTemplate}">
+             Title="{Binding name}"
+             ControlTemplate="{StaticResource profileHeader}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <convert:friendStatusToAction x:Key="friendStatusToAction"/>
-            <convert:statusToMessage x:Key="statusToMessage" />
             <convert:ActionToColor x:Key="actionToColor"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ListView BackgroundColor="Black" ItemTemplate="{StaticResource myPartyTemplate}" VerticalScrollBarVisibility="Never" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True" ItemTapped="postListView_ItemTapped" SeparatorVisibility="None">
+        <AbsoluteLayout>
+            <ListView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" BackgroundColor="Black" ItemTemplate="{StaticResource myPartyTemplate}" VerticalScrollBarVisibility="Never" x:Name="postListView" Refreshing="refreshView_Refreshing"  RefreshControlColor="White" HasUnevenRows="True" IsPullToRefreshEnabled="True" ItemTapped="postListView_ItemTapped" SeparatorVisibility="None" Scrolled="ListView_Scrolled">
 
-            <ListView.Header>
-                <StackLayout x:Name="profileStack" Padding="0,50,0,0" Spacing="0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="0" VerticalOptions="CenterAndExpand">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="Friends_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Image Source="tab_friends" HorizontalOptions="Center" WidthRequest="50"/>
-                            <Label Text="Friends" TextColor="White" HorizontalOptions="Center" FontSize="12"/>
-                        </StackLayout>
-                        <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="CenterAndExpand" Padding="0" IsClippedToBounds="True" Grid.Column="1">
-                            <Image HorizontalOptions="Center"  Aspect="AspectFill" Source="{Binding ProfileImageSource}">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="ChangeProfileImage"/>
-                                </Image.GestureRecognizers>
-                            </Image>
-                        </Frame>
-                        <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="2" VerticalOptions="CenterAndExpand">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="Music_Tapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Image Source="Music" HorizontalOptions="Center" WidthRequest="50"/>
-                            <Label Text="Music" TextColor="White" HorizontalOptions="Center" FontSize="12"/>
-                        </StackLayout>
-                    </Grid>
-                    <Label Text="{Binding name}" TextColor="White" HorizontalTextAlignment="Center" FontSize="22" Padding="5"/>
-                    <Label FontSize="14" HorizontalTextAlignment="Center" TextColor="White" Text="{Binding status, Converter={StaticResource statusToMessage}, StringFormat='Status: {0}'}"/>
-                    <Label FontSize="20" HorizontalTextAlignment="Center" Padding="10" FontAttributes="Italic" TextColor="White" Text="{Binding bio}"/>
-                    <BoxView WidthRequest="100" HorizontalOptions="Center" HeightRequest="1" Color="Gray"/>
-                </StackLayout>
-            </ListView.Header>
+                <ListView.Header>
 
-        </ListView>
+
+                    <StackLayout x:Name="profileStack" Padding="25,40,25,0" Spacing="0">
+                        <StackLayout Orientation="Horizontal"  Padding="0,30,0,30">
+                            <StackLayout HorizontalOptions="StartAndExpand">
+                                <Label Text="{Binding name}" TextColor="White" FontSize="30" VerticalTextAlignment="Center" FontAttributes="Bold"/>
+                            </StackLayout>
+
+
+                        </StackLayout>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="1" VerticalOptions="CenterAndExpand">
+
+
+                                <Label x:Name="friendsCount" Text="0" FontSize="24" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold"/>
+                                <Label Text="Friends" FontSize="14" TextColor="White" HorizontalOptions="Center"/>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Friends_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+
+                            </StackLayout>
+                            <AbsoluteLayout Grid.Column="0" HeightRequest="100" WidthRequest="100">
+                                <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" Padding="0"  IsClippedToBounds="True" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                    <Image Aspect="AspectFill" Source="{Binding ProfileImageSource}">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="ChangeProfileImage"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Frame>
+                                <StackLayout VerticalOptions="Center" WidthRequest="100" AbsoluteLayout.LayoutBounds="0,1,1,0.1" AbsoluteLayout.LayoutFlags="All">
+                                    <Frame CornerRadius="12.5" Padding="0" BackgroundColor="#F50058" HorizontalOptions="Center" HeightRequest="25">
+                                        <Button HorizontalOptions="Center" VerticalOptions="Center" Text="Edit Profile" TextColor="White" FontSize="14" Padding="10"/>
+                                    </Frame>
+                                </StackLayout>
+                            </AbsoluteLayout>
+
+                            <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                                <Label x:Name="partiesCount" Text="0" FontSize="24" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold"/>
+                                <Label Text="Parties" FontSize="14" TextColor="White" HorizontalOptions="Center"/>
+
+                            </StackLayout>
+                            <StackLayout HorizontalOptions="CenterAndExpand" Grid.Column="3" VerticalOptions="CenterAndExpand">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="Music_Tapped"/>
+                                </StackLayout.GestureRecognizers>
+                                <Frame CornerRadius="25" WidthRequest="50" HeightRequest="50" Padding="0" BackgroundColor="#505050">
+                                    <Image Source="Music" HorizontalOptions="Center" WidthRequest="20"/>
+                                </Frame>
+
+                            </StackLayout>
+                        </Grid>
+                        <Label FontSize="16" Padding="0, 20,0,20" FontAttributes="Italic" TextColor="White" Text="This is a test bio."/>
+                        <Label Text="My Events" TextColor="White" HorizontalTextAlignment="End" FontSize="22" FontAttributes="Bold"/>
+                    </StackLayout>
+                </ListView.Header>
+
+            </ListView>
+        </AbsoluteLayout>
+        
 
 
 

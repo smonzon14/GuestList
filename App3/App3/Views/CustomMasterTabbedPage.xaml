@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App3.Views.CustomMasterTabbedPage">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <ContentView x:Name="CurrentPage" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.95"/>
+            <StackLayout x:Name="tabBar" Orientation="Horizontal" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,0.1" HorizontalOptions="FillAndExpand" BackgroundColor="Black">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="Red">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                            </StackLayout.GestureRecognizers>
+                            <Frame Padding="0" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Black">
+                                <Image Source="{Binding IconImageSource}"/>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+            <StackLayout Padding="10" HorizontalOptions="Center" VerticalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0.5,1,0.1,0.1">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                </StackLayout.GestureRecognizers>
+                <Image Source="button_plus_simple_white" HeightRequest="25" Aspect="AspectFit" WidthRequest="25"/>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

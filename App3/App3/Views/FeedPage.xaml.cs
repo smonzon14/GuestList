@@ -3,6 +3,8 @@ using App3.Models;
 using Plugin.Media;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
@@ -14,8 +16,12 @@ namespace App3.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FeedPage : ContentPage
     {
-        public double ToolbarOpacity { get; private set; } = 1.0;
+        
         public ICommand DotsCommand { get; private set; }
+        public ICommand ToolbarRightCommand { get; private set; }
+        public string ToolbarRightSource { get; private set; } = "button_settings";
+        ObservableCollection<Party> invites = new ObservableCollection<Party>();
+        
         public FeedPage()
         {
             DotsCommand = new Command(async (object item) =>
@@ -47,42 +53,68 @@ namespace App3.Views
                     }
                 }
             });
-            InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
+            ToolbarRightCommand = new Command(() =>
+            {
+                Navigation.PushAsync(new SettingsPage());
+            });
+            InitializeComponent();
             update();
 
         }
 
         void update()
         {
+
+            feedListView.ItemsSource = invites;
             populateFeed();
-            populateStories();
+            //populateStories();
+        }
+        private void mergeInvites(List<Party> parties)
+        {
+
+            //0: 4/15
+            //1: 4/16
+            if (parties.Count == 0) return;
+            if(invites.Count > 0)
+            {
+                
+                
+                for (int x = invites.Count-1; x > 0; x--)
+                {
+                    if (parties[0].posted.CompareTo(invites[x].posted) > 0)
+                    {
+                        invites.Insert(x, parties[0]);
+                        parties.RemoveAt(0);
+                        x++;
+                        if (parties.Count == 0) break;
+                    }
+                }
+                
+            }
+            else
+            {
+                while (parties.Count != 0)
+                {
+                    invites.Add(parties[parties.Count - 1]);
+                    parties.RemoveAt(parties.Count - 1);
+                }
+            }
+            
+            
+
         }
         async void populateFeed()
         {
-            List<Party> items = new List<Party>();
-            
-            foreach (var user in App.UserFriends)
-            {
-                //items.AddRange(await FirebaseHelper.GetPostsForUser(user.uid));
-                items.AddRange(await FirebaseHelper.GetPartiesThrownByUser(user));
-            }
-            //var posts = await FirebaseHelper.GetPostsForUser(uid);
-            //items.AddRange(posts);
-            items.AddRange(App.UserParties);
+            invites.Clear();
 
-            feedListView.ItemsSource = items;
-            noInvitesMsg.IsVisible = items.Count == 0;
-            
+            mergeInvites(await App.GetPartiesAsync());
+            mergeInvites(await App.GetInvitesAsync());
 
+            noInvitesMsg.IsVisible = invites.Count == 0;
+            
         }
-        async void populateStories()
-        {
-            if (storiesCollectionView == null) return;
-            //var stories = new List<Story>();
-            var stories = await FirebaseHelper.GetUserStories(App.UserDatabase.GetUser().uid);
-            storiesCollectionView.ItemsSource = stories;
-        }
+        
 
         private void RefreshView_Refreshing(object sender, EventArgs e)
         {
@@ -96,12 +128,15 @@ namespace App3.Views
             else if (e.Item is Party party) await Navigation.PushModalAsync(new PartyDetailsPage(party));
             feedListView.SelectedItem = null;
         }
-        private void NewPostButton_Clicked(object sender, EventArgs e)
+
+
+        /*async void populateStories()
         {
-            Navigation.PushModalAsync(new NewPostPage());
+            if (storiesCollectionView == null) return;
+            //var stories = new List<Story>();
+            var stories = await FirebaseHelper.GetUserStories(App.UserDatabase.GetUser().uid);
+            storiesCollectionView.ItemsSource = stories;
         }
-
-
         private void storiesCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Debug.WriteLine("Hello");
@@ -132,20 +167,27 @@ namespace App3.Views
             {
                 Debug.WriteLine(ex.Message);
             }
-        }
+        }*/
 
         private void MapButton_Tapped(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new NavigationPage(new HomePage()));
+            Navigation.PushModalAsync(new NavigationPage(new HomePage()) { BarTextColor = Color.White });
         }
+
+        private double toolbarOpacity = 1.0;
+        public double ToolbarOpacity { get { return toolbarOpacity; } private set { toolbarOpacity = value; } }
 
         private void feedListView_Scrolled(object sender, ScrolledEventArgs e)
         {
-            if (e.ScrollY <= 0) ToolbarOpacity = 1.0;
-            else if (e.ScrollY > 100) ToolbarOpacity = 0.0;
-            else ToolbarOpacity = 1.0 - e.ScrollY / 100;
-            
+            if (e.ScrollY <= 0) toolbarOpacity = 0.0;
+            else if (e.ScrollY > 60) toolbarOpacity = 1.0;
+            else toolbarOpacity = e.ScrollY / 60;
+            OnPropertyChanged("ToolbarOpacity");
         }
 
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            await Navigation.PushModalAsync(new PartyHostPage());
+        }
     }
 }

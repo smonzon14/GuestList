@@ -13,11 +13,10 @@
         <ToolbarItem Text="Scan" Clicked="btnScan_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout BackgroundColor="#2f2f2f">
-            <StackLayout Padding="50,10,50,0">
-                <Frame BackgroundColor="White"  CornerRadius="10" Padding="0">
-                    <SearchBar BackgroundColor="Transparent" FontSize="14" Placeholder="Search" TextColor="Black" HorizontalTextAlignment="Center" HeightRequest="30" TextChanged="FriendSearch_TextChanged"/>
-                </Frame>
+        <StackLayout BackgroundColor="Black">
+            <StackLayout Padding="60,10,60,0">
+                <SearchBar BackgroundColor="Transparent" FontSize="14" Placeholder="Search" TextColor="White" HorizontalTextAlignment="Center" HeightRequest="30" TextChanged="FriendSearch_TextChanged"/>
+
             </StackLayout>
             <ListView x:Name="userList" BackgroundColor="Transparent" RowHeight="70">
                 <ListView.ItemTemplate>
@@ -28,7 +27,7 @@
 
                             <StackLayout Orientation="Horizontal" Padding="10">
                                 <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" IsClippedToBounds="True">
-                                    <Image HorizontalOptions="Center" VerticalOptions="Center" Source="Profile"/>
+                                    <Image Aspect="AspectFill" Source="{Binding ProfileImageSource}"/>
                                 </Frame>
                                 <StackLayout Padding="20,0,0,0" VerticalOptions="Center">
                                     <Label Text="{Binding name}" HorizontalOptions="StartAndExpand" FontSize="20" TextColor="White"/>

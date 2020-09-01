@@ -97,7 +97,7 @@ namespace App3.iOS
 
             MKAnnotationView annotationView;
             if (annotation == null || annotation.GetTitle() == null) return null;
-            if (annotation is MKUserLocation)
+            if (annotation.GetTitle().Equals("My Location"))
             {
                 return null;
             }

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
+             x:Class="App3.Views.MasterAuthPage"
+             BackgroundColor="Black"
+             Title="Welcome">
+    <ContentPage.Content>
+        <StackLayout Spacing="20" Padding="20" VerticalOptions="FillAndExpand">
+
+            <Label Text="ZP" FontSize="50" HorizontalOptions="Center" TextColor="White" FontAttributes="Italic" VerticalOptions="Start"/>
+
+            
+            <Frame WidthRequest="200" HeightRequest="40" CornerRadius="15" Padding="0">
+                <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <magic:GradientView VerticalOptions="FillAndExpand">
+                        <magic:GradientView.GradientSource >
+                            <magic:CssGradientSource>
+                                <x:String>
+                                    <![CDATA[
+            linear-gradient(to right, #F50058, #D90B80)
+                    ]]>
+                                </x:String>
+                            </magic:CssGradientSource>
+                        </magic:GradientView.GradientSource>
+                    </magic:GradientView>
+                    <Button Text="Log In" Clicked="LogIn_Clicked" TextColor="White" FontSize="20" BackgroundColor="Transparent"/>
+                </Grid>
+            </Frame>
+
+            <Frame WidthRequest="200" HeightRequest="40" CornerRadius="15" Padding="0" >
+                <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <magic:GradientView VerticalOptions="FillAndExpand">
+                        <magic:GradientView.GradientSource >
+                            <magic:CssGradientSource>
+                                <x:String>
+                                    <![CDATA[
+            linear-gradient(to right, #F50058, #D90B80)
+                    ]]>
+                                </x:String>
+                            </magic:CssGradientSource>
+                        </magic:GradientView.GradientSource>
+                    </magic:GradientView>
+                    <Button Text="Sign Up" Clicked="SignUp_Clicked" TextColor="White" FontSize="20" BackgroundColor="Transparent"/>
+                </Grid>
+            </Frame>
+
+
+
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

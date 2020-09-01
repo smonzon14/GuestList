@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,10 +12,6 @@ namespace App3.Views
         public LogInPage()
         {
             InitializeComponent();
-        }
-        public async void OnSwitchToSignUp(object sender, EventArgs e)
-        {
-            await Navigation.PopAsync();
         }
         public async void onSubmit(object sender, EventArgs e)
         {
@@ -27,6 +25,15 @@ namespace App3.Views
 
 
 
+        }
+
+        private async void Button_Clicked(object sender, EventArgs e)
+        {
+            var email = await DisplayPromptAsync("email", "enter your account email for a password reset.", "Send", "Cancel");
+            if(await App.ResetPassword(email))
+            {
+                await DisplayAlert("Check Your Email", "password reset request sent.", "Got it");
+            }
         }
     }
 }

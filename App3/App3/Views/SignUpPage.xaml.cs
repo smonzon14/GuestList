@@ -15,12 +15,6 @@ namespace App3
         {
             InitializeComponent();
             logInPage = new LogInPage();
-
-
-        }
-        async public void OnSwitchToSignIn(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(logInPage);
         }
 
         public async void onSubmit(object sender, EventArgs e)
@@ -41,6 +35,7 @@ namespace App3
                 await DisplayAlert("Name Invalid", "Full name must be at least 3 characters long", "Ok");
                 return;
             }
+
             /*if (await FirebaseHelper.UserWithEmailExists(username.Text))
             {
                 await DisplayAlert("Username Exists", "Try a different username", "Ok");
@@ -48,7 +43,7 @@ namespace App3
             }*/
             else
             {
-                User user = await App.SignupAsync(username.Text, password.Text, name.Text);
+                User user = await App.SignupAsync(username.Text, password.Text, name.Text, GenderPicker.SelectedIndex , DOBPicker.Date);
                 if (user == null)
                 {
                     errorMessage.IsVisible = true;

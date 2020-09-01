@@ -99,7 +99,7 @@ namespace App3.Views
             var currentUser = App.UserDatabase.GetUser();
             if (uid != null && currentUser != null && currentUser.uid != null && !uid.Equals(currentUser.uid))
             {
-                if (!FirebaseHelper.AddFriend(currentUser.uid, uid).Result) Debug.WriteLine("Error");
+                if (!FirebaseHelper.AddFriend(uid).Result) Debug.WriteLine("Error");
             }
 
 

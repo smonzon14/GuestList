@@ -15,22 +15,18 @@
                     <view key="view" contentMode="scaleToFill" id="yd7-JS-zBw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" colorSpace="calibratedRGB" red="0.42745098039215684" green="0.17254901960784314" blue="0.77254901960784317" alpha="1"/>
                         <accessibility key="accessibilityConfiguration">
                             <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                         </accessibility>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="491" fixedFrame="YES" image="launchGradient.png">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="941"/>
-                                <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="493" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" text="ZP">
                                 <rect key="frame" x="146" y="302" width="122" height="131"/>
-                                <fontDescription key="fontDescription" type="italicSystem" pointSize="80"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="0.62745098039215685" green="0.10196078431372549" blue="0.74117647058823533" alpha="1"/>
                                 <color key="highlightedColor" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" white="1" alpha="1"/>
+                                <fontDescription key="fontDescription" type="italicSystem" pointSize="86"/>
                             </label>
                         </subviews>
+                        <color key="backgroundColor" colorSpace="calibratedRGB" red="0" green="0" blue="0" alpha="1"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XAI-xm-WK6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -38,7 +34,4 @@
             <point key="canvasLocation" x="349" y="339"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="launchGradient.png" width="830" height="1800"/>
-    </resources>
 </document>

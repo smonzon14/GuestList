@@ -1,6 +1,7 @@
 ﻿
 using App3.Models;
 using Firebase.Database;
+using Firebase.Database.Offline;
 using Firebase.Database.Query;
 using Firebase.Storage;
 using System;
@@ -17,34 +18,84 @@ namespace App3.Data
 
         //Connect app with firebase using API Url  
 
-        public static FirebaseClient firebase = new FirebaseClient("https://tribal-dispatch-276722.firebaseio.com/");
-        public static FirebaseStorage storage = new FirebaseStorage("tribal-dispatch-276722.appspot.com");
+        static FirebaseClient firebase = new FirebaseClient("https://tribal-dispatch-276722.firebaseio.com/", new FirebaseOptions { OfflineDatabaseFactory = (t,s) => new OfflineDatabase(t,s) });
+        static FirebaseStorage storage = new FirebaseStorage("tribal-dispatch-276722.appspot.com");
         
+        
+        static string UID { 
+            get
+            {
+                return App.UserDatabase.GetUser().uid;
+            }
+        }
+        static ChildQuery CurrentUser = firebase.Child("Users").Child(UID);
         /*
          * User
          */
-        internal class UserBase
+
+        internal class UserDataModel
         {
-            public string uid { get; set; }
             public string bio { get; set; }
-            public int status { get; set; }
             public string name { get; set; }
             public string email { get; set; }
+            public DateTime birthday { get; set; }
+            public int gender { get; set; }
+            public byte music { get; set; }
+        }
+        internal class PartyDataModel
+        {
+            public DateTime posted { get; set; }
+            public string name { get; set; }
+            public string description { get; set; }
+            public string address { get; set; }
+            public bool img { get; set; }
+            public DateTime time { get; set; }
+        }
+        internal class CommentDataModel
+        {
+            public CommentDataModel() { }
+            public CommentDataModel(Comment comment)
+            {
+                cid = comment.cid;
+                name = comment.name;
+                uid = comment.uid;
+                message = comment.message;
+                likes = 0;
+            }
+            public string cid { get; set; }
+            public string name { get; set; }
+            public string uid { get; set; }
+            public string message { get; set; }
+            public int likes { get; set; }
+        }
+        internal class StoryDataModel
+        {
+            public string location { get; set; }
+        }
+        public static async Task SetNotificationToken(string token)
+        {
+            
+            await CurrentUser.Child("notificationTokens").Child(token).PutAsync(true).ConfigureAwait(false);
+            
         }
         public static async Task<List<User>> FindUsersMatching(string query)
         {
+            
             if (query.Length == 0) return new List<User>();
             try
             {
-                var task = firebase.Child("Users").OrderBy("name").StartAt(query).EndAt(query + "\uf8ff").LimitToFirst(15).OnceAsync<UserBase>().ConfigureAwait(false);
+                var task = firebase.Child("Users").OrderBy("name").StartAt(query).EndAt(query + "\uf8ff").LimitToFirst(15).OnceAsync<UserDataModel>().ConfigureAwait(false);
 
                 var possibleUsers = (await task).Select(item => new User
                 {
                     uid = item.Key,
                     name = item.Object.name,
                     bio = item.Object.bio,
-                    status = item.Object.status,
-                    email = item.Object.email
+                    music = item.Object.music,
+                    email = item.Object.email,
+                    birthday = item.Object.birthday,
+                    gender = item.Object.gender
+                    
                 }).ToList();
                 foreach(var user in possibleUsers)
                 {
@@ -66,13 +117,11 @@ namespace App3.Data
             try
             {
                 Debug.WriteLine("Getting User: " + uid);
-                UserBase user = await firebase.Child("Users").Child(uid).OnceSingleAsync<UserBase>().ConfigureAwait(false);
-                Debug.Write("Got User: ");
-                //user.printUser();
-                var u = new User { name = user.name, uid = uid, bio = user.bio, status = user.status, email = user.email };
+                UserDataModel user = await CurrentUser.OnceSingleAsync<UserDataModel>().ConfigureAwait(false);
+                
+                var u = new User { name = user.name, uid = uid, bio = user.bio, email = user.email, birthday = user.birthday, gender = user.gender, music = user.music};
                 u.updateProfileImageSource();
                 return u;
-
             }
             catch (Exception e)
             {
@@ -86,23 +135,8 @@ namespace App3.Data
             try
             {
                 
-                var data = new UserBase { bio = user.bio, name = user.name, email = user.email, status = user.status };
-                await firebase.Child("Users").Child(user.uid).PutAsync(data).ConfigureAwait(false);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine($"Error:{e}");
-                return false;
-            }
-        }
-
-        public static async Task<bool> DeleteUser(string uid)
-        {
-            try
-            {
-                await firebase.Child("Users").Child(uid).DeleteAsync().ConfigureAwait(false);
-
+                var data = new UserDataModel { bio = user.bio, name = user.name, email = user.email, birthday = user.birthday, gender = user.gender, music = user.music};
+                await CurrentUser.PutAsync(data).ConfigureAwait(false);
                 return true;
             }
             catch (Exception e)
@@ -117,11 +151,11 @@ namespace App3.Data
          * Friends
          */
 
-        public static async Task<List<User>> GetFriendsList(string userid)
+        public static async Task<List<User>> GetFriendsList()
         {
             Debug.WriteLine("Getting Friends List...");
 
-            var friendIdList = (await firebase.Child("Friendships").Child(userid).OnceAsync<int>().ConfigureAwait(false));
+            var friendIdList = (await firebase.Child("Friendships").Child(UID).OnceAsync<int>().ConfigureAwait(false));
 
             List<User> friends = new List<User>();
             foreach (FirebaseObject<int> u in friendIdList)
@@ -142,60 +176,29 @@ namespace App3.Data
         }
 
         // returns success boolean
-        public static async Task<bool> AddFriend(string userid, string friendid)
+        public static async Task<bool> AddFriend(string friendid)
         {
-            if (userid.Equals(friendid)) return false;
+            if (friendid == null || UID.Equals(friendid)) return false;
             Debug.WriteLine("Adding Friend...");
-
-            var fpath = firebase.Child("Friendships").Child(friendid).Child(userid);
-            var upath = firebase.Child("Friendships").Child(userid).Child(friendid);
-
-            
-            int friendStatus;
             try
             {
-                friendStatus = await fpath.OnceSingleAsync<int>().ConfigureAwait(false);
+                await firebase.Child("Friendships").Child(UID).Child(friendid).PutAsync(1).ConfigureAwait(false);
             }
-            catch
+            catch (Exception e)
             {
-                friendStatus = 0;
+                Debug.WriteLine("Error adding friend: " + e.Message);
             }
-            try
-            {
-                switch (friendStatus)
-                {
-                    case 0:
-                        await upath.PutAsync(1).ConfigureAwait(false);
-                        await fpath.PutAsync(2).ConfigureAwait(false);
-                        break;
-                    case 1:
-                        await upath.PutAsync(3).ConfigureAwait(false);
-                        await fpath.PutAsync(3).ConfigureAwait(false);
-                        break;
-                    case 2:
-                        await upath.PutAsync(1).ConfigureAwait(false);
-                        break;
-                    case 3:
-                        await upath.PutAsync(3).ConfigureAwait(false);
-                        break;
-                }
-            }
-            catch
-            {
-                return false;
-            }
+
             return true;
-        }
-        public static async Task<bool> RemoveFriend(string userid, string friendid)
-        {
-            Debug.WriteLine("Removing Friend...");
-            var fpath = firebase.Child("Friendships").Child(friendid).Child(userid);
-            var upath = firebase.Child("Friendships").Child(userid).Child(friendid);
 
+        }
+        public static async Task<bool> RemoveFriend(string friendid)
+        {
+            if (friendid == null || UID.Equals(friendid)) return false;
+            Debug.WriteLine("Removing Friend...");
             try
             {
-                await upath.DeleteAsync().ConfigureAwait(false);
-                await fpath.DeleteAsync().ConfigureAwait(false);
+                await firebase.Child("Friendships").Child(UID).Child(friendid).DeleteAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -209,29 +212,16 @@ namespace App3.Data
          * Party
          */
 
-        internal class PartyPost
-        {
-            public string name { get; set; }
-            public string description { get; set; }
-            public int numPeopleGoing
-            {
-                get; set;
-            }
-            public string thrower { get; set; }
-            public string address { get; set; }
-            public bool img { get; set; }
-            public DateTime time { get; set; }
-        }
+        
 
-        public static async Task<bool> CreateParty(Party party, string userid, Plugin.Media.Abstractions.MediaFile mediaFile, int exclusivity)
+        public static async Task<bool> CreateParty(Party party, Plugin.Media.Abstractions.MediaFile mediaFile, int exclusivity)
         {
             Debug.WriteLine("Creating Party...");
             try
             {
-                var item = await firebase.Child("Parties").Child(userid).PostAsync(new PartyPost
+                var item = await firebase.Child("Parties").Child(UID).PostAsync(new PartyDataModel
                 {
-                    thrower = App.UserDatabase.GetUser().name,
-                    
+                    posted = DateTime.Now,
                     address = party.address,
                     description = party.description,
                     name = party.name,
@@ -265,20 +255,18 @@ namespace App3.Data
         {
             Debug.WriteLine("Getting Invites...");
             List<Party> parties = new List<Party>();
-            foreach (User friend in friends)
+            try
             {
-                var partiesList = await firebase.Child("Parties").Child(friend.uid).OnceAsync<Party>().ConfigureAwait(false);
-                if (partiesList != null)
+                foreach (User friend in friends)
                 {
-                    foreach(var obj in partiesList)
-                    {
-                        Party party = obj.Object;
-                        party.Thrower = friend;
-                        party.pid = obj.Key;
-                        parties.Add(party);
-                    }
+                    parties.AddRange(await GetPartiesThrownByUser(friend).ConfigureAwait(false));
                 }
             }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error Retrieving Invites: " + e.Message);
+            }
+            
             return parties;
         }
 
@@ -291,7 +279,7 @@ namespace App3.Data
             Debug.WriteLine("Getting Party...");
             try
             {
-                Party party = await firebase.Child("Parties").Child(thrower.uid).Child(partyId).OnceSingleAsync<Party>();
+                Party party = await firebase.Child("Parties").Child(thrower.uid).Child(partyId).OnceSingleAsync<Party>().ConfigureAwait(false);
                 party.Thrower = thrower;
                 party.pid = partyId;
                 if (party.img) party.updateImageSource();
@@ -318,7 +306,7 @@ namespace App3.Data
                         var party = obj.Object;
                         party.pid = obj.Key;
                         party.Thrower = user;
-                        
+                        Debug.WriteLine(party.name + ": " + party.posted.ToString());
                         if(party.img) party.updateImageSource();
                         partiesList.Add(party);
                         
@@ -337,12 +325,12 @@ namespace App3.Data
         /* 
          * Posts
          */
-        public static async void CreatePost(Post post, string userid)
+        public static async void CreatePost(Post post)
         {
             try
             {
 
-                var p = await firebase.Child("Posts").Child(userid).PostAsync(post).ConfigureAwait(false);
+                var p = await firebase.Child("Posts").Child(UID).PostAsync(post).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -373,23 +361,7 @@ namespace App3.Data
         /*
          * Comments
          */
-        internal class CommentDataModel
-        {
-            public CommentDataModel() { }
-            public CommentDataModel(Comment comment)
-            {
-                cid = comment.cid;
-                name = comment.name;
-                uid = comment.uid;
-                message = comment.message;
-                likes = 0;
-            }
-            public string cid { get; set; }
-            public string name { get; set; }
-            public string uid { get; set; }
-            public string message { get; set; }
-            public int likes { get; set; }
-        }
+        
         public static async Task<Comment> AddCommentToPost(Comment comment, string pid)
         {
             var data = new CommentDataModel(comment);
@@ -459,15 +431,12 @@ namespace App3.Data
         /*
          * Stories
          */
-        internal class StoryPostMetaData
-        {
-            public string location { get; set; }
-        }
+        
         public static async void PostStory(Story story)
         {
             try
             {
-                var firebaseObj = await firebase.Child("Stories").Child(story.uid).PostAsync(new StoryPostMetaData { location = "HEllo" }).ConfigureAwait(false);
+                var firebaseObj = await firebase.Child("Stories").Child(story.uid).PostAsync(new StoryDataModel { location = "HEllo" }).ConfigureAwait(false);
                 var key = firebaseObj?.Key;
                 var storyRef = storage
                     .Child("Stories")
@@ -498,12 +467,12 @@ namespace App3.Data
             }
             return url;
         }
-        public static async Task<string> SetProfileImage(string uid, Plugin.Media.Abstractions.MediaFile mediaFile)
+        public static async Task<string> SetProfileImage(Plugin.Media.Abstractions.MediaFile mediaFile)
         {
             string url = null;
             try
             {
-                var storyRef = storage.Child("Profiles").Child(uid);
+                var storyRef = storage.Child("Profiles").Child(UID);
 
                 if (mediaFile != null)
                 {
@@ -544,7 +513,7 @@ namespace App3.Data
             var stories = new List<Story>();
             try
             {
-                var firebaseObjects = await firebase.Child("Stories").Child(uid).OnceAsync<StoryPostMetaData>().ConfigureAwait(false);
+                var firebaseObjects = await firebase.Child("Stories").Child(uid).OnceAsync<StoryDataModel>().ConfigureAwait(false);
                 if (firebaseObjects != null)
                 {
                     foreach (var obj in firebaseObjects)
@@ -569,22 +538,22 @@ namespace App3.Data
             return stories;
         }
         
-        public static async void AddLikeToPost(Post post, string userid)
+        public static async void AddLikeToPost(Post post)
         {
             try
             {
-                await firebase.Child("Likes").Child(post.pid).Child(userid).PutAsync(true).ConfigureAwait(false);
+                await firebase.Child("Likes").Child(post.pid).Child(UID).PutAsync(true).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
         }
-        public static async void RemoveLikeFromPost(Post post, string userid)
+        public static async void RemoveLikeFromPost(Post post)
         {
             try
             {
-                await firebase.Child("Likes").Child(post.pid).Child(userid).DeleteAsync().ConfigureAwait(false);
+                await firebase.Child("Likes").Child(post.pid).Child(UID).DeleteAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -593,26 +562,49 @@ namespace App3.Data
 }
 
         
-        public static async void GoToParty(string pid, string uid)
+        public static async void GoToParty(string pid)
         {
             try
             {
-                await firebase.Child("Guests").Child(pid).Child(uid).PutAsync(true).ConfigureAwait(false);
+                await firebase.Child("Guests").Child(pid).Child(UID).PutAsync(true).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
         }
-        public static async void UndoGoToParty(string pid, string uid)
+        public static async void UndoGoToParty(string pid)
         {
             try
             {
-                await firebase.Child("Guests").Child(pid).Child(uid).DeleteAsync().ConfigureAwait(false);
+                await firebase.Child("Guests").Child(pid).Child(UID).DeleteAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+            }
+        }
+
+        public static async void UpdateMusicPreferences(byte musicPreferences)
+        {
+            try
+            {
+                await CurrentUser.Child("music").PutAsync(musicPreferences).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e.Message);
+            }
+        }
+        public static async void UpdateBio(string bio)
+        {
+            try
+            {
+                await CurrentUser.Child("bio").PutAsync(bio).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e.Message);
             }
         }
     }

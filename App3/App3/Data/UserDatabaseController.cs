@@ -12,8 +12,7 @@ namespace App3.Data
         public UserDatabaseController()
         {
             userData = DependencyService.Get<IUserData>();
-            user = userData.GetUser();
-            user.updateProfileImageSource();
+            GetUser();
         }
         public User GetUser()
         {

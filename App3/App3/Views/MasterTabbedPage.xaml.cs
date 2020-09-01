@@ -22,14 +22,6 @@ namespace App3
 
             Children.Clear();
 
-            NavigationPage friends = new NavigationPage(new FriendsPage())
-            {
-                //Title = "Friends",
-                IconImageSource = "tab_friends",
-                BarTextColor = Color.White,
-                BarBackgroundColor = Color.Black
-            };
-
 
             // Home Page
             NavigationPage home = new NavigationPage(new HomePage())
@@ -61,11 +53,21 @@ namespace App3
                 BarBackgroundColor = Color.Black
             };
 
+            NavigationPage music = new NavigationPage(new MusicPage())
+            {
+                //Title = "Chatter",
+                IconImageSource = "Music",
+                BarTextColor = Color.White,
+                BarBackgroundColor = Color.Black
+            };
+
             //Children.Add(friends);
             //Children.Add(home);
-            
+
             Children.Add(feed);
+            Children.Add(home);
             Children.Add(host);
+            Children.Add(music);
             Children.Add(profile);
 
             CurrentPage = home;

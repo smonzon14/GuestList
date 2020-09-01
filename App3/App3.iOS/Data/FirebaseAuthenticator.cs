@@ -20,7 +20,13 @@ namespace App3.iOS.Data
             try
             {
                 var user = await Auth.DefaultInstance.CreateUserAsync(email, password);
-                
+                var actionCodeSettings = new ActionCodeSettings()
+                {
+                    HandleCodeInApp = false,
+                    IOSBundleId = NSBundle.MainBundle.BundleIdentifier,
+                    DynamicLinkDomain = "zoopass.page.link"
+                };
+                await Auth.DefaultInstance.CurrentUser.SendEmailVerificationAsync(actionCodeSettings);
                 return await user.User.GetIdTokenAsync();
             }
             catch (Exception e)
@@ -29,6 +35,20 @@ namespace App3.iOS.Data
                 return "";
             }
         }
+
+        public async Task<bool> ResetPassword(string email)
+        {
+            try
+            {
+                await Auth.DefaultInstance.SendPasswordResetAsync(email);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<string> LoginWithEmailPassword(string email, string password)
         {
 

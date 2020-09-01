@@ -145,8 +145,9 @@ namespace App3
                 if (step == 3)
                 {
                     await postParty();
-                    await Navigation.PopModalAsync();
+                    party.Thrower = App.UserDatabase.GetUser();
                     App.UserParties.Add(party);
+                    await Navigation.PopModalAsync();
                     return;
                 }
                 animateBetweenPrompts(true);
@@ -157,7 +158,7 @@ namespace App3
             try
             {
 
-                return await FirebaseHelper.CreateParty(party, App.UserDatabase.GetUser().uid, ImageFile ,0);
+                return await FirebaseHelper.CreateParty(party, ImageFile ,0);
             }
             catch
             {

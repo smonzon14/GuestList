@@ -55,19 +55,28 @@
 
                             <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutBounds="0,1,1,1" AbsoluteLayout.LayoutFlags="All">
 
-                                <StackLayout HorizontalOptions="FillAndExpand" Spacing="5" Padding="15" >
+                                <StackLayout HorizontalOptions="FillAndExpand" Spacing="5" Padding="20,0,20,0" >
 
 
                                     <Label Text="{Binding name}" TextColor="White" FontAttributes="Bold" FontSize="35" LineBreakMode="WordWrap" MaxLines="2" VerticalOptions="EndAndExpand"/>
-                                    <Label Text="{Binding thrower}" FontSize="18" TextColor="White" HorizontalTextAlignment="Start"/>
-                                    <Label Text="{Binding time}" FontSize="18" TextColor="White"  HorizontalTextAlignment="Start"/>
-                                    <StackLayout Orientation="Horizontal" Spacing="10" Padding="0,0,0,20">
-                                        <Image Source="tab_map" HeightRequest="18"/>
-                                        <Label Text="{Binding address}" FontSize="14" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
-                                    </StackLayout>
 
+                                    
+                                    <StackLayout Orientation="Horizontal" Spacing="10">
+                                        <Image Source="tab_map" HeightRequest="18"/>
+                                        <Label Text="{Binding address}" FontSize="18" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
+                                    </StackLayout>
+                                    <Label Text="{Binding time}" FontSize="16" TextColor="DeepSkyBlue"  HorizontalTextAlignment="Start" FontAttributes="Italic"/>
+                                    <StackLayout HorizontalOptions="Fill" Orientation="Horizontal" Padding="10">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                                        </StackLayout.GestureRecognizers>
+                                        <Frame WidthRequest="30" HeightRequest="30" CornerRadius="15" HorizontalOptions="Start" Padding="0" IsClippedToBounds="True" Grid.Column="0">
+                                            <Image Aspect="AspectFill" Source="{Binding Path=Thrower.ProfileImageSource}"/>
+                                        </Frame>
+                                        <Label Text="{Binding Path=Thrower.name}" FontSize="18" TextColor="White" VerticalOptions="Center"/>
+                                    </StackLayout>
                                 </StackLayout>
-                                <StackLayout Padding="15"  HorizontalOptions="Center" VerticalOptions="EndAndExpand">
+                                <StackLayout Padding="20"  HorizontalOptions="Center" VerticalOptions="EndAndExpand">
                                     <Frame CornerRadius="35" Padding="0" >
                                         <Button WidthRequest="70" HeightRequest="70" Command="{Binding GoCommand}" CommandParameter="{Binding .}" Padding="0" FontAttributes="Bold">
                                             <Button.FontSize>
@@ -121,16 +130,16 @@
 
 
 
-                        <StackLayout Padding="20" Spacing="20">
-
+                        <StackLayout Padding="20,10,20,10" Spacing="20">
+                            
                             <Label Text="Demographics" FontSize="20" TextColor="White" FontAttributes="Bold"/>
                             <Frame Padding="0" CornerRadius="40" BackgroundColor="#202020">
 
                                 <StackLayout Spacing="10" Padding="20">
                                     <StackLayout Orientation="Horizontal">
                                         <StackLayout HorizontalOptions="CenterAndExpand">
-                                            <Label Text="101" TextColor="Turquoise" FontSize="22" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
-                                            <Label Text="Total" TextColor="Turquoise" FontSize="14"  HorizontalTextAlignment="Center"/>
+                                            <Label Text="101" TextColor="#F50058" FontSize="22" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                                            <Label Text="Total" TextColor="#F50058" FontSize="14"  HorizontalTextAlignment="Center"/>
                                         </StackLayout>
                                         <StackLayout HorizontalOptions="CenterAndExpand">
                                             <Label Text="19" TextColor="White" FontSize="22" FontAttributes="Bold" HorizontalTextAlignment="Center"/>

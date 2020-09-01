@@ -24,12 +24,12 @@ namespace App3.Models
             if (item.Going)
             {
                 item.Going = false;
-                FirebaseHelper.UndoGoToParty(item.pid, App.UserDatabase.GetUser().uid);
+                FirebaseHelper.UndoGoToParty(item.pid);
             }
             else
             {
                 item.Going = true;
-                FirebaseHelper.GoToParty(item.pid, App.UserDatabase.GetUser().uid);
+                FirebaseHelper.GoToParty(item.pid);
             }
         });
         public Party()
@@ -61,6 +61,7 @@ namespace App3.Models
         public bool Going { get { return going; } set { going = value; OnPropertyChanged("Going"); } } 
         public User Thrower { get; set; }
         public DateTime time { get; set; }
+        public DateTime posted { get; set; }
         public string address { get; set; }
         public Position geoPosition { get; set; }
         public bool img { get; set; }

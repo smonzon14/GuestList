@@ -12,12 +12,12 @@ namespace App3.Models
             if (item.liked)
             {
                 item.likes--;
-                FirebaseHelper.RemoveLikeFromPost(item, App.UserDatabase.GetUser().uid);
+                FirebaseHelper.RemoveLikeFromPost(item);
             }
             else
             {
                 item.likes++;
-                FirebaseHelper.AddLikeToPost(item, App.UserDatabase.GetUser().uid);
+                FirebaseHelper.AddLikeToPost(item);
             }
             item.Liked = !item.Liked;
         });

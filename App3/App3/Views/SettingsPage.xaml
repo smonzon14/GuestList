@@ -7,16 +7,7 @@
              x:Class="App3.SettingsPage">
     <ContentPage.Content>
         <TableView Intent="Settings">
-            <TableRoot>
-                
-                <TableSection Title="Notifications">
-                    <SwitchCell Text="Display Notifications" On="False"/>
-                    <SwitchCell Text="Notify On Direct Invites" On="False"/>
-                    <SwitchCell Text="Notify on Public Invites" On="False"/>
-                </TableSection>
-                <TableSection Title="Privacy">
-                    <SwitchCell Text="Show my name" On="true"/>
-                </TableSection>
+            <TableRoot >
                 <TableSection Title="Account Settings">
                     <SwitchCell Text="Change Password"/>
                     <TextCell Text="Sign Out" TextColor="Red" Tapped="OnLogout"/>

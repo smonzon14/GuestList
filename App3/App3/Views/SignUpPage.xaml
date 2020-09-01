@@ -6,76 +6,76 @@
              xmlns:magic="clr-namespace:MagicGradients;assembly=MagicGradients"
              mc:Ignorable="d"
              x:Class="App3.SignUpPage">
-    <ContentPage.ToolbarItems>
-
-        <ToolbarItem Text="Sign In" Clicked="OnSwitchToSignIn"/>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid BackgroundColor="Black">
-            <magic:GradientView VerticalOptions="FillAndExpand">
-                <magic:GradientView.GradientSource>
-                    <magic:CssGradientSource>
-                        <x:String>
-                            <![CDATA[
-                    linear-gradient(to top, rgba(157,14,54,1) 0%, rgba(107,10,92,1) 23%, rgba(40,5,61,1) 100%)
-                            ]]>
-                        </x:String>
-                    </magic:CssGradientSource>
-                </magic:GradientView.GradientSource>
-            </magic:GradientView>
-            <Grid ColumnSpacing="0" RowSpacing="12">
-
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="100"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="50"/>
-                </Grid.ColumnDefinitions>
-
-                <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalOptions="Center" Margin="0,10,0,0">
-                    <Label Text="ZP" TextColor="White" FontSize="100" FontAttributes="Bold, Italic" HorizontalTextAlignment="Center"/>
+            <StackLayout Spacing="12" Padding="20">
+                <Label Text="Sign Up" HorizontalTextAlignment="Start" TextColor="White" FontSize="30" Padding="10" FontAttributes="Bold"/>
+                <StackLayout Padding="10">
+                    <Label Text="Full Name" FontSize="12" TextColor="White"/>
+                    <Entry x:Name="name" Placeholder="John Doe" FontSize="Medium" HorizontalTextAlignment="Start" BackgroundColor="Transparent" TextColor="White" />
+                    <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="Fill"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Padding="10" Spacing="30">
+                    <StackLayout HorizontalOptions="FillAndExpand">
+                        <Label Text="DOB" FontSize="12" TextColor="White"/>
+                        <DatePicker x:Name="DOBPicker" TextColor="White" BackgroundColor="Transparent"></DatePicker>
+                        <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="Fill"/>
+                    </StackLayout>
+                    <StackLayout HorizontalOptions="FillAndExpand">
+                        <Label Text="Gender" FontSize="12" TextColor="White"/>
+                        <Picker x:Name="GenderPicker" TextColor="White" BackgroundColor="Transparent" SelectedIndex="0">
+                            <Picker.Items>
+                                <x:String>Not Specified</x:String>
+                                <x:String>Male</x:String>
+                                <x:String>Female</x:String>
+                                <x:String>Other</x:String>
+                                
+                            </Picker.Items>
+                        </Picker>
+                        <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="Fill"/>
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout Padding="10">
+                    <Label Text="Email" FontSize="12" TextColor="White"/>
+                    <Entry x:Name="username" Placeholder="example@gmail.com"  FontSize="Medium" HorizontalTextAlignment="Start" Keyboard="Email" BackgroundColor="Transparent" TextColor="White" />
+                    <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="Fill"/>
+                </StackLayout>
+            
+                <StackLayout Padding="10">
+                    <Label Text="Password" FontSize="12" TextColor="White"/>
+                    <Entry x:Name="password" Placeholder="h@rdT0Gu355"  FontSize="Medium" HorizontalTextAlignment="Start" IsPassword="True" BackgroundColor="Transparent" TextColor="White" />
+                    <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="Fill"/>
                 </StackLayout>
 
-                <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Sign Up" HorizontalTextAlignment="Center" TextColor="White" FontSize="25"/>
+                <StackLayout Padding="10">
+                    <Label Text="Re-Type Password" FontSize="12" TextColor="White"/>
+                    <Entry x:Name="retypePassword" Placeholder="Re-Type" FontSize="Medium" HorizontalTextAlignment="Start" IsPassword="True" BackgroundColor="Transparent" TextColor="White" />
+                    <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="Fill"/>
+                </StackLayout>
 
-                <Frame Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
-                    <Entry x:Name="name" Placeholder="Full Name"  FontSize="Medium" HorizontalTextAlignment="Center" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-
-                </Frame>
-
-                <Frame Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
-                    <Entry x:Name="username" Placeholder="University Email"  FontSize="Medium" HorizontalTextAlignment="Center" Keyboard="Email" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                </Frame>
-                <Frame  Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
-                    <Entry x:Name="password" Placeholder="Password"  FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                </Frame>
-                <Frame Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Padding="0" BackgroundColor="Black">
-                    <Entry  x:Name="retypePassword" Placeholder="Retype Password" FontSize="Medium" HorizontalTextAlignment="Center" IsPassword="True" BackgroundColor="Transparent" TextColor="White" PlaceholderColor="White"/>
-                </Frame>
-
-                <Label Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" x:Name="errorMessage" Text="Error signing up. Try again." TextColor="Red" HorizontalTextAlignment="Center" IsVisible="False"/>
-                <Label Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="Already have an account? Sign In." TextColor="Gray" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                <Label x:Name="errorMessage" Text="Error signing up. Try again." TextColor="Red" HorizontalTextAlignment="Center" IsVisible="False"/>
                 <StackLayout Padding="30" VerticalOptions="EndAndExpand" Grid.ColumnSpan="4" Grid.Row="9">
                     <Frame CornerRadius="30" Padding="0" BackgroundColor="Transparent">
-                        <Button Text="Sign Up" HeightRequest="80" BackgroundColor="#92000000" TextColor="White" FontSize="40" Clicked="onSubmit"/>
+                        <Grid>
+                            <magic:GradientView VerticalOptions="FillAndExpand">
+                                <magic:GradientView.GradientSource >
+                                    <magic:CssGradientSource>
+                                        <x:String>
+                                            <![CDATA[
+            linear-gradient(to right, #F50058, #D90B80)
+                    ]]>
+                                        </x:String>
+                                    </magic:CssGradientSource>
+                                </magic:GradientView.GradientSource>
+                            </magic:GradientView>
+                            <Button Text="Sign Up" HeightRequest="60" BackgroundColor="Transparent" TextColor="White" FontSize="30" Clicked="onSubmit"/>
+                        </Grid>
 
                     </Frame>
 
                 </StackLayout>
-            </Grid>
+            </StackLayout>
+            
 
         </Grid>
     </ContentPage.Content>

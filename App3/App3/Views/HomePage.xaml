@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
 
             <models:PartyMap x:Name="map" AbsoluteLayout.LayoutFlags="All" Grid.RowSpan="6" Grid.ColumnSpan="2"/>
@@ -35,12 +35,11 @@
                 </Frame>
             </StackLayout>
 
-            <StackLayout x:Name="controls" Spacing="15" Grid.Row="3" Grid.Column="1">
-                <Frame VerticalOptions="Center" HorizontalOptions="Center" Padding="0" CornerRadius="26" BackgroundColor="#F50058">
-                    <ImageButton Source="button_plus_simple_white" Clicked="hostButtonClicked"  VerticalOptions="Center" BackgroundColor="Transparent" Padding="15"/>
+            <StackLayout x:Name="controls" Grid.Row="3" Grid.Column="1" VerticalOptions="EndAndExpand" Padding="10">
+                <Frame Padding="0" BackgroundColor="#0b6bd9" HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="20">
+
+                    <ImageButton Source="tab_search" Clicked="SearchButton_Clicked" Padding="10" WidthRequest="40" HeightRequest="40"/>
                 </Frame>
-                <ImageButton Source="tab_search" Clicked="SearchButton_Clicked" Padding="10"/>
-                <ImageButton Source="car" Padding="10"/>
             </StackLayout>
 
             <StackLayout Grid.Row="4" Grid.ColumnSpan="2">

@@ -20,6 +20,7 @@ namespace App3
         public PartyDetailsPage(Party party)
         {
             comments = new List<Comment>();
+            
             BindingContext = party;
             ToolbarLeftSource = "button_back";
             ToolbarLeftCommand = new Command(async () =>
@@ -91,6 +92,10 @@ namespace App3
             partyDetailsListView.ScrollTo(partyDetailsListView.Footer, ScrollToPosition.End, true);
         }
 
+        private void TapGestureRecognizer_Tapped(object sender, System.EventArgs e)
+        {
+            Navigation.PushAsync(new ProfilePage((BindingContext as Party).Thrower));
+        }
     }
 
 }

@@ -12,6 +12,7 @@ namespace App3.Data
         bool SignOut();
         User RefreshCurrentUser();
 
+        Task<bool> ResetPassword(string email);
 
     }
 }

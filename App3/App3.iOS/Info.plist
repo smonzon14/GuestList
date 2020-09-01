@@ -49,8 +49,6 @@
 		<string>FontAwesome5Regular.otf</string>
 		<string>FontAwesome5Solid.otf</string>
 	</array>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -59,5 +57,9 @@
 	<string>This app needs access to the camera to scan QR codes.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to photos.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

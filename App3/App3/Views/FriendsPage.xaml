@@ -29,7 +29,7 @@
                                     <Frame CornerRadius="35" BackgroundColor="#303030" Padding="0">
                                         <StackLayout Padding = "10" BackgroundColor = "Transparent" Orientation = "Horizontal">
                                             <Frame WidthRequest="50" HeightRequest="50" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" IsClippedToBounds="True">
-                                                <Image Source="Profile" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                <Image Aspect="AspectFill" Source="{Binding ProfileImageSource}"/>
                                             </Frame>
                                             <StackLayout Padding="20,0,0,0" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
                                                 <Label Text="{Binding name}" FontSize="18" TextColor="White"/>

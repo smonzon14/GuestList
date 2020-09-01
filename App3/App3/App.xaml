@@ -40,8 +40,8 @@
         <ControlTemplate x:Key="header">
             <AbsoluteLayout>
                 
-                <ContentPresenter VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,0.91" AbsoluteLayout.LayoutFlags="All"/>
-                <AbsoluteLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}" AbsoluteLayout.LayoutBounds="0,0,1,0.09" AbsoluteLayout.LayoutFlags="All">
+                <ContentPresenter VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,0.90" AbsoluteLayout.LayoutFlags="All"/>
+                <AbsoluteLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}" AbsoluteLayout.LayoutBounds="0,0,1,0.1" AbsoluteLayout.LayoutFlags="All">
                     <StackLayout Padding="0,0,0,0" Spacing="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1">
                         <magic:GradientView VerticalOptions="FillAndExpand">
                             <magic:GradientView.GradientSource >
@@ -58,8 +58,8 @@
                     <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" Padding="20,35,20,0" >
 
                         <ImageButton Source="{Binding ToolbarLeftSource}" Command="{Binding ToolbarLeftCommand}" IsVisible="{Binding ToolbarLeftSource, Converter={StaticResource nullToFalse}, FallbackValue={StaticResource false}}" Padding="0,0,20,0"/>
-                        <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="White" FontSize="24" HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
-                        <ImageButton Source="{Binding ToolbarRightSource}" Command="{Binding ToolbarRightCommand}" IsVisible="{Binding ToolbarRightSource, Converter={StaticResource nullToFalse}, FallbackValue={StaticResource false}}" WidthRequest="30"/>
+                        <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="White" FontSize="18" HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                        <ImageButton Source="{Binding ToolbarRightSource}" Command="{Binding ToolbarRightCommand}" IsVisible="{Binding ToolbarRightSource, Converter={StaticResource nullToFalse}, FallbackValue={StaticResource false}}" WidthRequest="30" Padding="5,0,0,0"/>
                     </StackLayout>
 
                 </AbsoluteLayout>
@@ -68,39 +68,36 @@
         <ControlTemplate x:Key="profileHeader">
             <AbsoluteLayout>
                 <ContentPresenter VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All"/>
-                <StackLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}" AbsoluteLayout.LayoutBounds="0,0,1,0.11" AbsoluteLayout.LayoutFlags="All">
-                    
-                    <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" Padding="20,35,20,0" VerticalOptions="EndAndExpand">
-                        <ImageButton Source="{Binding ToolbarLeftSource}" Command="{Binding ToolbarLeftCommand}"/>
-                        <Frame Padding="0" CornerRadius="10" HorizontalOptions="CenterAndExpand">
-                            <Grid>
-                                <magic:GradientView VerticalOptions="FillAndExpand">
-                                    <magic:GradientView.GradientSource>
-                                        <magic:CssGradientSource>
-                                            <x:String>
-                                                <![CDATA[
-                linear-gradient(to right, #F50058, #D90B80)
+                <AbsoluteLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}" AbsoluteLayout.LayoutBounds="0,0,1,0.11" AbsoluteLayout.LayoutFlags="All">
+                    <magic:GradientView VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" Opacity="{Binding ToolbarOpacity, FallbackValue='1.0'}">
+                        <magic:GradientView.GradientSource>
+                            <magic:CssGradientSource>
+                                <x:String>
+                                    <![CDATA[
+                radial-gradient(circle, rgba(50,50,50,1) 0%, rgba(31,31,31,1) 100%)
                         ]]>
-                                            </x:String>
-                                        </magic:CssGradientSource>
-                                    </magic:GradientView.GradientSource>
-                                </magic:GradientView>
-                                <Label Text="{Binding Title}" TextColor="White" FontSize="18" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Padding="10"/>
-                            </Grid>
-                        </Frame>
+                                </x:String>
+                            </magic:CssGradientSource>
+                        </magic:GradientView.GradientSource>
+                    </magic:GradientView>
+                    <StackLayout Orientation="Horizontal" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" Padding="30,30,30,0" VerticalOptions="EndAndExpand">
+                        <ImageButton Source="{Binding ToolbarLeftSource}" Command="{Binding ToolbarLeftCommand}"/>
+                        <Label Text="{Binding Title}" TextColor="White" FontSize="18" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Padding="10" Opacity="{Binding ToolbarOpacity, FallbackValue='1.0'}"/>
+                        
 
-                        <ImageButton Source="{Binding ToolbarRightSource}" Command="{Binding ToolbarRightCommand}" BackgroundColor="#D90B80"/>
+                        <ImageButton Source="{Binding ToolbarRightSource}" Command="{Binding ToolbarRightCommand}" WidthRequest="30"/>
                     </StackLayout>
 
-                </StackLayout>
+                </AbsoluteLayout>
                 
             </AbsoluteLayout>
         </ControlTemplate>
         <ControlTemplate x:Key="minimizedBarTemplate">
-            <StackLayout Spacing="0">
-                <BoxView HorizontalOptions="FillAndExpand" HeightRequest="40" BackgroundColor="#202020"/>
-                <ContentPresenter VerticalOptions="FillAndExpand"/>
-            </StackLayout>
+            <AbsoluteLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+                <ContentPresenter VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
+                <BoxView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="#202020" Opacity="{Binding ToolbarOpacity}" AbsoluteLayout.LayoutBounds="0,0,1,0.05" AbsoluteLayout.LayoutFlags="All"/>
+                
+            </AbsoluteLayout>
         </ControlTemplate>
         <ControlTemplate x:Key="hiddenBarTemplate">
             <AbsoluteLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
@@ -149,21 +146,23 @@
             </ViewCell>
         </DataTemplate>
         <DataTemplate x:Key="partyTemplate">
-            <ViewCell Height="130">
+            <ViewCell Height="120">
                 
                 <Grid Padding="0" FlowDirection="LeftToRight" ColumnSpacing="0" HorizontalOptions="FillAndExpand">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
-                    <StackLayout Padding="10" VerticalOptions="Center">
+                    <StackLayout Padding="10" VerticalOptions="Start" >
                         <Frame WidthRequest="30" HeightRequest="30" CornerRadius="15" HorizontalOptions="Start" Padding="0" IsClippedToBounds="True" Grid.Column="0">
-                            <Image WidthRequest="30" HeightRequest="30" HorizontalOptions="Center" VerticalOptions="Center" Aspect="AspectFill" Source="{Binding Path=Thrower.ProfileImageSource}"/>
+                            <Image Aspect="AspectFill" Source="{Binding Path=Thrower.ProfileImageSource}"/>
                         </Frame>
                     </StackLayout>
-                    <ContentView Padding="0,10,80,10" Grid.Column="1" HorizontalOptions="Start">
-                        <Frame BackgroundColor="#151515" CornerRadius="20" Padding="0" HasShadow="False">
-                            <StackLayout Orientation="Horizontal">
+                    
+                    <ContentView Padding="0,10,0,10" Grid.Column="1" HorizontalOptions="Start">
+                        <Frame BackgroundColor="#F50058" CornerRadius="20" Padding="0" HasShadow="False">
+                            <StackLayout Orientation="Horizontal" Spacing="0">
 
                                 <StackLayout Padding="0" VerticalOptions="Center" IsVisible="{Binding img, TargetNullValue={StaticResource false}}">
                                     <AbsoluteLayout>
@@ -172,29 +171,39 @@
                                     </AbsoluteLayout>
 
                                 </StackLayout>
-                                <StackLayout Padding="10" Spacing="5">
-                                    <Label Text="{Binding time, StringFormat='{0:MM/dd @ hh\\:mm tt}'}" FontSize="12" HorizontalOptions="Start" TextColor="#F50058" VerticalOptions="Center"/>
-                                    <Label Text="{Binding name}" FontSize="18" HorizontalOptions="Start" TextColor="White" LineBreakMode="WordWrap" FontAttributes="Bold"/>
+                                <Grid>
+                                    <magic:GradientView VerticalOptions="FillAndExpand">
+                                        <magic:GradientView.GradientSource>
+                                            <magic:CssGradientSource>
+                                                <x:String>
+                                                    <![CDATA[
+                linear-gradient(to right, #F50058, #D90B80)
+                        ]]>
+                                                </x:String>
+                                            </magic:CssGradientSource>
+                                        </magic:GradientView.GradientSource>
+                                    </magic:GradientView>
+                                    <StackLayout Orientation="Horizontal">
+                                        <StackLayout Padding="10" Spacing="5">
+                                            <Label Text="{Binding time, StringFormat='{0:MM/dd @ hh\\:mm tt}'}" FontSize="14" HorizontalOptions="Start" TextColor="Black" VerticalOptions="Center" FontAttributes="Bold"/>
+                                            <Label Text="{Binding name}" FontSize="20" HorizontalOptions="Start" TextColor="White" LineBreakMode="WordWrap" FontAttributes="Bold"/>
 
-                                    <StackLayout Orientation="Horizontal" Spacing="10">
-                                        <Image Source="tab_map" HeightRequest="18"/>
-                                        <Label Text="{Binding address}" FontSize="12" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Spacing="20" Padding="0" HeightRequest="25">
-                                        <StackLayout Spacing="5" Orientation="Horizontal">
-                                            <ImageButton Source="{Binding Liked, Converter={StaticResource likeToButtonSource}}" Padding="3" WidthRequest="25" Command="{Binding LikeCommand}" CommandParameter="{Binding .}" />
-                                            <Label Text="{Binding likes}" FontSize="14" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                                <Image Source="tab_map" HeightRequest="18"/>
+                                                <Label Text="{Binding address}" FontSize="14" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
+                                            </StackLayout>
                                         </StackLayout>
-                                        <StackLayout Spacing="5" Padding="0" Orientation="Horizontal">
-                                            <ImageButton Source="button_comment_simple" Padding="3" WidthRequest="25" IsEnabled="False"/>
-                                            <Label Text="{Binding comments}" FontSize="14" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                        </StackLayout>
+                                        
                                     </StackLayout>
-                                </StackLayout>
+                                </Grid>
+                                
                             </StackLayout>
                         </Frame>
                     </ContentView>
-
+                    <StackLayout Padding="10" VerticalOptions="Center" Grid.Column="2"  HorizontalOptions="Start">
+                        <ImageButton Source="{Binding Liked, Converter={StaticResource likeToButtonSource}}" Padding="2" WidthRequest="30" HeightRequest="30" Command="{Binding LikeCommand}" CommandParameter="{Binding .}" />
+                        <Label Text="{Binding likes}" FontSize="16" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Start"/>
+                    </StackLayout>
 
                 </Grid>
 
@@ -202,53 +211,71 @@
             </ViewCell>
         </DataTemplate>
         <DataTemplate x:Key="myPartyTemplate">
-            <ViewCell Height="130">
+            <ViewCell Height="120">
 
                 <Grid Padding="0" FlowDirection="RightToLeft" ColumnSpacing="0" HorizontalOptions="FillAndExpand">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
-                    <StackLayout Padding="10" VerticalOptions="Start">
-                        <Frame WidthRequest="30" HeightRequest="30" CornerRadius="15" HorizontalOptions="CenterAndExpand" Padding="0" IsClippedToBounds="True">
-                            <Image WidthRequest="30" HeightRequest="30" HorizontalOptions="Center" VerticalOptions="Center" Aspect="AspectFill" Source="{Binding Path=Thrower.ProfileImageSource}"/>
+                    <StackLayout Padding="10" VerticalOptions="Start" >
+                        <Frame WidthRequest="30" HeightRequest="30" CornerRadius="15" HorizontalOptions="Start" Padding="0" IsClippedToBounds="True" Grid.Column="0">
+                            <Image Aspect="AspectFill" Source="{Binding Path=Thrower.ProfileImageSource}"/>
                         </Frame>
                     </StackLayout>
-                    <ContentView Padding="0,10,80,10" Grid.Column="1" HorizontalOptions="Start">
-                        <Frame BackgroundColor="#151515" CornerRadius="20" Padding="0" HasShadow="False">
-                            <StackLayout Orientation="Horizontal">
+                    <ContentView Padding="0,10,0,10" Grid.Column="1" HorizontalOptions="Start">
+                        <Frame CornerRadius="20" Padding="0" HasShadow="False" BackgroundColor="Black">
+                            <StackLayout Orientation="Horizontal" Spacing="0" >
 
-                                <StackLayout Padding="0" VerticalOptions="Center" IsVisible="{Binding img}">
+                                <StackLayout VerticalOptions="Center" IsVisible="{Binding img}">
                                     <AbsoluteLayout>
                                         <ActivityIndicator  IsRunning="{Binding ImageSource, Converter={StaticResource nullToTrue}}" VerticalOptions="Center" HorizontalOptions="Center" Color="White" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" />
                                         <Image Aspect="AspectFill" HeightRequest="110" WidthRequest="110" Source="{Binding ImageSource}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"/>
                                     </AbsoluteLayout>
 
                                 </StackLayout>
-                                <StackLayout Padding="10" Spacing="5">
-                                    <Label Text="{Binding time, StringFormat='{0:MM/dd @ hh\\:mm tt}'}" FontSize="12" HorizontalOptions="Start" TextColor="#F50058" VerticalOptions="Center"/>
-                                    <Label Text="{Binding name}" FontSize="18" HorizontalOptions="Start" TextColor="White" LineBreakMode="WordWrap" FontAttributes="Bold"/>
 
-                                    <StackLayout Orientation="Horizontal" Spacing="10">
-                                        <Image Source="tab_map" HeightRequest="18"/>
-                                        <Label Text="{Binding address}" FontSize="12" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Spacing="20" Padding="0" HeightRequest="25">
+                                <Grid>
+                                    <magic:GradientView VerticalOptions="FillAndExpand">
+                                        <magic:GradientView.GradientSource>
+                                            <magic:CssGradientSource>
+                                                <x:String>
+                                                    <![CDATA[
+                linear-gradient(90deg, rgba(0,197,245,1) 0%, rgba(11,107,217,1) 100%)
+                        ]]>
+                                                </x:String>
+                                            </magic:CssGradientSource>
+                                        </magic:GradientView.GradientSource>
+                                    </magic:GradientView>
+                                    <StackLayout Orientation="Horizontal">
+                                        <StackLayout Padding="10" Spacing="5">
+                                            <Label Text="{Binding time, StringFormat='{0:MM/dd @ hh\\:mm tt}'}" FontSize="14" HorizontalOptions="Start" TextColor="Black" VerticalOptions="Center" FontAttributes="Bold"/>
+                                            <Label Text="{Binding name}" FontSize="20" HorizontalOptions="Start" TextColor="White" LineBreakMode="WordWrap" FontAttributes="Bold"/>
 
-                                        <StackLayout Spacing="5" Padding="0" Orientation="Horizontal">
-                                            <ImageButton Source="button_comment_simple" Padding="3" WidthRequest="25" IsEnabled="False"/>
-                                            <Label Text="{Binding comments}" FontSize="14" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                            <StackLayout Orientation="Horizontal" Spacing="10" FlowDirection="LeftToRight">
+                                                <Image Source="tab_map" HeightRequest="18"/>
+                                                <Label Text="{Binding address}" FontSize="14" HorizontalOptions="StartAndExpand" TextColor="White" LineBreakMode="WordWrap" />
+                                            </StackLayout>
                                         </StackLayout>
-                                        <StackLayout Spacing="5" Orientation="Horizontal">
-                                            <ImageButton Source="{Binding Liked, Converter={StaticResource likeToButtonSource}}" Padding="3" WidthRequest="25" Command="{Binding LikeCommand}" CommandParameter="{Binding .}" />
-                                            <Label Text="{Binding likes}" FontSize="14" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                        </StackLayout>
+                                        
+                                        
                                     </StackLayout>
-                                </StackLayout>
+                                </Grid>
                             </StackLayout>
                         </Frame>
                     </ContentView>
+                    <StackLayout Grid.Column="2" FlowDirection="LeftToRight" VerticalOptions="Center" Padding="10">
+                        <StackLayout Padding="0" HorizontalOptions="Center" Orientation="Horizontal">
+                            <ImageButton IsEnabled="False" Source="{Binding Liked, Converter={StaticResource likeToButtonSource}}" Padding="2" WidthRequest="25" HeightRequest="25"/>
+                            <Label Text="{Binding likes}" FontSize="16" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Start"/>
+                        </StackLayout>
+                        <StackLayout  Padding="0" HorizontalOptions="Center" Orientation="Horizontal">
+                            <ImageButton Source="button_comment_simple" Padding="2" WidthRequest="25" IsEnabled="False" HeightRequest="25"/>
+                            <Label Text="{Binding comments}" FontSize="16" TextColor="White" Padding="0" HorizontalOptions="Center" VerticalOptions="Start"/>
+                        </StackLayout>
 
+                    </StackLayout>
 
                 </Grid>
 

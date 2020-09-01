@@ -19,38 +19,18 @@ namespace App3
         // Party object visualization template
         public System.Windows.Input.ICommand ToolbarRightCommand { get; private set; }
         public string ToolbarRightSource { get; private set; }
-        public System.Windows.Input.ICommand ToolbarLeftCommand { get; private set; }
-        public string ToolbarLeftSource { get; private set; }
-
         private bool partyViewIsExpanded;
         public HomePage()
         {
             ToolbarRightSource = "button_refresh";
-            ToolbarRightCommand = new Command(async () =>
+            ToolbarRightCommand = new Command(() =>
             {
-                await App.GetInvitesAsync();
                 update();
             });
-            ToolbarLeftCommand = new Command(async () =>
-            {
-                await Navigation.PopModalAsync();
-            });
-            ToolbarLeftSource = "x";
-            Debug.WriteLine("Loading Home Page");
             InitializeComponent();
             partyViewIsExpanded = false;
 
-            Debug.WriteLine("Updating Home");
-
-            //partyCarousel.ItemTemplate = Templates.PartyObjectUI();
             partyCarousel.CurrentItemChanged += CurrentItemChanged;
-
-
-            //commentsListView.ItemTemplate = Templates.commentLayout();
-
-            //peopleGoingListView.ItemTemplate = Templates.friendDescriptionLayout();
-            //peopleGoingListView.ItemTapped += personItemTapped;
-
             NavigationPage.SetHasNavigationBar(this, false);
 
             update();
@@ -75,15 +55,14 @@ namespace App3
         public async void update()
         {
 
-
-            if (App.UserInvites.Count > 0)
+            var invites = await App.GetInvitesAsync();
+            if (invites.Count > 0)
             {
 
-                foreach (var p in App.UserInvites) p.geoPosition = (await (new Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
-                map.generateMap(App.UserInvites);
+                foreach (var p in invites) p.geoPosition = (await (new Geocoder()).GetPositionsForAddressAsync(p.address)).FirstOrDefault();
+                map.generateMap(invites);
 
-                partyCarousel.ItemsSource = App.UserInvites;
-                partyCarousel.CurrentItem = App.UserInvites[0];
+                partyCarousel.ItemsSource = invites;
                 partyCarousel.IsVisible = true;
                 //noPartiesMsg.IsVisible = false;
             }
