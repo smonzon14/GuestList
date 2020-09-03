@@ -25,7 +25,8 @@ namespace App3.Data
         static string UID { 
             get
             {
-                return App.UserDatabase.GetUser().uid;
+                var user = App.UserDatabase.GetUser();
+                return user != null ? user.uid : "";
             }
         }
         static ChildQuery CurrentUser = firebase.Child("Users").Child(UID);
@@ -303,6 +304,7 @@ namespace App3.Data
                 {
                     foreach (var obj in firebaseObjects)
                     {
+                        
                         var party = obj.Object;
                         party.pid = obj.Key;
                         party.Thrower = user;
@@ -562,22 +564,22 @@ namespace App3.Data
 }
 
         
-        public static async void GoToParty(string pid)
+        public static async void GoToParty(Party party)
         {
             try
             {
-                await firebase.Child("Guests").Child(pid).Child(UID).PutAsync(true).ConfigureAwait(false);
+                await firebase.Child("Guests").Child(party.Thrower.uid).Child(party.pid).Child(UID).PutAsync(true).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
         }
-        public static async void UndoGoToParty(string pid)
+        public static async void UndoGoToParty(Party party)
         {
             try
             {
-                await firebase.Child("Guests").Child(pid).Child(UID).DeleteAsync().ConfigureAwait(false);
+                await firebase.Child("Guests").Child(party.Thrower.uid).Child(party.pid).Child(UID).DeleteAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -606,6 +608,11 @@ namespace App3.Data
             {
                 Debug.Write(e.Message);
             }
+        }
+        public static async void DeleteNotificationToken(string tokenid)
+        {
+            await CurrentUser.Child("notificationTokens").Child(tokenid).DeleteAsync().ConfigureAwait(false);
+
         }
     }
 }

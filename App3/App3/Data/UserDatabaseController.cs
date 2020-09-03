@@ -20,6 +20,7 @@ namespace App3.Data
             {
                 user = userData.GetUser();
                 if (user != null) user.updateProfileImageSource();
+                
             }
             return user;
         }

@@ -1,6 +1,9 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
+
+var db = admin.database();
+
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 // exports.removeFriend = functions.database.ref('/Friendships/{MyUid}/{FriendUid}').onDelete(async (change, context) =>{
@@ -10,6 +13,61 @@ admin.initializeApp();
 //         console.log("Error removing friend. " + error.message);
 //       });
 // });
+async function sendNotifications(tokensSnapshot, payload){
+  if(!tokensSnapshot.hasChildren()) {return;}
+  // The array containing all the user's tokens.
+  // Listing all tokens as an array.
+  let tokens = Object.keys(tokensSnapshot.val());
+  // Send notifications to all tokens.
+  const response = await admin.messaging().sendToDevice(tokens, payload);
+  // For each message check if there was an error.
+  const tokensToRemove = [];
+  response.results.forEach((result, index) => {
+    const error = result.error;
+    if (error) {
+      console.error('Failure sending notification to', tokens[index], error);
+      // Cleanup the tokens who are not registered anymore.
+      if (error.code === 'messaging/invalid-registration-token' ||
+          error.code === 'messaging/registration-token-not-registered') {
+        tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
+      }
+    }
+  });
+  return Promise.all(tokensToRemove);
+}
+exports.notifyHostOfGuest = functions.database.ref('/Guests/{HostUid}/{Pid}/{GuestUid}')
+    .onWrite(async (change, context) => {
+      const Pid = context.params.Pid;
+      const HostUid = context.params.HostUid;
+      const GuestUid = context.params.GuestUid;
+
+      // Get guest count
+      const acceptedInvite = change.after.exists();
+      db.ref(`/Parties/${HostUid}/${Pid}/guestCount`).transaction((current) => (current || 0) + (acceptedInvite ? 1 : -1));
+
+      if(!acceptedInvite){ return; }
+
+      // Get the list of device notification tokens.
+      const getDeviceTokensPromise = db.ref(`/Users/${HostUid}/notificationTokens`).once('value');
+      
+      // Get the guest name
+      const getRespondingProfilePromise = db.ref(`/Users/${GuestUid}/name`).once('value');
+
+      results = await Promise.all([getDeviceTokensPromise, getRespondingProfilePromise]);
+      
+      const tokensSnapshot = results[0];
+      const name = results[1].val();
+
+      const payload = {
+        notification: {
+          title: `${name}`,
+          body: 'is going to your event!'
+        }
+      };
+
+      return sendNotifications(tokensSnapshot, payload);
+      
+    });
 exports.updateFriendStatus = functions.database.ref('/Friendships/{MyUid}/{FriendUid}')
     .onWrite(async (change, context) => {
       const MyUid = context.params.MyUid;
@@ -17,7 +75,7 @@ exports.updateFriendStatus = functions.database.ref('/Friendships/{MyUid}/{Frien
       
       if(!change.after.exists()){
         
-        return admin.database().ref(`/Friendships/${FriendUid}/${MyUid}`).remove((error)=>{
+        return db.ref(`/Friendships/${FriendUid}/${MyUid}`).remove((error)=>{
           console.log("Error removing friend. " + error.message);
         });
       }
@@ -34,15 +92,15 @@ exports.updateFriendStatus = functions.database.ref('/Friendships/{MyUid}/{Frien
 
       
       // Get any previous friend request from prospective friend
-      const getPreviousFriendRequest = admin.database().ref(`/Friendships/${FriendUid}/${MyUid}`).once("value");
+      const getPreviousFriendRequest = db.ref(`/Friendships/${FriendUid}/${MyUid}`).once("value");
 
-      let results = await Promise.all([getPreviousFriendRequest]);
-      const returningFriendRequest = results[0].val() === 1;
+      let results = await Promise.resolve(getPreviousFriendRequest);
+      const returningFriendRequest = results.val() === 1;
       // Get the list of device notification tokens.
-      const getDeviceTokensPromise = admin.database().ref(`/Users/${returningFriendRequest ? FriendUid : MyUid}/notificationTokens`).once('value');
+      const getDeviceTokensPromise = db.ref(`/Users/${returningFriendRequest ? FriendUid : MyUid}/notificationTokens`).once('value');
 
       // Get the profile.
-      const getRespondingProfilePromise = admin.database().ref(`/Users/${MyUid}/name`).once('value');
+      const getRespondingProfilePromise = db.ref(`/Users/${MyUid}/name`).once('value');
       
       results = await Promise.all([getDeviceTokensPromise, getRespondingProfilePromise]);
       
@@ -51,8 +109,8 @@ exports.updateFriendStatus = functions.database.ref('/Friendships/{MyUid}/{Frien
       let payload;
 
       if(returningFriendRequest){
-        admin.database().ref(`/Friendships/${FriendUid}/${MyUid}`).set(3);
-        admin.database().ref(`/Friendships/${MyUid}/${FriendUid}`).set(3);
+        db.ref(`/Friendships/${FriendUid}/${MyUid}`).set(3);
+        db.ref(`/Friendships/${MyUid}/${FriendUid}`).set(3);
         payload = {
           notification: {
             title: `${name}`,
@@ -60,7 +118,7 @@ exports.updateFriendStatus = functions.database.ref('/Friendships/{MyUid}/{Frien
           }
         };
       }else{
-        admin.database().ref(`/Friendships/${FriendUid}/${MyUid}`).set(2);
+        db.ref(`/Friendships/${FriendUid}/${MyUid}`).set(2);
         payload = {
           notification: {
             title: `${name}`,
@@ -68,35 +126,6 @@ exports.updateFriendStatus = functions.database.ref('/Friendships/{MyUid}/{Frien
           }
         };
       }
-
+      return sendNotifications(tokensSnapshot, payload);
       
-
-      // Check if there are any device tokens.
-      if (!tokensSnapshot.hasChildren()) {
-        return console.log('There are no notification tokens to send to.');
-      }
-      console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
-      console.log('Fetched follower profile', name);
-
-      
-
-      // The array containing all the user's tokens.
-      // Listing all tokens as an array.
-      let tokens = Object.keys(tokensSnapshot.val());
-      // Send notifications to all tokens.
-      const response = await admin.messaging().sendToDevice(tokens, payload);
-      // For each message check if there was an error.
-      const tokensToRemove = [];
-      response.results.forEach((result, index) => {
-        const error = result.error;
-        if (error) {
-          console.error('Failure sending notification to', tokens[index], error);
-          // Cleanup the tokens who are not registered anymore.
-          if (error.code === 'messaging/invalid-registration-token' ||
-              error.code === 'messaging/registration-token-not-registered') {
-            tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
-          }
-        }
-      });
-      return Promise.all(tokensToRemove);
     });

@@ -24,12 +24,12 @@ namespace App3.Models
             if (item.Going)
             {
                 item.Going = false;
-                FirebaseHelper.UndoGoToParty(item.pid);
+                FirebaseHelper.UndoGoToParty(item);
             }
             else
             {
                 item.Going = true;
-                FirebaseHelper.GoToParty(item.pid);
+                FirebaseHelper.GoToParty(item);
             }
         });
         public Party()

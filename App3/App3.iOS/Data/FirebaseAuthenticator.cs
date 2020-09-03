@@ -11,7 +11,6 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(FirebaseAuthenticator))]
 namespace App3.iOS.Data
 {
-
     public class FirebaseAuthenticator : IFirebaseAuthenticator
     {
         public async Task<string> SignUpUser(string email, string password)

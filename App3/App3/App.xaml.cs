@@ -72,6 +72,7 @@ namespace App3
                 if (userFriends != null) userInvites = FirebaseHelper.GetInvitedParties(userFriends).Result;
                 
                 MainPage = createMainPage();
+                DependencyService.Get<INotificationRegister>().RegisterForNotifications();
                     
             }
         }
@@ -100,7 +101,7 @@ namespace App3
         }
         public static void Logout()
         {
-
+            DependencyService.Get<INotificationRegister>().DeregisterNotifications();
             UserDatabase.RemoveUserData();
             if (!authenticator.SignOut()) Debug.WriteLine("Error Signing out");
             NavigationPage loginScreen = new NavigationPage(new MasterAuthPage());
@@ -136,6 +137,7 @@ namespace App3
             if (tokenId == "") return null;
             Debug.WriteLine(tokenId);
             var user = authenticator.GetCurrentUser(); //await FirebaseHelper.GetUserFromUID(uid);
+            user.printUser();
             user = await FirebaseHelper.GetUserFromUID(user.uid);
             user.printUser();
             if (user == null)
@@ -146,6 +148,8 @@ namespace App3
             UserDatabase.SetUser(user);
             Debug.WriteLine("OK");
             await GetUserMediaAndDisplay();
+
+            DependencyService.Get<INotificationRegister>().RegisterForNotifications();
             return user;
 
         }
